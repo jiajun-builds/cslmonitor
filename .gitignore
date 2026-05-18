@@ -1,0 +1,7 @@
+.env.local
+.DS_Store
+__pycache__/
+*.pyc
+data/raw_data/backups/
+site/
+src/csl/xg/.xg_venv/
