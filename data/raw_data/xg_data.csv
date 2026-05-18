@@ -92,9 +92,9 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15549837,12,2026-05-15,Henan Songshan Longmen,Shenzhen Xinpengcheng,1,0,1.55,0.55,Ended
 15549839,12,2026-05-15,Shanghai Port,Zhejiang Professional,2,2,1.04,1.84,Ended
 15549840,12,2026-05-15,Tianjin Jinmen Tiger,Chengdu Rongcheng,1,2,0.44,1.8,Ended
-15549844,12,2026-05-16,Shandong Taishan,Chongqing Tonglianglong,3,1,,,Ended
-15549842,12,2026-05-16,Wuhan Three Towns,Liaoning Tieren,2,2,,,Ended
-15549848,12,2026-05-16,Yunnan Yukun,Shanghai Shenhua,1,0,,,2nd half
+15549844,12,2026-05-16,Shandong Taishan,Chongqing Tonglianglong,3,1,1.69,0.81,Ended
+15549842,12,2026-05-16,Wuhan Three Towns,Liaoning Tieren,2,2,2.13,1.04,Ended
+15549848,12,2026-05-16,Yunnan Yukun,Shanghai Shenhua,1,0,1.04,0.68,Ended
 15549846,13,2026-05-19,Chengdu Rongcheng,Shanghai Port,,,,,Not started
 15549843,13,2026-05-19,Qingdao West Coast,Beijing Guoan,,,,,Not started
 15549845,13,2026-05-19,Shenzhen Xinpengcheng,Dalian Yingbo,,,,,Not started
