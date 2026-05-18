@@ -188,7 +188,6 @@ function renderSignalBar(meta) {
 function renderMarketRows(rows) {
   selectors.marketBody.innerHTML = rows
     .map((row) => {
-      const signal = getSignal(row);
       return `
         <tr>
           <td class="numeric">${row.round}</td>
@@ -197,7 +196,6 @@ function renderMarketRows(rows) {
           <td>
             <div class="match-cell">
               <span class="match-cell__home">
-                <span class="signal-dot signal-dot--${signal.type}" aria-hidden="true"></span>
                 <span class="market-match">${row.home_team} vs ${row.away_team}</span>
               </span>
             </div>
@@ -306,7 +304,6 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
     setText("spotlight-ovr", formatRating(strongest.overall_rating));
     setText("spotlight-att", formatRating(strongest.attack_rating));
     setText("spotlight-def", formatRating(strongest.defense_rating));
-    setText("spotlight-form", strongest.form);
   }
 
   if (bestBet) {

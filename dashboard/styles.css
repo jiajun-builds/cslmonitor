@@ -5,7 +5,6 @@
   --term-surface-2: 220 17% 8%;
   --term-surface-3: 220 16% 10%;
   --term-border: 220 15% 15%;
-  --term-border-strong: 145 48% 28%;
   --term-dim: 220 10% 44%;
   --term-text: 45 20% 92%;
   --term-green: 148 56% 61%;
@@ -92,11 +91,9 @@ body::after {
 .masthead__glyph {
   width: 36px;
   height: 36px;
-  border: 1px solid hsl(var(--term-border-strong));
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: linear-gradient(180deg, hsl(var(--term-green) / 0.1), transparent);
 }
 
 .masthead__logo {
@@ -510,34 +507,11 @@ th,
   font-variant-numeric: tabular-nums;
 }
 
-.signal-dot {
-  flex: 0 0 auto;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  border: 1px solid hsl(var(--term-border));
-}
-
 .market-table td:nth-child(1),
 .market-table td:nth-child(2),
 .market-table td:nth-child(3),
 .market-table td:nth-child(4) {
   white-space: nowrap;
-}
-
-.signal-dot--home {
-  background: hsl(var(--term-green));
-  box-shadow: 0 0 10px hsl(var(--term-green) / 0.28);
-}
-
-.signal-dot--draw {
-  background: hsl(var(--term-amber));
-  box-shadow: 0 0 10px hsl(var(--term-amber) / 0.22);
-}
-
-.signal-dot--away {
-  background: hsl(var(--term-red));
-  box-shadow: 0 0 10px hsl(var(--term-red) / 0.22);
 }
 
 .signal-chip {
@@ -668,13 +642,6 @@ th,
   color: hsl(var(--term-text));
   font-size: 24px;
   line-height: 1;
-}
-
-.spotlight-card__form {
-  margin-top: 14px;
-  color: hsl(var(--term-green));
-  font-size: 12px;
-  letter-spacing: 0.18em;
 }
 
 .form-strip {
