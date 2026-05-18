@@ -10,13 +10,23 @@ csl_repo_root() {
 }
 
 csl_activate_environment() {
-  if [ ! -f "$CSL_CONDA_SH" ]; then
-    echo "Conda init script not found: $CSL_CONDA_SH" >&2
+  local conda_sh="$CSL_CONDA_SH"
+
+  if command -v conda >/dev/null 2>&1; then
+    local conda_base
+    conda_base="$(conda info --base 2>/dev/null || true)"
+    if [ -n "$conda_base" ] && [ -f "$conda_base/etc/profile.d/conda.sh" ]; then
+      conda_sh="$conda_base/etc/profile.d/conda.sh"
+    fi
+  fi
+
+  if [ ! -f "$conda_sh" ]; then
+    echo "Conda init script not found: $conda_sh" >&2
     return 1
   fi
 
   # shellcheck disable=SC1090
-  source "$CSL_CONDA_SH"
+  source "$conda_sh"
   conda activate "$CSL_ENV_NAME"
 }
 

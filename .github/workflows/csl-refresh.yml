@@ -1,0 +1,60 @@
+name: CSL Refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 */2 * *"
+      timezone: "Europe/London"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csl-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v4
+        with:
+          activate-environment: csl-workflows
+          auto-activate-base: false
+          environment-file: environment.yml
+
+      - name: Show environment details
+        run: |
+          conda info
+          python --version
+
+      - name: Run full CSL refresh
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+        run: ./scripts/csl.sh all
+
+      - name: Commit refreshed data
+        run: |
+          git add data/raw_data data/output_data data/dashboard
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(data): automated dashboard refresh [skip ci]"
+          git push origin main
