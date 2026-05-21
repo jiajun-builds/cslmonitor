@@ -129,10 +129,14 @@ def parse_event(event, season_label):
         result = "H" if hg > ag else ("A" if hg < ag else "D")
     mt = event.get("strTime") or ""
     mt = mt[:5] if len(mt) >= 5 else None
-    rnd = event.get("intRound") or "?"
+    rnd_raw = event.get("intRound")
+    try:
+        round_num = int(rnd_raw) if rnd_raw not in (None, "") else None
+    except (TypeError, ValueError):
+        round_num = None
     return {
         "Country": "China", "League": "Super League", "Season": season_label,
-        "Round": f"Regular Season - {rnd}", "Date": event.get("dateEvent"), "Time": mt,
+        "Round": round_num, "Date": event.get("dateEvent"), "Time": mt,
         "Home": event.get("strHomeTeam"), "Away": event.get("strAwayTeam"),
         "HG": hg, "AG": ag, "HxG": None, "AxG": None,
         "HExpG+": None, "AExpG+": None, "Res": result,
@@ -166,7 +170,7 @@ def deduplicate_matches(df):
     work = df.copy()
     work["_row_order"] = range(len(work))
     work["_info_score"] = work.notna().sum(axis=1)
-    work["_round_penalty"] = work["Round"].astype(str).str.contains("Regular Season", na=False).astype(int)
+    work["_round_penalty"] = pd.to_numeric(work["Round"], errors="coerce").isna().astype(int)
 
     work = work.sort_values(
         ["Season", "Home", "Away", "Date", "_info_score", "_round_penalty", "_row_order"],
@@ -347,7 +351,7 @@ df_upcoming = df_fresh[
 
 # Keep only the columns useful for the tracker
 df_upcoming_out = df_upcoming.copy()
-df_upcoming_out["Wk"] = df_upcoming_out["Round"].str.split("-").str[-1].str.strip()
+df_upcoming_out["Wk"] = pd.to_numeric(df_upcoming_out["Round"], errors="coerce").astype("Int64")
 df_upcoming_out["Date"] = format_date_only_series(df_upcoming_out["Date"])
 df_upcoming_out = df_upcoming_out[["Wk", "Date", "Time", "Home", "Away"]]
 

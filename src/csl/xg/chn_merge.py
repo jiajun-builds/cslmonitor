@@ -98,6 +98,14 @@ def _normalize_team_series(series: pd.Series, mapping: dict[str, str]) -> pd.Ser
     return cleaned.map(mapping).fillna(cleaned)
 
 
+def _coerce_round_column(series: pd.Series) -> pd.Series:
+    """Normalize Round to nullable Int64 (handles legacy 'Regular Season - N' text)."""
+    as_text = series.astype("string")
+    legacy = as_text.str.extract(r"Regular Season\s*-\s*(\d+)", expand=False)
+    numeric = pd.to_numeric(series, errors="coerce")
+    return pd.to_numeric(legacy.fillna(numeric), errors="coerce").round().astype("Int64")
+
+
 def _build_xg_lookup(xg: pd.DataFrame, team_aliases: dict[str, str]) -> tuple[pd.DataFrame, int]:
     """
     Prepare xg side: columns d, H, A, round, home_xg, away_xg.
@@ -174,6 +182,7 @@ def merge_xg_into_league(
     )
 
     # Apply updates only where merge matched
+    out["Round"] = _coerce_round_column(out["Round"])
     round_x = merged.loc[matched, "round"]
     idx = merged.index[matched]
     # Round: always update on key match (Sofa round -> Round)
