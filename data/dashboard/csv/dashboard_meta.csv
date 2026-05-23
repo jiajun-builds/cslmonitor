@@ -1,2 +1,2 @@
 competition_code,competition_name,season,updated_at,timezone,last_completed_match_date,next_fixture_date,matches_played,current_round,total_rounds,model_name,model_version
-CSL,Chinese Super League,2026,2026-05-22T03:05:33+08:00,Asia/Shanghai,2026-05-20,2026-05-23,104,14,30,Zero-Inflated Poisson with Dixon-Coles Time Decay,v1
+CSL,Chinese Super League,2026,2026-05-23T16:59:03+08:00,Asia/Shanghai,2026-05-20,2026-05-23,104,14,30,Zero-Inflated Poisson with Dixon-Coles Time Decay,v1
