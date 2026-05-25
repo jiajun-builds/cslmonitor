@@ -103,14 +103,14 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15549849,13,2026-05-20,Liaoning Tieren,Qingdao Hainiu,2,1,3.15,1.08,Ended
 15549851,13,2026-05-20,Shanghai Shenhua,Wuhan Three Towns,2,2,2.14,2.45,Ended
 15549853,13,2026-05-20,Zhejiang Professional,Shandong Taishan,4,1,3.29,1.09,Ended
-15549855,14,2026-05-23,Beijing Guoan,Henan Songshan Longmen,,,,,Not started
-15549856,14,2026-05-23,Dalian Yingbo,Chengdu Rongcheng,,,,,Not started
-15549854,14,2026-05-23,Shanghai Port,Tianjin Jinmen Tiger,,,,,Not started
-15549860,14,2026-05-24,Qingdao Hainiu,Chongqing Tonglianglong,,,,,Not started
-15549858,14,2026-05-24,Shandong Taishan,Wuhan Three Towns,,,,,Not started
-15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,,,,,Not started
-15549857,14,2026-05-24,Yunnan Yukun,Qingdao West Coast,,,,,Not started
-15549859,14,2026-05-24,Zhejiang Professional,Liaoning Tieren,,,,,Not started
+15549855,14,2026-05-23,Beijing Guoan,Henan Songshan Longmen,1,2,,,Ended
+15549856,14,2026-05-23,Dalian Yingbo,Chengdu Rongcheng,2,0,1.17,0.5,Ended
+15549854,14,2026-05-23,Shanghai Port,Tianjin Jinmen Tiger,1,1,1.86,1.05,Ended
+15549860,14,2026-05-24,Qingdao Hainiu,Chongqing Tonglianglong,0,1,,,Ended
+15549858,14,2026-05-24,Shandong Taishan,Wuhan Three Towns,3,3,,,Ended
+15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,1,2,,,Ended
+15549857,14,2026-05-24,Yunnan Yukun,Qingdao West Coast,2,3,,,Ended
+15549859,14,2026-05-24,Zhejiang Professional,Liaoning Tieren,0,5,1.62,1.93,Ended
 15549861,15,2026-05-29,Liaoning Tieren,Shanghai Port,,,,,Not started
 15552548,15,2026-05-30,Chengdu Rongcheng,Shandong Taishan,,,,,Not started
 15552547,15,2026-05-30,Chongqing Tonglianglong,Beijing Guoan,,,,,Not started

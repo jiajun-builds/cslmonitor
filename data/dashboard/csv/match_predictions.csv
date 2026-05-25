@@ -1,12 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-14-2026-05-23-shanghai-port-tianjin-jinmen-tiger,14,2026-05-23,2026-05-23T11:00:00+08:00,Shanghai Port,Tianjin Jinmen Tiger,0.662241,0.224742,0.113017,1.51,4.4495,8.8482
-CSL-2026-14-2026-05-23-beijing-guoan-henan-songshan-longmen,14,2026-05-23,2026-05-23T11:35:00+08:00,Beijing Guoan,Henan Songshan Longmen,0.534138,0.272142,0.19372,1.8722,3.6746,5.1621
-CSL-2026-14-2026-05-23-dalian-yingbo-chengdu-rongcheng,14,2026-05-23,2026-05-23T12:00:00+08:00,Dalian Yingbo,Chengdu Rongcheng,0.175497,0.310132,0.514371,5.6981,3.2244,1.9441
-CSL-2026-14-2026-05-24-qingdao-hainiu-chongqing-tonglianglong,14,2026-05-24,2026-05-24T09:00:00+08:00,Qingdao Hainiu,Chongqing Tonglianglong,0.257716,0.443835,0.298448,3.8802,2.2531,3.3507
-CSL-2026-14-2026-05-24-yunnan-yukun-qingdao-west-coast,14,2026-05-24,2026-05-24T11:00:00+08:00,Yunnan Yukun,Qingdao West Coast,0.441107,0.318547,0.240346,2.267,3.1393,4.1607
-CSL-2026-14-2026-05-24-shandong-taishan-wuhan-three-towns,14,2026-05-24,2026-05-24T11:35:00+08:00,Shandong Taishan,Wuhan Three Towns,0.741793,0.174211,0.083995,1.3481,5.7402,11.9055
-CSL-2026-14-2026-05-24-zhejiang-professional-liaoning-tieren,14,2026-05-24,2026-05-24T11:35:00+08:00,Zhejiang Professional,Liaoning Tieren,0.610733,0.252959,0.136308,1.6374,3.9532,7.3363
-CSL-2026-14-2026-05-24-shanghai-shenhua-shenzhen-xinpengcheng,14,2026-05-24,2026-05-24T12:00:00+08:00,Shanghai Shenhua,Shenzhen Xinpengcheng,0.863745,0.106137,0.030118,1.1577,9.4218,33.2027
 CSL-2026-15-2026-05-29-liaoning-tieren-shanghai-port,15,2026-05-29,2026-05-29T11:35:00+08:00,Liaoning Tieren,Shanghai Port,0.234041,0.274825,0.491133,4.2728,3.6387,2.0361
 CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua,15,2026-05-30,2026-05-30T10:00:00+08:00,Qingdao West Coast,Shanghai Shenhua,0.220379,0.285334,0.494287,4.5376,3.5047,2.0231
 CSL-2026-15-2026-05-30-henan-songshan-longmen-zhejiang-professional,15,2026-05-30,2026-05-30T11:00:00+08:00,Henan Songshan Longmen,Zhejiang Professional,0.582359,0.260581,0.15706,1.7172,3.8376,6.367

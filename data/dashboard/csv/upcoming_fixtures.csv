@@ -1,12 +1,4 @@
 fixture_id,round,match_date,match_time,kickoff_at,home_team,away_team
-CSL-2026-14-2026-05-23-shanghai-port-tianjin-jinmen-tiger,14,2026-05-23,11:00,2026-05-23T11:00:00+08:00,Shanghai Port,Tianjin Jinmen Tiger
-CSL-2026-14-2026-05-23-beijing-guoan-henan-songshan-longmen,14,2026-05-23,11:35,2026-05-23T11:35:00+08:00,Beijing Guoan,Henan Songshan Longmen
-CSL-2026-14-2026-05-23-dalian-yingbo-chengdu-rongcheng,14,2026-05-23,12:00,2026-05-23T12:00:00+08:00,Dalian Yingbo,Chengdu Rongcheng
-CSL-2026-14-2026-05-24-qingdao-hainiu-chongqing-tonglianglong,14,2026-05-24,09:00,2026-05-24T09:00:00+08:00,Qingdao Hainiu,Chongqing Tonglianglong
-CSL-2026-14-2026-05-24-yunnan-yukun-qingdao-west-coast,14,2026-05-24,11:00,2026-05-24T11:00:00+08:00,Yunnan Yukun,Qingdao West Coast
-CSL-2026-14-2026-05-24-shandong-taishan-wuhan-three-towns,14,2026-05-24,11:35,2026-05-24T11:35:00+08:00,Shandong Taishan,Wuhan Three Towns
-CSL-2026-14-2026-05-24-zhejiang-professional-liaoning-tieren,14,2026-05-24,11:35,2026-05-24T11:35:00+08:00,Zhejiang Professional,Liaoning Tieren
-CSL-2026-14-2026-05-24-shanghai-shenhua-shenzhen-xinpengcheng,14,2026-05-24,12:00,2026-05-24T12:00:00+08:00,Shanghai Shenhua,Shenzhen Xinpengcheng
 CSL-2026-15-2026-05-29-liaoning-tieren-shanghai-port,15,2026-05-29,11:35,2026-05-29T11:35:00+08:00,Liaoning Tieren,Shanghai Port
 CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua,15,2026-05-30,10:00,2026-05-30T10:00:00+08:00,Qingdao West Coast,Shanghai Shenhua
 CSL-2026-15-2026-05-30-henan-songshan-longmen-zhejiang-professional,15,2026-05-30,11:00,2026-05-30T11:00:00+08:00,Henan Songshan Longmen,Zhejiang Professional
