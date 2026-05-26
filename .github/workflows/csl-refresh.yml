@@ -3,7 +3,7 @@ name: CSL Refresh
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 8 */2 * *"
+    - cron: "0 9 * * *"
       timezone: "Europe/London"
 
 permissions:
