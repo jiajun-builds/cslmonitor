@@ -108,7 +108,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15549854,14,2026-05-23,Shanghai Port,Tianjin Jinmen Tiger,1,1,1.86,1.05,Ended
 15549860,14,2026-05-24,Qingdao Hainiu,Chongqing Tonglianglong,0,1,,,Ended
 15549858,14,2026-05-24,Shandong Taishan,Wuhan Three Towns,3,3,,,Ended
-15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,1,2,,,Ended
+15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,1,2,1.42,2.49,Ended
 15549857,14,2026-05-24,Yunnan Yukun,Qingdao West Coast,2,3,,,Ended
 15549859,14,2026-05-24,Zhejiang Professional,Liaoning Tieren,0,5,1.62,1.93,Ended
 15549861,15,2026-05-29,Liaoning Tieren,Shanghai Port,,,,,Not started
