@@ -2,18 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-28T19:54:52+08:00"
+    "updated_at": "2026-05-29T19:44:34+08:00"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-29-liaoning-tieren-shanghai-port",
-      "round": 15,
-      "match_date": "2026-05-29",
-      "match_time": "11:35",
-      "kickoff_at": "2026-05-29T11:35:00+08:00",
-      "home_team": "Liaoning Tieren",
-      "away_team": "Shanghai Port"
-    },
     {
       "fixture_id": "CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua",
       "round": 15,

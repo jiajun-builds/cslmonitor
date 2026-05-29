@@ -2,25 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-28T19:54:52+08:00",
+    "updated_at": "2026-05-29T19:44:34+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-29-liaoning-tieren-shanghai-port",
-      "round": 15,
-      "match_date": "2026-05-29",
-      "kickoff_at": "2026-05-29T11:35:00+08:00",
-      "home_team": "Liaoning Tieren",
-      "away_team": "Shanghai Port",
-      "home_win_prob": 0.234041,
-      "draw_prob": 0.274825,
-      "away_win_prob": 0.491133,
-      "home_win_fair_odds": 4.2728,
-      "draw_fair_odds": 3.6387,
-      "away_win_fair_odds": 2.0361
-    },
     {
       "fixture_id": "CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua",
       "round": 15,
