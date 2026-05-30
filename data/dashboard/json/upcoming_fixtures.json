@@ -2,18 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-29T19:44:34+08:00"
+    "updated_at": "2026-05-30T18:21:28+08:00"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua",
-      "round": 15,
-      "match_date": "2026-05-30",
-      "match_time": "10:00",
-      "kickoff_at": "2026-05-30T10:00:00+08:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Shanghai Shenhua"
-    },
     {
       "fixture_id": "CSL-2026-15-2026-05-30-henan-songshan-longmen-zhejiang-professional",
       "round": 15,

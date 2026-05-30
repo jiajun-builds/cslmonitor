@@ -2,25 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-29T19:44:34+08:00",
+    "updated_at": "2026-05-30T18:21:28+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua",
-      "round": 15,
-      "match_date": "2026-05-30",
-      "kickoff_at": "2026-05-30T10:00:00+08:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Shanghai Shenhua",
-      "home_win_prob": 0.220379,
-      "draw_prob": 0.285334,
-      "away_win_prob": 0.494287,
-      "home_win_fair_odds": 4.5376,
-      "draw_fair_odds": 3.5047,
-      "away_win_fair_odds": 2.0231
-    },
     {
       "fixture_id": "CSL-2026-15-2026-05-30-henan-songshan-longmen-zhejiang-professional",
       "round": 15,

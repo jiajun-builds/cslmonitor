@@ -1,5 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-15-2026-05-30-qingdao-west-coast-shanghai-shenhua,15,2026-05-30,2026-05-30T10:00:00+08:00,Qingdao West Coast,Shanghai Shenhua,0.220379,0.285334,0.494287,4.5376,3.5047,2.0231
 CSL-2026-15-2026-05-30-henan-songshan-longmen-zhejiang-professional,15,2026-05-30,2026-05-30T11:00:00+08:00,Henan Songshan Longmen,Zhejiang Professional,0.582359,0.260581,0.15706,1.7172,3.8376,6.367
 CSL-2026-15-2026-05-30-chengdu-rongcheng-shandong-taishan,15,2026-05-30,2026-05-30T11:35:00+08:00,Chengdu Rongcheng,Shandong Taishan,0.685367,0.206839,0.107794,1.4591,4.8347,9.277
 CSL-2026-15-2026-05-30-chongqing-tonglianglong-beijing-guoan,15,2026-05-30,2026-05-30T12:00:00+08:00,Chongqing Tonglianglong,Beijing Guoan,0.338747,0.440117,0.221136,2.9521,2.2721,4.5221

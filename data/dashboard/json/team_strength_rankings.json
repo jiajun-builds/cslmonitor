@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-29T19:44:34+08:00"
+    "updated_at": "2026-05-30T18:21:28+08:00"
   },
   "rows": [
     {
@@ -23,7 +23,7 @@
       "overall_rating": 3.630941363943422,
       "attack_rank": 1,
       "defense_rank": 4,
-      "form": "L,D,L,D,L"
+      "form": "W,L,D,L,D"
     },
     {
       "rank_overall": 3,
@@ -103,7 +103,7 @@
       "overall_rating": 2.620003706608947,
       "attack_rank": 13,
       "defense_rank": 11,
-      "form": "W,D,W,D,D"
+      "form": "L,W,D,W,D"
     },
     {
       "rank_overall": 11,

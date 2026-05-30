@@ -2,47 +2,34 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-29T19:44:34+08:00"
+    "updated_at": "2026-05-30T18:21:28+08:00"
   },
   "rows": [
-    {
-      "home_team": "Qingdao West Coast",
-      "away_team": "Shanghai Shenhua",
-      "match_time": "10:00",
-      "home_spread": -0.25,
-      "away_spread": 0.25,
-      "home_odds": 2.04,
-      "away_odds": 1.83,
-      "home_ah_ev": -0.3320470118534573,
-      "away_ah_ev": 0.2406078411480068,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
-    },
     {
       "home_team": "Henan Songshan Longmen",
       "away_team": "Zhejiang Professional",
       "match_time": "11:00",
-      "home_spread": -0.75,
-      "away_spread": 0.75,
-      "home_odds": 2.01,
-      "away_odds": 1.86,
-      "home_ah_ev": 0.0449444672716844,
-      "away_ah_ev": -0.098063273599552,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
+      "home_spread": -0.5,
+      "away_spread": 0.5,
+      "home_odds": 2.02,
+      "away_odds": 1.88,
+      "home_ah_ev": 0.1883343462024105,
+      "away_ah_ev": -0.2259745400299663,
+      "last_update": "2026-05-30T10:21:15Z",
+      "fetched_at": "2026-05-30T10:21:26Z"
     },
     {
       "home_team": "Chengdu Rongcheng",
       "away_team": "Shandong Taishan",
       "match_time": "11:35",
-      "home_spread": -0.25,
-      "away_spread": 0.25,
-      "home_odds": 1.84,
-      "away_odds": 2.02,
-      "home_ah_ev": 0.3674789883052622,
-      "away_ah_ev": -0.473280302904363,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
+      "home_spread": -0.5,
+      "away_spread": 0.5,
+      "home_odds": 1.92,
+      "away_odds": 1.97,
+      "home_ah_ev": 0.3200232603306673,
+      "away_ah_ev": -0.3843988660684451,
+      "last_update": "2026-05-30T10:21:15Z",
+      "fetched_at": "2026-05-30T10:21:26Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -50,12 +37,12 @@
       "match_time": "12:00",
       "home_spread": 0.5,
       "away_spread": -0.5,
-      "home_odds": 1.95,
-      "away_odds": 1.9,
-      "home_ah_ev": 0.4138987339498352,
-      "away_ah_ev": -0.4776449202588138,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
+      "home_odds": 2.04,
+      "away_odds": 1.85,
+      "home_ah_ev": 0.4791555985936738,
+      "away_ah_ev": -0.4913911065677923,
+      "last_update": "2026-05-30T10:21:15Z",
+      "fetched_at": "2026-05-30T10:21:26Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -63,12 +50,12 @@
       "match_time": "12:00",
       "home_spread": -0.5,
       "away_spread": 0.5,
-      "home_odds": 1.93,
-      "away_odds": 1.92,
-      "home_ah_ev": -0.3560456317682995,
-      "away_ah_ev": 0.2793821828990336,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
+      "home_odds": 1.91,
+      "away_odds": 1.98,
+      "home_ah_ev": -0.3627187340297679,
+      "away_ah_ev": 0.3193628761146285,
+      "last_update": "2026-05-30T10:21:15Z",
+      "fetched_at": "2026-05-30T10:21:26Z"
     },
     {
       "home_team": "Tianjin Jinmen Tiger",
@@ -77,11 +64,11 @@
       "home_spread": 0.25,
       "away_spread": -0.25,
       "home_odds": 1.76,
-      "away_odds": 2.11,
+      "away_odds": 2.12,
       "home_ah_ev": 0.1881620508359389,
-      "away_ah_ev": -0.2978074138704393,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
+      "away_ah_ev": -0.2953667755260917,
+      "last_update": "2026-05-30T10:21:15Z",
+      "fetched_at": "2026-05-30T10:21:26Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -89,12 +76,12 @@
       "match_time": "11:35",
       "home_spread": 0.25,
       "away_spread": -0.25,
-      "home_odds": 1.78,
-      "away_odds": 2.08,
-      "home_ah_ev": 0.2106003542446784,
-      "away_ah_ev": -0.3217602877986481,
-      "last_update": "2026-05-29T11:44:26Z",
-      "fetched_at": "2026-05-29T11:44:32Z"
+      "home_odds": 1.84,
+      "away_odds": 2.02,
+      "home_ah_ev": 0.2465059019151336,
+      "away_ah_ev": -0.3371305937269224,
+      "last_update": "2026-05-30T10:21:15Z",
+      "fetched_at": "2026-05-30T10:21:26Z"
     }
   ]
 }
