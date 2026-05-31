@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-30T18:21:28+08:00"
+    "updated_at": "2026-05-31T18:28:12+08:00"
   },
   "rows": [
     {
@@ -13,7 +13,7 @@
       "overall_rating": 3.946775361146463,
       "attack_rank": 2,
       "defense_rank": 2,
-      "form": "L,L,W,W,W"
+      "form": "W,L,L,W,W"
     },
     {
       "rank_overall": 2,
@@ -33,7 +33,7 @@
       "overall_rating": 3.366800027776903,
       "attack_rank": 4,
       "defense_rank": 5,
-      "form": "L,D,W,D,W"
+      "form": "W,L,D,W,D"
     },
     {
       "rank_overall": 4,
@@ -43,7 +43,7 @@
       "overall_rating": 3.265589398286341,
       "attack_rank": 5,
       "defense_rank": 7,
-      "form": "D,L,W,W,W"
+      "form": "L,D,L,W,W"
     },
     {
       "rank_overall": 5,
@@ -63,7 +63,7 @@
       "overall_rating": 3.2163494846595384,
       "attack_rank": 16,
       "defense_rank": 1,
-      "form": "W,D,L,D,D"
+      "form": "L,W,D,L,D"
     },
     {
       "rank_overall": 7,
@@ -73,7 +73,7 @@
       "overall_rating": 3.191159503071193,
       "attack_rank": 6,
       "defense_rank": 6,
-      "form": "W,W,W,L,D"
+      "form": "L,W,W,W,L"
     },
     {
       "rank_overall": 8,
@@ -83,7 +83,7 @@
       "overall_rating": 2.815868243880839,
       "attack_rank": 7,
       "defense_rank": 12,
-      "form": "L,W,D,D,W"
+      "form": "W,L,W,D,D"
     },
     {
       "rank_overall": 9,
@@ -113,7 +113,7 @@
       "overall_rating": 2.619172806187416,
       "attack_rank": 8,
       "defense_rank": 13,
-      "form": "L,L,L,W,W"
+      "form": "L,L,L,L,W"
     },
     {
       "rank_overall": 12,
@@ -173,7 +173,7 @@
       "overall_rating": 2.0563130470627744,
       "attack_rank": 17,
       "defense_rank": 15,
-      "form": "W,D,L,L,D"
+      "form": "W,W,D,L,L"
     },
     {
       "rank_overall": 18,

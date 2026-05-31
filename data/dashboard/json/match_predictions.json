@@ -2,67 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-30T18:21:28+08:00",
+    "updated_at": "2026-05-31T18:28:12+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-30-henan-songshan-longmen-zhejiang-professional",
-      "round": 15,
-      "match_date": "2026-05-30",
-      "kickoff_at": "2026-05-30T11:00:00+08:00",
-      "home_team": "Henan Songshan Longmen",
-      "away_team": "Zhejiang Professional",
-      "home_win_prob": 0.582359,
-      "draw_prob": 0.260581,
-      "away_win_prob": 0.15706,
-      "home_win_fair_odds": 1.7172,
-      "draw_fair_odds": 3.8376,
-      "away_win_fair_odds": 6.367
-    },
-    {
-      "fixture_id": "CSL-2026-15-2026-05-30-chengdu-rongcheng-shandong-taishan",
-      "round": 15,
-      "match_date": "2026-05-30",
-      "kickoff_at": "2026-05-30T11:35:00+08:00",
-      "home_team": "Chengdu Rongcheng",
-      "away_team": "Shandong Taishan",
-      "home_win_prob": 0.685367,
-      "draw_prob": 0.206839,
-      "away_win_prob": 0.107794,
-      "home_win_fair_odds": 1.4591,
-      "draw_fair_odds": 4.8347,
-      "away_win_fair_odds": 9.277
-    },
-    {
-      "fixture_id": "CSL-2026-15-2026-05-30-chongqing-tonglianglong-beijing-guoan",
-      "round": 15,
-      "match_date": "2026-05-30",
-      "kickoff_at": "2026-05-30T12:00:00+08:00",
-      "home_team": "Chongqing Tonglianglong",
-      "away_team": "Beijing Guoan",
-      "home_win_prob": 0.338747,
-      "draw_prob": 0.440117,
-      "away_win_prob": 0.221136,
-      "home_win_fair_odds": 2.9521,
-      "draw_fair_odds": 2.2721,
-      "away_win_fair_odds": 4.5221
-    },
-    {
-      "fixture_id": "CSL-2026-15-2026-05-30-shenzhen-xinpengcheng-qingdao-hainiu",
-      "round": 15,
-      "match_date": "2026-05-30",
-      "kickoff_at": "2026-05-30T12:00:00+08:00",
-      "home_team": "Shenzhen Xinpengcheng",
-      "away_team": "Qingdao Hainiu",
-      "home_win_prob": 0.311541,
-      "draw_prob": 0.33878,
-      "away_win_prob": 0.349679,
-      "home_win_fair_odds": 3.2099,
-      "draw_fair_odds": 2.9518,
-      "away_win_fair_odds": 2.8598
-    },
     {
       "fixture_id": "CSL-2026-15-2026-05-31-tianjin-jinmen-tiger-dalian-yingbo",
       "round": 15,

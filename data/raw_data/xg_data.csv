@@ -111,12 +111,12 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,1,2,1.42,2.49,Ended
 15549857,14,2026-05-24,Yunnan Yukun,Qingdao West Coast,2,3,,,Ended
 15549859,14,2026-05-24,Zhejiang Professional,Liaoning Tieren,0,5,1.62,1.93,Ended
-15549861,15,2026-05-29,Liaoning Tieren,Shanghai Port,1,0,,,1st half
-15552548,15,2026-05-30,Chengdu Rongcheng,Shandong Taishan,,,,,Not started
-15552547,15,2026-05-30,Chongqing Tonglianglong,Beijing Guoan,,,,,Not started
-15549863,15,2026-05-30,Henan Songshan Longmen,Zhejiang Professional,,,,,Not started
-15552544,15,2026-05-30,Qingdao West Coast,Shanghai Shenhua,,,,,Not started
-15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,,,,,Not started
+15549861,15,2026-05-29,Liaoning Tieren,Shanghai Port,3,2,,,Ended
+15552548,15,2026-05-30,Chengdu Rongcheng,Shandong Taishan,1,0,,,Ended
+15552547,15,2026-05-30,Chongqing Tonglianglong,Beijing Guoan,2,3,,,Ended
+15549863,15,2026-05-30,Henan Songshan Longmen,Zhejiang Professional,0,2,,,Ended
+15552544,15,2026-05-30,Qingdao West Coast,Shanghai Shenhua,2,2,,,Ended
+15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,3,2,,,Ended
 15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,,,,,Not started
 15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,,,,,Not started
 15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,,,,,Not started
