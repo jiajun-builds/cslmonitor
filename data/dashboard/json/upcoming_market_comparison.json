@@ -4,32 +4,5 @@
     "season": "2026",
     "updated_at": "2026-05-31T18:28:12+08:00"
   },
-  "rows": [
-    {
-      "home_team": "Tianjin Jinmen Tiger",
-      "away_team": "Dalian Yingbo",
-      "match_time": "11:00",
-      "home_spread": 0,
-      "away_spread": 0,
-      "home_odds": 2.05,
-      "away_odds": 1.85,
-      "home_ah_ev": 0.156511558917062,
-      "away_ah_ev": -0.1740461153512358,
-      "last_update": "2026-05-31T10:28:02Z",
-      "fetched_at": "2026-05-31T10:28:10Z"
-    },
-    {
-      "home_team": "Wuhan Three Towns",
-      "away_team": "Yunnan Yukun",
-      "match_time": "11:35",
-      "home_spread": 0,
-      "away_spread": 0,
-      "home_odds": 1.98,
-      "away_odds": 1.91,
-      "home_ah_ev": 0.1877911219254427,
-      "away_ah_ev": -0.2199070479075824,
-      "last_update": "2026-05-31T10:28:02Z",
-      "fetched_at": "2026-05-31T10:28:10Z"
-    }
-  ]
+  "rows": []
 }

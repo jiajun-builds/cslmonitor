@@ -117,8 +117,8 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15549863,15,2026-05-30,Henan Songshan Longmen,Zhejiang Professional,0,2,,,Ended
 15552544,15,2026-05-30,Qingdao West Coast,Shanghai Shenhua,2,2,,,Ended
 15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,3,2,,,Ended
-15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,,,,,Not started
-15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,,,,,Not started
+15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,1,0,,,Ended
+15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,1,1,,,Ended
 15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,,,,,Not started
 15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,,,,,Not started
 15552557,16,2026-06-27,Chongqing Tonglianglong,Tianjin Jinmen Tiger,,,,,Not started
