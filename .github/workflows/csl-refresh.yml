@@ -47,14 +47,16 @@ jobs:
         run: ./scripts/csl.sh all
 
       - name: Commit refreshed data
+        # Plain bash avoids login-shell EXIT traps (conda) turning exit 0 into failure.
+        shell: bash {0}
         run: |
+          set -euo pipefail
           git add data/raw_data data/output_data data/dashboard
           if git diff --cached --quiet; then
             echo "No data changes to commit."
-            exit 0
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore(data): automated dashboard refresh [skip ci]"
+            git push origin main
           fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore(data): automated dashboard refresh"
-          git push origin main
