@@ -284,6 +284,15 @@ def run(
 
     base = build_base_frame(upcoming, simulations, pinnacle)
     log.info("Matched %d upcoming fixtures with Pinnacle odds out of %d total upcoming fixtures", len(base), len(upcoming))
+
+    if base.empty:
+        log.info("No fixtures matched with Pinnacle odds; writing empty outputs and skipping model fit")
+        full_df = pd.DataFrame(columns=FULL_COLUMNS)
+        dashboard_df = pd.DataFrame(columns=DASHBOARD_COLUMNS)
+        write_csv(full_df, full_out_csv)
+        write_csv(dashboard_df, dashboard_out_csv)
+        return full_df, dashboard_df
+
     enriched = attach_market_probabilities(base, matches_csv, xi)
     validate_market_probabilities(enriched)
 
