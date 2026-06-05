@@ -69,57 +69,53 @@ def run_dixon_coles_model(input_csv_path, output_csv_path, xi=0.001):
         xi (float): Decay factor for time weighting. Higher values down-weight older matches more
                     aggressively. Default is 0.001. Typical range: 0.0001 (slow decay) to 0.01 (fast decay).
     """
-    try:
-        # Step 1: Fit the shared Dixon-Coles model used across exports
-        clf = fit_dixon_coles_model_from_csv(input_csv_path, xi=xi)
-        
-        # Step 2: Extract Parameters
-        # Use clf.teams to guarantee team order matches the internal parameter array
-        teams = clf.teams
-        params = clf._params
-        attack = params[:len(teams)]        # Attack values
-        defense = params[len(teams):len(teams)*2]  # Defense values
-        
-        # Step 3: Create DataFrame for Team Statistics
-        team_stats = pd.DataFrame({
-            "Team": teams,
-            "Attack": attack,
-            "Defense": defense
-        })
-        team_stats["Date"] = datetime.now().strftime("%Y-%m-%d")
-        
-        # Step 4: Simulate Matches Between All Teams
-        simulation_results = []
-        for home_team in teams:
-            for away_team in teams:
-                if home_team != away_team:
-                    probs = clf.predict(home_team, away_team)
-                    results = {
-                        "Home Team": home_team,
-                        "Away Team": away_team,
-                        "Home Win Probability": probs.asian_handicap("home", 0),
-                        "Draw Probability": 1 - probs.asian_handicap("home", 0) - probs.asian_handicap("away", 0),
-                        "Away Win Probability": probs.asian_handicap("away", 0),
-                        "Home -1 Handicap": probs.asian_handicap("home", -1),
-                        "Home -2 Handicap": probs.asian_handicap("home", -2),
-                        "Away -1 Handicap": probs.asian_handicap("away", -1),
-                        "Away -2 Handicap": probs.asian_handicap("away", -2),
-                    }
-                    simulation_results.append(results)
-        
-        match_simulations_df = pd.DataFrame(simulation_results)
-        match_simulations_df["Date"] = datetime.now().strftime("%Y-%m-%d")
-        
-        # Reorder columns
-        match_simulations_df = match_simulations_df[["Date", "Home Team", "Away Team", "Home Win Probability", 
-                                                     "Draw Probability", "Away Win Probability", "Home -1 Handicap", 
-                                                     "Home -2 Handicap", "Away -1 Handicap", "Away -2 Handicap"]]
-        
-        # Step 5: Save DataFrames to CSV
-        team_stats.to_csv(output_csv_path, index=False)
-        match_simulations_df.to_csv(output_csv_path.replace(".csv", "_match_simulations.csv"), index=False)
-        
-        print(f"Team stats and match simulation results successfully saved to: {output_csv_path}")
-        
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    # Step 1: Fit the shared Dixon-Coles model used across exports
+    clf = fit_dixon_coles_model_from_csv(input_csv_path, xi=xi)
+
+    # Step 2: Extract Parameters
+    # Use clf.teams to guarantee team order matches the internal parameter array
+    teams = clf.teams
+    params = clf._params
+    attack = params[:len(teams)]        # Attack values
+    defense = params[len(teams):len(teams)*2]  # Defense values
+
+    # Step 3: Create DataFrame for Team Statistics
+    team_stats = pd.DataFrame({
+        "Team": teams,
+        "Attack": attack,
+        "Defense": defense
+    })
+    team_stats["Date"] = datetime.now().strftime("%Y-%m-%d")
+
+    # Step 4: Simulate Matches Between All Teams
+    simulation_results = []
+    for home_team in teams:
+        for away_team in teams:
+            if home_team != away_team:
+                probs = clf.predict(home_team, away_team)
+                results = {
+                    "Home Team": home_team,
+                    "Away Team": away_team,
+                    "Home Win Probability": probs.asian_handicap("home", 0),
+                    "Draw Probability": 1 - probs.asian_handicap("home", 0) - probs.asian_handicap("away", 0),
+                    "Away Win Probability": probs.asian_handicap("away", 0),
+                    "Home -1 Handicap": probs.asian_handicap("home", -1),
+                    "Home -2 Handicap": probs.asian_handicap("home", -2),
+                    "Away -1 Handicap": probs.asian_handicap("away", -1),
+                    "Away -2 Handicap": probs.asian_handicap("away", -2),
+                }
+                simulation_results.append(results)
+
+    match_simulations_df = pd.DataFrame(simulation_results)
+    match_simulations_df["Date"] = datetime.now().strftime("%Y-%m-%d")
+
+    # Reorder columns
+    match_simulations_df = match_simulations_df[["Date", "Home Team", "Away Team", "Home Win Probability",
+                                                 "Draw Probability", "Away Win Probability", "Home -1 Handicap",
+                                                 "Home -2 Handicap", "Away -1 Handicap", "Away -2 Handicap"]]
+
+    # Step 5: Save DataFrames to CSV
+    team_stats.to_csv(output_csv_path, index=False)
+    match_simulations_df.to_csv(output_csv_path.replace(".csv", "_match_simulations.csv"), index=False)
+
+    print(f"Team stats and match simulation results successfully saved to: {output_csv_path}")
