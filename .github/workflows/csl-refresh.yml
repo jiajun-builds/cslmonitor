@@ -57,6 +57,10 @@ jobs:
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore(data): automated dashboard refresh [skip ci]"
+            # No `[skip ci]` — this workflow only triggers on workflow_dispatch
+            # and schedule, never on push, so there's no loop to break. The tag
+            # was also being honoured by Netlify, which silently skipped every
+            # post-refresh deploy and left the live dashboard stale.
+            git commit -m "chore(data): automated dashboard refresh"
             git push origin main
           fi
