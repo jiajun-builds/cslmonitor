@@ -377,8 +377,13 @@ def build_dashboard_meta(
     played = played[played["parsed_date"].notna() & played["Res"].isin(["H", "D", "A"])].copy()
     if played.empty:
         raise ValueError("No completed matches found for dashboard_meta.csv")
-    if upcoming.empty:
-        raise ValueError("No upcoming fixtures available for dashboard_meta.csv")
+
+    # Off-season tolerance: when there are no upcoming fixtures in the next 14 days
+    # (e.g. between rounds, mid-season break, end of season), the meta is still
+    # valuable — strength rankings and last-completed match info are fresh. Emit
+    # the meta with next_fixture_date left blank rather than failing Step 5 and
+    # leaving the entire dashboard frozen at the previous run's snapshot.
+    next_fixture_date = upcoming["match_date"].min() if not upcoming.empty else None
 
     meta = pd.DataFrame(
         [
@@ -389,7 +394,7 @@ def build_dashboard_meta(
                 "updated_at": export_now.tz_convert(TZ).isoformat(timespec="seconds"),
                 "timezone": "Asia/Shanghai",
                 "last_completed_match_date": played["parsed_date"].max().strftime("%Y-%m-%d"),
-                "next_fixture_date": upcoming["match_date"].min(),
+                "next_fixture_date": next_fixture_date,
                 "matches_played": round_progress["matches_played"],
                 "current_round": round_progress["current_round"],
                 "total_rounds": round_progress["total_rounds"],
