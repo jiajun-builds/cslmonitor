@@ -2,26 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-31T18:28:12+08:00"
+    "updated_at": "2026-06-08T06:46:23+08:00"
   },
-  "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-31-tianjin-jinmen-tiger-dalian-yingbo",
-      "round": 15,
-      "match_date": "2026-05-31",
-      "match_time": "11:00",
-      "kickoff_at": "2026-05-31T11:00:00+08:00",
-      "home_team": "Tianjin Jinmen Tiger",
-      "away_team": "Dalian Yingbo"
-    },
-    {
-      "fixture_id": "CSL-2026-15-2026-05-31-wuhan-three-towns-yunnan-yukun",
-      "round": 15,
-      "match_date": "2026-05-31",
-      "match_time": "11:35",
-      "kickoff_at": "2026-05-31T11:35:00+08:00",
-      "home_team": "Wuhan Three Towns",
-      "away_team": "Yunnan Yukun"
-    }
-  ]
+  "rows": []
 }

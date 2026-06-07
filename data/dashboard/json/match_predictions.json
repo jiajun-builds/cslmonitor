@@ -2,38 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-05-31T18:28:12+08:00",
+    "updated_at": "2026-06-08T06:46:23+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
-  "rows": [
-    {
-      "fixture_id": "CSL-2026-15-2026-05-31-tianjin-jinmen-tiger-dalian-yingbo",
-      "round": 15,
-      "match_date": "2026-05-31",
-      "kickoff_at": "2026-05-31T11:00:00+08:00",
-      "home_team": "Tianjin Jinmen Tiger",
-      "away_team": "Dalian Yingbo",
-      "home_win_prob": 0.394774,
-      "draw_prob": 0.368297,
-      "away_win_prob": 0.236929,
-      "home_win_fair_odds": 2.5331,
-      "draw_fair_odds": 2.7152,
-      "away_win_fair_odds": 4.2207
-    },
-    {
-      "fixture_id": "CSL-2026-15-2026-05-31-wuhan-three-towns-yunnan-yukun",
-      "round": 15,
-      "match_date": "2026-05-31",
-      "kickoff_at": "2026-05-31T11:35:00+08:00",
-      "home_team": "Wuhan Three Towns",
-      "away_team": "Yunnan Yukun",
-      "home_win_prob": 0.446563,
-      "draw_prob": 0.291432,
-      "away_win_prob": 0.262005,
-      "home_win_fair_odds": 2.2393,
-      "draw_fair_odds": 3.4313,
-      "away_win_fair_odds": 3.8167
-    }
-  ]
+  "rows": []
 }
