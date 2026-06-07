@@ -326,6 +326,21 @@ if new_rows:
 
 df_raw["Date"] = format_date_only_series(df_raw["Date"])
 
+# Invariant: a played row (Res populated) must have a Date. If this fires it
+# almost always means a parse regression silently dropped legacy date formats —
+# refuse to overwrite the CSV so the bad state cannot be auto-committed.
+played_mask = df_raw["Res"].notna() & (df_raw["Res"].astype(str).str.strip() != "")
+date_str = df_raw["Date"].astype("string").str.strip()
+missing_date_mask = played_mask & (date_str.isna() | (date_str == ""))
+if missing_date_mask.any():
+    sample = df_raw.loc[missing_date_mask, ["Season", "Round", "Home", "Away", "Res"]].head(10)
+    raise RuntimeError(
+        f"Refusing to write CHN_Super League.csv: "
+        f"{int(missing_date_mask.sum())} played row(s) have empty Date after normalization. "
+        f"Likely a date-parse regression in csl.date_utils.parse_date_only_series. "
+        f"Sample of affected rows:\n{sample.to_string(index=False)}"
+    )
+
 df_raw.to_csv(RAW_DATA_PATH, index=False, encoding="utf-8-sig")
 print(f"\n  ✓ CHN_Super League.csv saved ({len(df_raw)} total rows)")
 
