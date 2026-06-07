@@ -235,6 +235,13 @@ def build_upcoming_fixtures(fixtures_path: str, season: str, export_now: pd.Time
     out = out[out["match_date_dt"].notna()].copy()
     out = out[out["match_date_dt"] >= export_date].copy()
 
+    # Off-season short-circuit: with no rows, `out.apply(..., axis=1)` below
+    # returns an empty DataFrame instead of a Series, which then fails to
+    # assign back into `out["fixture_id"]`. Return the expected schema
+    # directly so downstream consumers see a well-formed empty DataFrame.
+    if out.empty:
+        return pd.DataFrame(columns=UPCOMING_COLUMNS)
+
     out["match_date"] = format_date_only_series(out["match_date_dt"])
     out["match_time"] = out["match_time"].astype(str).str.strip().str.slice(0, 5)
     kickoff = pd.to_datetime(
