@@ -104,7 +104,7 @@ cp .env.local.example .env.local
 3. 抓 Pinnacle 赔率
 4. 导出 market comparison
 5. 导出 dashboard CSV / JSON
-6. 构建 Netlify `site/`
+6. 构建 GitHub Pages `site/`
 
 如果你只想看菜单，不带参数直接运行：
 
@@ -151,7 +151,7 @@ cp .env.local.example .env.local
 - `data/dashboard/json/match_predictions.json`
 - `data/dashboard/json/team_strength_rankings.json`
 
-### 4. 生成 Netlify 静态站点
+### 4. 生成 GitHub Pages 静态站点
 
 执行：
 

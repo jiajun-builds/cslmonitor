@@ -57,10 +57,9 @@ jobs:
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            # No `[skip ci]` — this workflow only triggers on workflow_dispatch
-            # and schedule, never on push, so there's no loop to break. The tag
-            # was also being honoured by Netlify, which silently skipped every
-            # post-refresh deploy and left the live dashboard stale.
+            # The Pages deploy (deploy-pages.yml) chains off this workflow via
+            # workflow_run, not off this push, so no `[skip ci]` is needed and
+            # the commit message stays clean.
             git commit -m "chore(data): automated dashboard refresh"
             git push origin main
           fi

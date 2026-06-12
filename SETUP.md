@@ -52,7 +52,7 @@ What each command does:
 
 - `./scripts/csl.sh help`: shows the supported subcommands
 - `./scripts/csl.sh dashboard`: generates dashboard-facing CSV and JSON files
-- `./scripts/csl.sh publish`: rebuilds dashboard exports and the Netlify-ready `site/` directory
+- `./scripts/csl.sh publish`: rebuilds dashboard exports and the GitHub Pages-ready `site/` directory
 
 ---
 

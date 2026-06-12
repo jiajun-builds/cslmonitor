@@ -122,7 +122,7 @@ EOF
   elapsed=$((finished_at - started_at))
 
   printf '\nAll steps completed in %s\n' "$(format_duration "$elapsed")"
-  printf 'site/ is ready for Netlify deploy.\n'
+  printf 'site/ is ready for GitHub Pages deploy.\n'
 }
 
 show_help() {

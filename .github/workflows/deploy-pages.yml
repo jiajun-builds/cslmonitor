@@ -1,0 +1,54 @@
+name: Deploy Dashboard to GitHub Pages
+
+on:
+  # Manual code changes merged to main.
+  push:
+    branches: [main]
+  # The daily refresh pushes with GITHUB_TOKEN, which never fires `push`
+  # workflows (GitHub's anti-recursion rule), so chain off the run instead.
+  workflow_run:
+    workflows: ["CSL Refresh"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          # On workflow_run the default SHA predates the refresh auto-commit;
+          # always build the current tip of main.
+          ref: main
+
+      - name: Build site bundle
+        run: ./scripts/build_dashboard_site.sh
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
