@@ -45,7 +45,7 @@ This command performs these steps, in order:
 3. Pinnacle odds fetch
 4. market comparison export
 5. dashboard CSV / JSON export
-6. Netlify `site/` build
+6. GitHub Pages `site/` build
 
 ### 2. Data Update Pipeline
 Run:
@@ -119,7 +119,7 @@ Notes:
 - Market is fixed to `spreads`
 - Team-name normalization depends on `data/output_data/CHN_team_name_mapping.csv`
 
-### 6. Build Netlify Site
+### 6. Build GitHub Pages Site
 Run:
 ```bash
 ./scripts/build_dashboard_site.sh
@@ -140,7 +140,7 @@ Run:
 
 This rebuilds:
 - dashboard CSV / JSON
-- Netlify `site/`
+- GitHub Pages `site/`
 
 ## Key Source Modules
 - Fixtures/results ingestion: `src/csl/fixtures/chn_fixture_v5.py`

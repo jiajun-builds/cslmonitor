@@ -1,3 +1,0 @@
-[build]
-  command = "./scripts/build_dashboard_site.sh"
-  publish = "site"

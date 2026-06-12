@@ -37,6 +37,6 @@ mkdir -p "$SITE_DATA_DIR"
 cp -R "$SOURCE_DASHBOARD/." "$SITE_DIR/"
 cp "$SOURCE_JSON"/*.json "$SITE_DATA_DIR/"
 
-echo "Built Netlify site bundle:"
+echo "Built site bundle:"
 echo "  Site root : $SITE_DIR"
 echo "  Data files: $SITE_DATA_DIR"
