@@ -14,8 +14,8 @@
             <img class="masthead__logo" src="./assets/csl-logo.png" alt="Chinese Super League logo" />
           </div>
           <div class="masthead__copy">
-            <h1 class="masthead__title">Monitoring the CSL</h1>
-            <p class="masthead__trail" data-bind="masthead-trail">Chinese Super League · Season 2026 · Model Terminal</p>
+            <h1 class="masthead__title">CSL Monitor</h1>
+            <p class="masthead__trail" data-bind="masthead-trail">Chinese Super League · Season 2026 · Model Terminal · v2.0</p>
           </div>
         </div>
 
@@ -58,7 +58,7 @@
         <article class="metric-cell">
           <p class="metric-cell__label">Strongest Club</p>
           <p class="metric-cell__value metric-cell__value--amber" data-bind="metric-strongest-team">Chengdu Rongcheng</p>
-          <p class="metric-cell__note" data-bind="metric-strongest-team-note">OVR 3.918</p>
+          <p class="metric-cell__note" data-bind="metric-strongest-team-note">OVR 3.918 · ATT 1.823 · DEF -2.095</p>
         </article>
         <article class="metric-cell">
           <p class="metric-cell__label">Best Bet</p>
@@ -72,206 +72,190 @@
         </article>
       </section>
 
-      <main class="terminal-grid">
-        <section class="terminal-column terminal-column--main">
-          <section class="terminal-panel terminal-panel--primary">
-            <header class="terminal-panel__header">
-              <div class="terminal-panel__title-wrap">
-                <span class="terminal-panel__kicker">Fixture Market</span>
-                <h2 class="terminal-panel__title">Upcoming Matches</h2>
+      <main class="terminal-layout">
+        <nav class="sidebar" aria-label="Primary views">
+          <div class="sidebar__group">
+            <p class="sidebar__group-label">Terminal</p>
+            <ul class="sidebar__nav">
+              <li>
+                <button type="button" class="sidebar__link sidebar__link--active" data-view-target="ev-bet" aria-current="page">EV Bet</button>
+              </li>
+              <li>
+                <button type="button" class="sidebar__link" data-view-target="schedule" aria-current="false">Upcoming Schedule</button>
+              </li>
+              <li>
+                <button type="button" class="sidebar__link" data-view-target="club" aria-current="false">Club Snapshot</button>
+              </li>
+              <li>
+                <button type="button" class="sidebar__link" data-view-target="context" aria-current="false">Model Context</button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="terminal-views">
+          <section class="terminal-view terminal-view--active" data-view="ev-bet" aria-label="EV Bet">
+            <section class="terminal-panel terminal-panel--wide">
+              <header class="terminal-panel__header">
+                <div class="terminal-panel__title-wrap">
+                  <span class="terminal-panel__kicker">Pinnacle Market Comparison</span>
+                  <h2 class="terminal-panel__title">EV Analysis</h2>
+                </div>
+                <div class="terminal-panel__meta" data-bind="panel-market-comparison-meta">Updated -- -- · Fetched -- --</div>
+              </header>
+              <div class="terminal-panel__body">
+                <table class="terminal-table market-comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Match</th>
+                      <th class="numeric">Line</th>
+                      <th class="numeric">Odds</th>
+                      <th class="numeric">EV</th>
+                    </tr>
+                  </thead>
+                  <tbody id="market-comparison-body">
+                    <tr>
+                      <td class="numeric" rowspan="2">11:35</td>
+                      <td>Shanghai Shenhua</td>
+                      <td class="numeric">H -1.25</td>
+                      <td class="numeric">1.95</td>
+                      <td class="numeric">-0.611</td>
+                    </tr>
+                    <tr>
+                      <td>Chongqing Tonglianglong</td>
+                      <td class="numeric">A +1.25</td>
+                      <td class="numeric">1.89</td>
+                      <td class="numeric">0.525</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div class="terminal-panel__meta-stack">
-                <div class="terminal-panel__stamp" data-bind="panel-market-stamp">Last Updated on 08/05/2026 10:35 UTC</div>
-                <div class="terminal-panel__meta" data-bind="panel-market-meta">20 matches · Zero-Inflated Poisson with Dixon-Coles Time Decay</div>
-              </div>
-            </header>
-            <div class="terminal-panel__body">
-              <table class="terminal-table market-table">
-                <thead>
-                  <tr>
-                    <th>Rnd</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Match</th>
-                    <th class="numeric">H</th>
-                    <th class="numeric">D</th>
-                    <th class="numeric">A</th>
-                  </tr>
-                </thead>
-                <tbody id="market-body">
-                  <tr>
-                    <td>11</td>
-                    <td>2026-05-09</td>
-                    <td>11:35</td>
-                    <td>Shanghai Shenhua vs Chongqing Tonglianglong</td>
-                    <td class="numeric">40.7%</td>
-                    <td class="numeric">42.8%</td>
-                    <td class="numeric">16.5%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            </section>
           </section>
 
-          <section class="terminal-panel terminal-panel--wide">
-            <header class="terminal-panel__header">
-              <div class="terminal-panel__title-wrap">
-                <span class="terminal-panel__kicker">Pinnacle Market Comparison</span>
-                <h2 class="terminal-panel__title">EV Analysis</h2>
-              </div>
-              <div class="terminal-panel__meta" data-bind="panel-market-comparison-meta">Updated -- -- · Fetched -- --</div>
-            </header>
-            <div class="terminal-panel__body">
-              <table class="terminal-table market-comparison-table">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Match</th>
-                    <th class="numeric">Line</th>
-                    <th class="numeric">Odds</th>
-                    <th class="numeric">EV</th>
-                  </tr>
-                </thead>
-                <tbody id="market-comparison-body">
-                  <tr>
-                    <td class="numeric" rowspan="2">11:35</td>
-                    <td>Shanghai Shenhua</td>
-                    <td class="numeric">H -1.25</td>
-                    <td class="numeric">1.95</td>
-                    <td class="numeric">-0.611</td>
-                  </tr>
-                  <tr>
-                    <td>Chongqing Tonglianglong</td>
-                    <td class="numeric">A +1.25</td>
-                    <td class="numeric">1.89</td>
-                    <td class="numeric">0.525</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </section>
-
-        <section class="terminal-column terminal-column--side">
-          <section class="terminal-panel terminal-panel--spotlight">
-            <header class="terminal-panel__header">
-              <div class="terminal-panel__title-wrap">
-                <span class="terminal-panel__kicker">Leader Snapshot</span>
-                <h2 class="terminal-panel__title">Strongest Club Snapshot</h2>
-              </div>
-              <div class="terminal-panel__meta">Current model leader</div>
-            </header>
-            <div class="terminal-panel__body spotlight-card">
-              <p class="spotlight-card__eyebrow">Top Rank</p>
-              <h3 class="spotlight-card__name" data-bind="spotlight-team">Chengdu Rongcheng</h3>
-              <p class="spotlight-card__subtitle" data-bind="spotlight-subtitle">Best overall rating in the current model run</p>
-              <div class="spotlight-card__stats">
-                <div class="spotlight-stat">
-                  <span class="spotlight-stat__label">Ovr</span>
-                  <span class="spotlight-stat__value" data-bind="spotlight-ovr">3.918</span>
+          <section class="terminal-view" data-view="schedule" aria-label="Upcoming Schedule">
+            <section class="terminal-panel terminal-panel--primary">
+              <header class="terminal-panel__header">
+                <div class="terminal-panel__title-wrap">
+                  <span class="terminal-panel__kicker">Fixture Market</span>
+                  <h2 class="terminal-panel__title">Upcoming Matches</h2>
                 </div>
-                <div class="spotlight-stat">
-                  <span class="spotlight-stat__label">Att</span>
-                  <span class="spotlight-stat__value" data-bind="spotlight-att">1.823</span>
+                <div class="terminal-panel__meta-stack">
+                  <div class="terminal-panel__stamp" data-bind="panel-market-stamp">Last Updated on 08/05/2026 10:35 UTC</div>
+                  <div class="terminal-panel__meta" data-bind="panel-market-meta">20 matches · Zero-Inflated Poisson with Dixon-Coles Time Decay</div>
                 </div>
-                <div class="spotlight-stat">
-                  <span class="spotlight-stat__label">Def</span>
-                  <span class="spotlight-stat__value" data-bind="spotlight-def">-2.095</span>
-                </div>
+              </header>
+              <div class="terminal-panel__body">
+                <table class="terminal-table market-table">
+                  <thead>
+                    <tr>
+                      <th>Rnd</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Match</th>
+                      <th class="numeric">H</th>
+                      <th class="numeric">D</th>
+                      <th class="numeric">A</th>
+                    </tr>
+                  </thead>
+                  <tbody id="market-body">
+                    <tr>
+                      <td>11</td>
+                      <td>2026-05-09</td>
+                      <td>11:35</td>
+                      <td>Shanghai Shenhua vs Chongqing Tonglianglong</td>
+                      <td class="numeric">40.7%</td>
+                      <td class="numeric">42.8%</td>
+                      <td class="numeric">16.5%</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
+            </section>
           </section>
 
-          <section class="terminal-panel">
-            <header class="terminal-panel__header">
-              <div class="terminal-panel__title-wrap">
-                <span class="terminal-panel__kicker">Leaderboard</span>
-                <h2 class="terminal-panel__title">Team Strength</h2>
+          <section class="terminal-view" data-view="club" aria-label="Club Snapshot">
+            <section class="terminal-panel terminal-panel--strength">
+              <header class="terminal-panel__header">
+                <div class="terminal-panel__title-wrap">
+                  <span class="terminal-panel__kicker">Leaderboard</span>
+                  <h2 class="terminal-panel__title">Team Strength</h2>
+                </div>
+                <div class="terminal-panel__meta" data-bind="panel-strength-meta">19 clubs · last 5 form</div>
+              </header>
+              <div class="terminal-panel__body">
+                <table class="terminal-table strength-table">
+                  <thead>
+                    <tr>
+                      <th>Rk</th>
+                      <th>Team</th>
+                      <th class="numeric">Ovr</th>
+                      <th>Form</th>
+                    </tr>
+                  </thead>
+                  <tbody id="strength-body">
+                    <tr>
+                      <td>1</td>
+                      <td>Chengdu Rongcheng</td>
+                      <td class="numeric">3.918</td>
+                      <td>W W W W W</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div class="terminal-panel__meta" data-bind="panel-strength-meta">19 clubs · last 5 form</div>
-            </header>
-            <div class="terminal-panel__body">
-              <table class="terminal-table strength-table">
-                <thead>
-                  <tr>
-                    <th>Rk</th>
-                    <th>Team</th>
-                    <th class="numeric">Ovr</th>
-                    <th>Form</th>
-                  </tr>
-                </thead>
-                <tbody id="strength-body">
-                  <tr>
-                    <td>1</td>
-                    <td>Chengdu Rongcheng</td>
-                    <td class="numeric">3.918</td>
-                    <td>W W W W W</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            </section>
           </section>
 
-          <section class="terminal-panel">
-            <header class="terminal-panel__header">
-              <div class="terminal-panel__title-wrap">
-                <span class="terminal-panel__kicker">System</span>
-                <h2 class="terminal-panel__title">Model Context</h2>
+          <section class="terminal-view" data-view="context" aria-label="Model Context">
+            <section class="terminal-panel terminal-panel--context">
+              <header class="terminal-panel__header">
+                <div class="terminal-panel__title-wrap">
+                  <span class="terminal-panel__kicker">System</span>
+                  <h2 class="terminal-panel__title">Model Context</h2>
+                </div>
+                <div class="terminal-panel__meta">Terminal reference</div>
+              </header>
+              <div class="terminal-panel__body terminal-panel__body--stacked">
+                <dl class="meta-grid">
+                  <div class="meta-grid__row">
+                    <dt>Competition</dt>
+                    <dd data-bind="meta-competition">Chinese Super League</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Season</dt>
+                    <dd data-bind="meta-season">2026</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Last Update</dt>
+                    <dd data-bind="meta-updated-at">2026-05-07T20:00:31+08:00</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Timezone</dt>
+                    <dd data-bind="meta-timezone">Asia/Shanghai</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Last Completed</dt>
+                    <dd data-bind="meta-last-completed">2026-05-02</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Next Fixture</dt>
+                    <dd data-bind="meta-next-fixture-date">2026-05-09</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Model Name</dt>
+                    <dd data-bind="meta-model-name">Zero-Inflated Poisson with Dixon-Coles Time Decay</dd>
+                  </div>
+                  <div class="meta-grid__row">
+                    <dt>Version</dt>
+                    <dd data-bind="meta-model-version">v1</dd>
+                  </div>
+                </dl>
               </div>
-              <div class="terminal-panel__meta">Terminal reference</div>
-            </header>
-            <div class="terminal-panel__body terminal-panel__body--stacked">
-              <dl class="meta-grid">
-                <div class="meta-grid__row">
-                  <dt>Competition</dt>
-                  <dd data-bind="meta-competition">Chinese Super League</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Season</dt>
-                  <dd data-bind="meta-season">2026</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Last Update</dt>
-                  <dd data-bind="meta-updated-at">2026-05-07T20:00:31+08:00</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Timezone</dt>
-                  <dd data-bind="meta-timezone">Asia/Shanghai</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Last Completed</dt>
-                  <dd data-bind="meta-last-completed">2026-05-02</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Next Fixture</dt>
-                  <dd data-bind="meta-next-fixture-date">2026-05-09</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Model Name</dt>
-                  <dd data-bind="meta-model-name">Zero-Inflated Poisson with Dixon-Coles Time Decay</dd>
-                </div>
-                <div class="meta-grid__row">
-                  <dt>Version</dt>
-                  <dd data-bind="meta-model-version">v1</dd>
-                </div>
-              </dl>
-
-              <div class="legend-box">
-                <p class="legend-box__title">Legend</p>
-                <p class="legend-box__item"><span class="legend-box__pill legend-box__pill--home">H</span> Home Win Probability</p>
-                <p class="legend-box__item"><span class="legend-box__pill legend-box__pill--draw">D</span> Draw Probability</p>
-                <p class="legend-box__item"><span class="legend-box__pill legend-box__pill--away">A</span> Away Win Probability</p>
-                <p class="legend-box__item"><span class="legend-box__pill legend-box__pill--neutral">F</span> Fair Odds = 1 / Probability</p>
-              </div>
-            </div>
+            </section>
           </section>
-        </section>
+        </div>
       </main>
-
-      <footer class="ticker">
-        <div class="ticker__label">News</div>
-        <div class="ticker__track" id="ticker-track">Strongest club Chengdu Rongcheng · Next fixture Shanghai Shenhua vs Chongqing Tonglianglong · Top favorite Chengdu Rongcheng 67.9% home win</div>
-      </footer>
     </div>
 
     <script src="./app.js" defer></script>
