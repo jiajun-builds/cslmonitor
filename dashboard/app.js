@@ -5,7 +5,6 @@ const selectors = {
   marketBody: document.getElementById("market-body"),
   marketComparisonBody: document.getElementById("market-comparison-body"),
   strengthBody: document.getElementById("strength-body"),
-  tickerTrack: document.getElementById("ticker-track"),
 };
 
 function setText(bind, value) {
@@ -287,7 +286,7 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
     .sort((a, b) => b.signal.value - a.signal.value)[0];
   const bestBet = getBestBet(marketComparison);
 
-  setText("masthead-trail", `${meta.competition_name} · Season ${meta.season} · ${meta.model_name}`);
+  setText("masthead-trail", `${meta.competition_name} · Season ${meta.season} · ${meta.model_name} · v2.0`);
   setText("masthead-next-date", meta.next_fixture_date);
   setText("masthead-updated", formatUpdatedAt(meta.updated_at));
 
@@ -298,12 +297,10 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
 
   if (strongest) {
     setText("metric-strongest-team", strongest.team);
-    setText("metric-strongest-team-note", `OVR ${formatRating(strongest.overall_rating)}`);
-    setText("spotlight-team", strongest.team);
-    setText("spotlight-subtitle", `Best overall rating across ${strength.length} clubs`);
-    setText("spotlight-ovr", formatRating(strongest.overall_rating));
-    setText("spotlight-att", formatRating(strongest.attack_rating));
-    setText("spotlight-def", formatRating(strongest.defense_rating));
+    setText(
+      "metric-strongest-team-note",
+      `OVR ${formatRating(strongest.overall_rating)} · ATT ${formatRating(strongest.attack_rating)} · DEF ${formatRating(strongest.defense_rating)}`,
+    );
   }
 
   if (bestBet) {
@@ -341,28 +338,33 @@ function renderMeta(meta) {
   setText("meta-model-version", meta.model_version);
 }
 
-function renderTicker(meta, fixtures, predictions, strength) {
-  const strongest = strength[0];
-  const nextFixture = fixtures[0];
-  const topTwo = [...predictions]
-    .map((row) => ({ row, signal: getSignal(row) }))
-    .sort((a, b) => b.signal.value - a.signal.value)
-    .slice(0, 2);
-
-  const items = [
-    `Season ${meta.season} terminal live at ${formatUpdatedAt(meta.updated_at)}`,
-    strongest ? `Strongest club ${strongest.team} OVR ${formatRating(strongest.overall_rating)}` : null,
-    nextFixture ? `Next fixture ${nextFixture.home_team} vs ${nextFixture.away_team} ${nextFixture.match_date} ${nextFixture.match_time}` : null,
-    ...topTwo.map(({ row, signal }) => `${row.home_team} vs ${row.away_team} · ${signal.label} ${formatPercent(signal.value)}`),
-  ].filter(Boolean);
-
-  selectors.tickerTrack.textContent = items.join("  •  ");
-}
-
 function startClock() {
   const tick = () => setText("masthead-clock", formatClock(new Date()));
   tick();
   window.setInterval(tick, 1000);
+}
+
+function initNav() {
+  const links = Array.from(document.querySelectorAll("[data-view-target]"));
+  const views = Array.from(document.querySelectorAll("[data-view]"));
+  if (!links.length || !views.length) {
+    return;
+  }
+
+  function activate(target) {
+    views.forEach((view) => {
+      view.classList.toggle("terminal-view--active", view.dataset.view === target);
+    });
+    links.forEach((link) => {
+      const isActive = link.dataset.viewTarget === target;
+      link.classList.toggle("sidebar__link--active", isActive);
+      link.setAttribute("aria-current", isActive ? "page" : "false");
+    });
+  }
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => activate(link.dataset.viewTarget));
+  });
 }
 
 function showError(message) {
@@ -414,7 +416,6 @@ async function bootstrap() {
     renderMarketRows(mergedMarketRows);
     renderMarketComparison(marketComparison);
     renderStrength(strength);
-    renderTicker(meta, fixtures, predictions, strength);
     startClock();
   } catch (error) {
     console.error(error);
@@ -422,4 +423,5 @@ async function bootstrap() {
   }
 }
 
+initNav();
 bootstrap();
