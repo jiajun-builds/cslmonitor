@@ -2,9 +2,24 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-11T20:21:23+08:00",
+    "updated_at": "2026-06-12T19:08:45+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
-  "rows": []
+  "rows": [
+    {
+      "fixture_id": "CSL-2026-16-2026-06-26-qingdao-hainiu-yunnan-yukun",
+      "round": 16,
+      "match_date": "2026-06-26",
+      "kickoff_at": "2026-06-26T11:35:00+08:00",
+      "home_team": "Qingdao Hainiu",
+      "away_team": "Yunnan Yukun",
+      "home_win_prob": 0.500569,
+      "draw_prob": 0.275447,
+      "away_win_prob": 0.223984,
+      "home_win_fair_odds": 1.9977,
+      "draw_fair_odds": 3.6305,
+      "away_win_fair_odds": 4.4646
+    }
+  ]
 }
