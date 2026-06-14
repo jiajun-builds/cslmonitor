@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-13T18:42:29+08:00",
+    "updated_at": "2026-06-14T19:11:51+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -90,6 +90,34 @@
       "home_win_fair_odds": 3.4941,
       "draw_fair_odds": 2.1002,
       "away_win_fair_odds": 4.2078
+    },
+    {
+      "fixture_id": "CSL-2026-16-2026-06-28-qingdao-west-coast-zhejiang-professional",
+      "round": 16,
+      "match_date": "2026-06-28",
+      "kickoff_at": "2026-06-28T10:00:00+08:00",
+      "home_team": "Qingdao West Coast",
+      "away_team": "Zhejiang Professional",
+      "home_win_prob": 0.420365,
+      "draw_prob": 0.321797,
+      "away_win_prob": 0.257838,
+      "home_win_fair_odds": 2.3789,
+      "draw_fair_odds": 3.1075,
+      "away_win_fair_odds": 3.8784
+    },
+    {
+      "fixture_id": "CSL-2026-16-2026-06-28-dalian-yingbo-shanghai-shenhua",
+      "round": 16,
+      "match_date": "2026-06-28",
+      "kickoff_at": "2026-06-28T11:00:00+08:00",
+      "home_team": "Dalian Yingbo",
+      "away_team": "Shanghai Shenhua",
+      "home_win_prob": 0.288392,
+      "draw_prob": 0.309256,
+      "away_win_prob": 0.402352,
+      "home_win_fair_odds": 3.4675,
+      "draw_fair_odds": 3.2336,
+      "away_win_fair_odds": 2.4854
     }
   ]
 }
