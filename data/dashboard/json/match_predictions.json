@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-18T20:00:49+08:00",
+    "updated_at": "2026-06-19T20:21:26+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -118,6 +118,20 @@
       "home_win_fair_odds": 3.4675,
       "draw_fair_odds": 3.2336,
       "away_win_fair_odds": 2.4854
+    },
+    {
+      "fixture_id": "CSL-2026-17-2026-07-03-yunnan-yukun-henan-songshan-longmen",
+      "round": 17,
+      "match_date": "2026-07-03",
+      "kickoff_at": "2026-07-03T12:00:00+08:00",
+      "home_team": "Yunnan Yukun",
+      "away_team": "Henan Songshan Longmen",
+      "home_win_prob": 0.298886,
+      "draw_prob": 0.312799,
+      "away_win_prob": 0.388315,
+      "home_win_fair_odds": 3.3458,
+      "draw_fair_odds": 3.1969,
+      "away_win_fair_odds": 2.5752
     }
   ]
 }
