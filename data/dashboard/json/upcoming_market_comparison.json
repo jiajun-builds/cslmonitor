@@ -2,7 +2,21 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-19T20:21:26+08:00"
+    "updated_at": "2026-06-20T18:44:07+08:00"
   },
-  "rows": []
+  "rows": [
+    {
+      "home_team": "Qingdao Hainiu",
+      "away_team": "Yunnan Yukun",
+      "match_time": "11:35",
+      "home_spread": 0,
+      "away_spread": 0,
+      "home_odds": 2,
+      "away_odds": 1.85,
+      "home_ah_ev": 0.2765854681411056,
+      "away_ah_ev": -0.3101830516764691,
+      "last_update": "2026-06-20T10:43:53Z",
+      "fetched_at": "2026-06-20T10:44:05Z"
+    }
+  ]
 }
