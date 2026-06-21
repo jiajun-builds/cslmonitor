@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-20T21:06:04+08:00"
+    "updated_at": "2026-06-21T19:28:17+08:00"
   },
   "rows": [
     {
@@ -130,6 +130,24 @@
       "kickoff_at": "2026-07-04T12:00:00+08:00",
       "home_team": "Tianjin Jinmen Tiger",
       "away_team": "Shenzhen Xinpengcheng"
+    },
+    {
+      "fixture_id": "CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng",
+      "round": 17,
+      "match_date": "2026-07-05",
+      "match_time": "11:00",
+      "kickoff_at": "2026-07-05T11:00:00+08:00",
+      "home_team": "Qingdao Hainiu",
+      "away_team": "Chengdu Rongcheng"
+    },
+    {
+      "fixture_id": "CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional",
+      "round": 17,
+      "match_date": "2026-07-05",
+      "match_time": "11:35",
+      "kickoff_at": "2026-07-05T11:35:00+08:00",
+      "home_team": "Shanghai Shenhua",
+      "away_team": "Zhejiang Professional"
     }
   ]
 }

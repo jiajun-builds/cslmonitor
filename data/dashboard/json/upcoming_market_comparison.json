@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-20T21:06:04+08:00"
+    "updated_at": "2026-06-21T19:28:17+08:00"
   },
   "rows": [
     {
@@ -11,12 +11,12 @@
       "match_time": "11:35",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 2,
-      "away_odds": 1.85,
-      "home_ah_ev": 0.2765854681411056,
-      "away_ah_ev": -0.3101830516764691,
-      "last_update": "2026-06-20T13:05:50Z",
-      "fetched_at": "2026-06-20T13:06:03Z"
+      "home_odds": 2.06,
+      "away_odds": 1.79,
+      "home_ah_ev": 0.3066195954348341,
+      "away_ah_ev": -0.323622054378084,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
     },
     {
       "home_team": "Liaoning Tieren",
@@ -26,10 +26,10 @@
       "away_spread": -0.25,
       "home_odds": 1.91,
       "away_odds": 1.93,
-      "home_ah_ev": -0.0812022166623204,
-      "away_ah_ev": 0.0121360197275273,
-      "last_update": "2026-06-20T13:05:50Z",
-      "fetched_at": "2026-06-20T13:06:03Z"
+      "home_ah_ev": -0.0812022514540762,
+      "away_ah_ev": 0.0121360549555707,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
     },
     {
       "home_team": "Henan Songshan Longmen",
@@ -39,10 +39,10 @@
       "away_spread": 0.25,
       "home_odds": 1.92,
       "away_odds": 1.92,
-      "home_ah_ev": 0.031264913175948,
-      "away_ah_ev": -0.1001459076051306,
-      "last_update": "2026-06-20T13:05:50Z",
-      "fetched_at": "2026-06-20T13:06:03Z"
+      "home_ah_ev": 0.0312649145433692,
+      "away_ah_ev": -0.100145909278628,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -52,10 +52,10 @@
       "away_spread": -0.75,
       "home_odds": 1.94,
       "away_odds": 1.89,
-      "home_ah_ev": -0.1505839713701707,
-      "away_ah_ev": 0.0750092267562537,
-      "last_update": "2026-06-20T13:05:50Z",
-      "fetched_at": "2026-06-20T13:06:03Z"
+      "home_ah_ev": -0.1505839702160758,
+      "away_ah_ev": 0.0750092256558737,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -64,11 +64,11 @@
       "home_spread": -1.5,
       "away_spread": 1.5,
       "home_odds": 1.88,
-      "away_odds": 1.92,
-      "home_ah_ev": -0.0316841171785073,
-      "away_ah_ev": -0.0689183484134393,
-      "last_update": "2026-06-20T13:05:50Z",
-      "fetched_at": "2026-06-20T13:06:03Z"
+      "away_odds": 1.95,
+      "home_ah_ev": -0.0316841085263217,
+      "away_ah_ev": -0.0543702065817408,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -76,12 +76,38 @@
       "match_time": "12:00",
       "home_spread": -0.5,
       "away_spread": 0.5,
-      "home_odds": 1.91,
-      "away_odds": 1.89,
-      "home_ah_ev": -0.4533584634124893,
-      "away_ah_ev": 0.3490824585600025,
-      "last_update": "2026-06-20T13:05:50Z",
-      "fetched_at": "2026-06-20T13:06:03Z"
+      "home_odds": 1.93,
+      "away_odds": 1.91,
+      "home_ah_ev": -0.4476344740151136,
+      "away_ah_ev": 0.3633584691030397,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
+    },
+    {
+      "home_team": "Qingdao West Coast",
+      "away_team": "Zhejiang Professional",
+      "match_time": "10:00",
+      "home_spread": 0,
+      "away_spread": 0,
+      "home_odds": 1.93,
+      "away_odds": 1.9,
+      "home_ah_ev": 0.1331024585711896,
+      "away_ah_ev": -0.1883117529831567,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
+    },
+    {
+      "home_team": "Dalian Yingbo",
+      "away_team": "Shanghai Shenhua",
+      "match_time": "11:00",
+      "home_spread": 0,
+      "away_spread": 0,
+      "home_odds": 1.87,
+      "away_odds": 1.96,
+      "home_ah_ev": -0.1514499013195267,
+      "away_ah_ev": 0.0978648308857983,
+      "last_update": "2026-06-21T11:27:58Z",
+      "fetched_at": "2026-06-21T11:28:16Z"
     }
   ]
 }

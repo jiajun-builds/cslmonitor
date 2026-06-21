@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-20T21:06:04+08:00",
+    "updated_at": "2026-06-21T19:28:17+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -30,7 +30,7 @@
       "away_team": "Shandong Taishan",
       "home_win_prob": 0.281214,
       "draw_prob": 0.262323,
-      "away_win_prob": 0.456463,
+      "away_win_prob": 0.456464,
       "home_win_fair_odds": 3.556,
       "draw_fair_odds": 3.8121,
       "away_win_fair_odds": 2.1908
@@ -202,6 +202,34 @@
       "home_win_fair_odds": 1.8901,
       "draw_fair_odds": 3.0588,
       "away_win_fair_odds": 6.9445
+    },
+    {
+      "fixture_id": "CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng",
+      "round": 17,
+      "match_date": "2026-07-05",
+      "kickoff_at": "2026-07-05T11:00:00+08:00",
+      "home_team": "Qingdao Hainiu",
+      "away_team": "Chengdu Rongcheng",
+      "home_win_prob": 0.161085,
+      "draw_prob": 0.255719,
+      "away_win_prob": 0.583196,
+      "home_win_fair_odds": 6.2079,
+      "draw_fair_odds": 3.9105,
+      "away_win_fair_odds": 1.7147
+    },
+    {
+      "fixture_id": "CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional",
+      "round": 17,
+      "match_date": "2026-07-05",
+      "kickoff_at": "2026-07-05T11:35:00+08:00",
+      "home_team": "Shanghai Shenhua",
+      "away_team": "Zhejiang Professional",
+      "home_win_prob": 0.692243,
+      "draw_prob": 0.191505,
+      "away_win_prob": 0.116252,
+      "home_win_fair_odds": 1.4446,
+      "draw_fair_odds": 5.2218,
+      "away_win_fair_odds": 8.602
     }
   ]
 }

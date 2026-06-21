@@ -1,6 +1,6 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
 CSL-2026-16-2026-06-26-qingdao-hainiu-yunnan-yukun,16,2026-06-26,2026-06-26T11:35:00+08:00,Qingdao Hainiu,Yunnan Yukun,0.500569,0.275447,0.223984,1.9977,3.6305,4.4646
-CSL-2026-16-2026-06-27-liaoning-tieren-shandong-taishan,16,2026-06-27,2026-06-27T11:00:00+08:00,Liaoning Tieren,Shandong Taishan,0.281214,0.262323,0.456463,3.556,3.8121,2.1908
+CSL-2026-16-2026-06-27-liaoning-tieren-shandong-taishan,16,2026-06-27,2026-06-27T11:00:00+08:00,Liaoning Tieren,Shandong Taishan,0.281214,0.262323,0.456464,3.556,3.8121,2.1908
 CSL-2026-16-2026-06-27-henan-songshan-longmen-shanghai-port,16,2026-06-27,2026-06-27T11:35:00+08:00,Henan Songshan Longmen,Shanghai Port,0.464728,0.277975,0.257297,2.1518,3.5974,3.8866
 CSL-2026-16-2026-06-27-shenzhen-xinpengcheng-chengdu-rongcheng,16,2026-06-27,2026-06-27T11:35:00+08:00,Shenzhen Xinpengcheng,Chengdu Rongcheng,0.103137,0.258004,0.638859,9.6958,3.8759,1.5653
 CSL-2026-16-2026-06-27-beijing-guoan-wuhan-three-towns,16,2026-06-27,2026-06-27T12:00:00+08:00,Beijing Guoan,Wuhan Three Towns,0.755651,0.164914,0.079435,1.3234,6.0638,12.5889
@@ -13,3 +13,5 @@ CSL-2026-17-2026-07-04-qingdao-west-coast-shanghai-port,17,2026-07-04,2026-07-04
 CSL-2026-17-2026-07-04-beijing-guoan-shandong-taishan,17,2026-07-04,2026-07-04T11:35:00+08:00,Beijing Guoan,Shandong Taishan,0.563865,0.238913,0.197222,1.7735,4.1856,5.0704
 CSL-2026-17-2026-07-04-dalian-yingbo-wuhan-three-towns,17,2026-07-04,2026-07-04T11:35:00+08:00,Dalian Yingbo,Wuhan Three Towns,0.514763,0.300323,0.184914,1.9426,3.3297,5.4079
 CSL-2026-17-2026-07-04-tianjin-jinmen-tiger-shenzhen-xinpengcheng,17,2026-07-04,2026-07-04T12:00:00+08:00,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng,0.529075,0.326927,0.143998,1.8901,3.0588,6.9445
+CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng,17,2026-07-05,2026-07-05T11:00:00+08:00,Qingdao Hainiu,Chengdu Rongcheng,0.161085,0.255719,0.583196,6.2079,3.9105,1.7147
+CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional,17,2026-07-05,2026-07-05T11:35:00+08:00,Shanghai Shenhua,Zhejiang Professional,0.692243,0.191505,0.116252,1.4446,5.2218,8.602
