@@ -1,6 +1,6 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
 CSL-2026-16-2026-06-26-qingdao-hainiu-yunnan-yukun,16,2026-06-26,2026-06-26T11:35:00+08:00,Qingdao Hainiu,Yunnan Yukun,0.500569,0.275447,0.223984,1.9977,3.6305,4.4646
-CSL-2026-16-2026-06-27-liaoning-tieren-shandong-taishan,16,2026-06-27,2026-06-27T11:00:00+08:00,Liaoning Tieren,Shandong Taishan,0.281214,0.262323,0.456464,3.556,3.8121,2.1908
+CSL-2026-16-2026-06-27-liaoning-tieren-shandong-taishan,16,2026-06-27,2026-06-27T11:00:00+08:00,Liaoning Tieren,Shandong Taishan,0.281214,0.262323,0.456463,3.556,3.8121,2.1908
 CSL-2026-16-2026-06-27-henan-songshan-longmen-shanghai-port,16,2026-06-27,2026-06-27T11:35:00+08:00,Henan Songshan Longmen,Shanghai Port,0.464728,0.277975,0.257297,2.1518,3.5974,3.8866
 CSL-2026-16-2026-06-27-shenzhen-xinpengcheng-chengdu-rongcheng,16,2026-06-27,2026-06-27T11:35:00+08:00,Shenzhen Xinpengcheng,Chengdu Rongcheng,0.103137,0.258004,0.638859,9.6958,3.8759,1.5653
 CSL-2026-16-2026-06-27-beijing-guoan-wuhan-three-towns,16,2026-06-27,2026-06-27T12:00:00+08:00,Beijing Guoan,Wuhan Three Towns,0.755651,0.164914,0.079435,1.3234,6.0638,12.5889
