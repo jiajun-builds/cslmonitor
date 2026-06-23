@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-22T21:50:20+08:00",
+    "updated_at": "2026-06-23T19:35:19+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -30,7 +30,7 @@
       "away_team": "Shandong Taishan",
       "home_win_prob": 0.281214,
       "draw_prob": 0.262323,
-      "away_win_prob": 0.456463,
+      "away_win_prob": 0.456464,
       "home_win_fair_odds": 3.556,
       "draw_fair_odds": 3.8121,
       "away_win_fair_odds": 2.1908
