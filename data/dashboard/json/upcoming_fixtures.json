@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-25T19:12:28+08:00"
+    "updated_at": "2026-06-26T19:18:42+08:00"
   },
   "rows": [
     {
@@ -148,6 +148,15 @@
       "kickoff_at": "2026-07-05T11:35:00+08:00",
       "home_team": "Shanghai Shenhua",
       "away_team": "Zhejiang Professional"
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-10-shandong-taishan-yunnan-yukun",
+      "round": 18,
+      "match_date": "2026-07-10",
+      "match_time": "11:35",
+      "kickoff_at": "2026-07-10T11:35:00+08:00",
+      "home_team": "Shandong Taishan",
+      "away_team": "Yunnan Yukun"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-25T19:12:28+08:00",
+    "updated_at": "2026-06-26T19:18:42+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -230,6 +230,20 @@
       "home_win_fair_odds": 1.4446,
       "draw_fair_odds": 5.2218,
       "away_win_fair_odds": 8.602
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-10-shandong-taishan-yunnan-yukun",
+      "round": 18,
+      "match_date": "2026-07-10",
+      "kickoff_at": "2026-07-10T11:35:00+08:00",
+      "home_team": "Shandong Taishan",
+      "away_team": "Yunnan Yukun",
+      "home_win_prob": 0.70336,
+      "draw_prob": 0.191421,
+      "away_win_prob": 0.105219,
+      "home_win_fair_odds": 1.4217,
+      "draw_fair_odds": 5.2241,
+      "away_win_fair_odds": 9.504
     }
   ]
 }

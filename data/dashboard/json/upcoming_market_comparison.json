@@ -2,21 +2,21 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-25T19:12:28+08:00"
+    "updated_at": "2026-06-26T19:18:42+08:00"
   },
   "rows": [
     {
       "home_team": "Qingdao Hainiu",
       "away_team": "Yunnan Yukun",
       "match_time": "11:35",
-      "home_spread": 0,
-      "away_spread": 0,
-      "home_odds": 2.08,
-      "away_odds": 1.79,
-      "home_ah_ev": 0.3166309821488028,
-      "away_ah_ev": -0.323622054378084,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "home_spread": 0.25,
+      "away_spread": -0.25,
+      "home_odds": 1.86,
+      "away_odds": 2.03,
+      "home_ah_ev": 0.3249478367704544,
+      "away_ah_ev": -0.4075893002287942,
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Liaoning Tieren",
@@ -24,12 +24,12 @@
       "match_time": "11:00",
       "home_spread": 0.25,
       "away_spread": -0.25,
-      "home_odds": 1.91,
-      "away_odds": 1.93,
-      "home_ah_ev": -0.0812022514540762,
-      "away_ah_ev": 0.0121360549555707,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "home_odds": 1.8,
+      "away_odds": 2.09,
+      "home_ah_ev": -0.1265635024536806,
+      "away_ah_ev": 0.0851702165113357,
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Henan Songshan Longmen",
@@ -37,12 +37,12 @@
       "match_time": "11:35",
       "home_spread": -0.25,
       "away_spread": 0.25,
-      "home_odds": 1.91,
+      "home_odds": 1.92,
       "away_odds": 1.93,
-      "home_ah_ev": 0.0266176366853791,
+      "home_ah_ev": 0.0312649145433692,
       "away_ah_ev": -0.0961830627947107,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -50,12 +50,12 @@
       "match_time": "11:35",
       "home_spread": 0.5,
       "away_spread": -0.5,
-      "home_odds": 2.04,
+      "home_odds": 2.05,
       "away_odds": 1.81,
-      "home_ah_ev": -0.2632715055916474,
+      "home_ah_ev": -0.2596600914033712,
       "away_ah_ev": 0.1563340319220009,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -64,11 +64,11 @@
       "home_spread": -1.5,
       "away_spread": 1.5,
       "home_odds": 1.88,
-      "away_odds": 1.95,
+      "away_odds": 1.96,
       "home_ah_ev": -0.0316841085263217,
-      "away_ah_ev": -0.0543702065817408,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "away_ah_ev": -0.0495208230257497,
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -77,11 +77,11 @@
       "home_spread": -0.5,
       "away_spread": 0.5,
       "home_odds": 1.93,
-      "away_odds": 1.91,
+      "away_odds": 1.92,
       "home_ah_ev": -0.4476344740151136,
-      "away_ah_ev": 0.3633584691030397,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "away_ah_ev": 0.3704964715590766,
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Qingdao West Coast",
@@ -89,12 +89,12 @@
       "match_time": "10:00",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 1.93,
-      "away_odds": 1.9,
-      "home_ah_ev": 0.1331024585711896,
-      "away_ah_ev": -0.1883117529831567,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "home_odds": 1.95,
+      "away_odds": 1.88,
+      "home_ah_ev": 0.1415097641256787,
+      "away_ah_ev": -0.1934684979774077,
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -102,12 +102,12 @@
       "match_time": "11:00",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 1.85,
-      "away_odds": 1.99,
-      "home_ah_ev": -0.157217750152166,
-      "away_ah_ev": 0.1099353706519783,
-      "last_update": "2026-06-25T11:12:20Z",
-      "fetched_at": "2026-06-25T11:12:26Z"
+      "home_odds": 1.82,
+      "away_odds": 2.03,
+      "home_ah_ev": -0.1658695234011248,
+      "away_ah_ev": 0.1260294236735517,
+      "last_update": "2026-06-26T11:18:33Z",
+      "fetched_at": "2026-06-26T11:18:41Z"
     }
   ]
 }
