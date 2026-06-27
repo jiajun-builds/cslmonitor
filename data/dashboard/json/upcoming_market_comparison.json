@@ -2,86 +2,21 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-27T18:27:27+08:00"
+    "updated_at": "2026-06-28T02:23:52+08:00"
   },
   "rows": [
-    {
-      "home_team": "Liaoning Tieren",
-      "away_team": "Shandong Taishan",
-      "match_time": "11:00",
-      "home_spread": 0,
-      "away_spread": 0,
-      "home_odds": 2.1,
-      "away_odds": 1.81,
-      "home_ah_ev": -0.1509721440478587,
-      "away_ah_ev": 0.0917776002676545,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
-    },
-    {
-      "home_team": "Henan Songshan Longmen",
-      "away_team": "Shanghai Port",
-      "match_time": "11:35",
-      "home_spread": -0.25,
-      "away_spread": 0.25,
-      "home_odds": 2.11,
-      "away_odds": 1.81,
-      "home_ah_ev": 0.1295713145797349,
-      "away_ah_ev": -0.1523081861121434,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
-    },
-    {
-      "home_team": "Shenzhen Xinpengcheng",
-      "away_team": "Chengdu Rongcheng",
-      "match_time": "11:35",
-      "home_spread": 1,
-      "away_spread": -1,
-      "home_odds": 1.83,
-      "away_odds": 2.07,
-      "home_ah_ev": -0.0363802681768923,
-      "away_ah_ev": -0.0017817692596114,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
-    },
-    {
-      "home_team": "Beijing Guoan",
-      "away_team": "Wuhan Three Towns",
-      "match_time": "12:00",
-      "home_spread": -1.5,
-      "away_spread": 1.5,
-      "home_odds": 1.9,
-      "away_odds": 1.99,
-      "home_ah_ev": -0.0123381019683717,
-      "away_ah_ev": -0.0444458826752318,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
-    },
-    {
-      "home_team": "Chongqing Tonglianglong",
-      "away_team": "Tianjin Jinmen Tiger",
-      "match_time": "12:00",
-      "home_spread": -0.25,
-      "away_spread": 0.25,
-      "home_odds": 1.81,
-      "away_odds": 2.1,
-      "home_ah_ev": -0.2535466518847022,
-      "away_ah_ev": 0.2483139647042422,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
-    },
     {
       "home_team": "Qingdao West Coast",
       "away_team": "Zhejiang Professional",
       "match_time": "10:00",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 1.97,
-      "away_odds": 1.9,
-      "home_ah_ev": 0.149686296643629,
-      "away_ah_ev": -0.1880503142453899,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
+      "home_odds": 2.02,
+      "away_odds": 1.85,
+      "home_ah_ev": 0.1706834018665124,
+      "away_ah_ev": -0.2009331914794052,
+      "last_update": "2026-06-27T18:23:48Z",
+      "fetched_at": "2026-06-27T18:23:50Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -89,12 +24,64 @@
       "match_time": "11:00",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 1.83,
+      "home_odds": 1.93,
+      "away_odds": 1.94,
+      "home_ah_ev": -0.137870616096638,
+      "away_ah_ev": 0.0934934127587245,
+      "last_update": "2026-06-27T18:23:48Z",
+      "fetched_at": "2026-06-27T18:23:50Z"
+    },
+    {
+      "home_team": "Yunnan Yukun",
+      "away_team": "Henan Songshan Longmen",
+      "match_time": "12:00",
+      "home_spread": 0,
+      "away_spread": 0,
+      "home_odds": 1.87,
+      "away_odds": 1.97,
+      "home_ah_ev": -0.1314779811743877,
+      "away_ah_ev": 0.0810420882943315,
+      "last_update": "2026-06-27T18:23:48Z",
+      "fetched_at": "2026-06-27T18:23:50Z"
+    },
+    {
+      "home_team": "Liaoning Tieren",
+      "away_team": "Chongqing Tonglianglong",
+      "match_time": "11:00",
+      "home_spread": -0.25,
+      "away_spread": 0.25,
+      "home_odds": 1.81,
       "away_odds": 2.04,
-      "home_ah_ev": -0.1665709073304339,
-      "away_ah_ev": 0.1339717452158185,
-      "last_update": "2026-06-27T10:27:07Z",
-      "fetched_at": "2026-06-27T10:27:25Z"
+      "home_ah_ev": -0.0420706136590289,
+      "away_ah_ev": -0.0227986651071196,
+      "last_update": "2026-06-27T18:23:48Z",
+      "fetched_at": "2026-06-27T18:23:50Z"
+    },
+    {
+      "home_team": "Beijing Guoan",
+      "away_team": "Shandong Taishan",
+      "match_time": "11:35",
+      "home_spread": -0.75,
+      "away_spread": 0.75,
+      "home_odds": 1.94,
+      "away_odds": 1.89,
+      "home_ah_ev": -0.0065275498370495,
+      "away_ah_ev": -0.0671796605905821,
+      "last_update": "2026-06-27T18:23:48Z",
+      "fetched_at": "2026-06-27T18:23:50Z"
+    },
+    {
+      "home_team": "Tianjin Jinmen Tiger",
+      "away_team": "Shenzhen Xinpengcheng",
+      "match_time": "12:00",
+      "home_spread": -0.25,
+      "away_spread": 0.25,
+      "home_odds": 1.93,
+      "away_odds": 1.91,
+      "home_ah_ev": 0.1915779826352352,
+      "away_ah_ev": -0.2562386637375655,
+      "last_update": "2026-06-27T18:23:48Z",
+      "fetched_at": "2026-06-27T18:23:50Z"
     }
   ]
 }

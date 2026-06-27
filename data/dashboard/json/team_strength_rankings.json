@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-27T18:27:27+08:00"
+    "updated_at": "2026-06-28T02:23:52+08:00"
   },
   "rows": [
     {
@@ -13,7 +13,7 @@
       "overall_rating": 3.4010991931051024,
       "attack_rank": 2,
       "defense_rank": 1,
-      "form": "W,L,L,W,W"
+      "form": "W,W,L,L,W"
     },
     {
       "rank_overall": 2,
@@ -23,7 +23,7 @@
       "overall_rating": 3.005644516439175,
       "attack_rank": 3,
       "defense_rank": 3,
-      "form": "W,L,D,W,D"
+      "form": "W,W,L,D,W"
     },
     {
       "rank_overall": 3,
@@ -43,7 +43,7 @@
       "overall_rating": 2.774562404653233,
       "attack_rank": 4,
       "defense_rank": 10,
-      "form": "L,D,L,W,W"
+      "form": "W,L,D,L,W"
     },
     {
       "rank_overall": 5,
@@ -53,7 +53,7 @@
       "overall_rating": 2.7602153480266822,
       "attack_rank": 5,
       "defense_rank": 9,
-      "form": "D,D,W,D,D"
+      "form": "W,D,D,W,D"
     },
     {
       "rank_overall": 6,
@@ -63,7 +63,7 @@
       "overall_rating": 2.7044434979910523,
       "attack_rank": 6,
       "defense_rank": 4,
-      "form": "L,W,W,W,L"
+      "form": "L,L,W,W,W"
     },
     {
       "rank_overall": 7,
@@ -103,7 +103,7 @@
       "overall_rating": 2.210495190834776,
       "attack_rank": 15,
       "defense_rank": 7,
-      "form": "W,D,L,L,D"
+      "form": "L,W,D,L,L"
     },
     {
       "rank_overall": 11,
@@ -133,7 +133,7 @@
       "overall_rating": 2.058728493918325,
       "attack_rank": 10,
       "defense_rank": 16,
-      "form": "D,D,D,D,D"
+      "form": "L,D,D,D,D"
     },
     {
       "rank_overall": 14,
@@ -143,7 +143,7 @@
       "overall_rating": 2.02157502063295,
       "attack_rank": 9,
       "defense_rank": 17,
-      "form": "D,W,W,D,L"
+      "form": "L,D,W,W,D"
     },
     {
       "rank_overall": 15,
@@ -153,7 +153,7 @@
       "overall_rating": 1.8762742785817208,
       "attack_rank": 18,
       "defense_rank": 2,
-      "form": "L,W,D,L,D"
+      "form": "W,L,W,D,L"
     },
     {
       "rank_overall": 16,
@@ -163,7 +163,7 @@
       "overall_rating": 1.699399180679049,
       "attack_rank": 16,
       "defense_rank": 13,
-      "form": "W,W,D,L,L"
+      "form": "L,W,W,D,L"
     },
     {
       "rank_overall": 17,
