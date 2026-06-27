@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-26T21:55:18+08:00",
+    "updated_at": "2026-06-27T18:27:27+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -230,6 +230,76 @@
       "home_win_fair_odds": 1.4231,
       "draw_fair_odds": 5.2273,
       "away_win_fair_odds": 9.4333
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-11-wuhan-three-towns-henan-songshan-longmen",
+      "round": 18,
+      "match_date": "2026-07-11",
+      "kickoff_at": "2026-07-11T11:00:00+08:00",
+      "home_team": "Wuhan Three Towns",
+      "away_team": "Henan Songshan Longmen",
+      "home_win_prob": 0.299098,
+      "draw_prob": 0.297926,
+      "away_win_prob": 0.402976,
+      "home_win_fair_odds": 3.3434,
+      "draw_fair_odds": 3.3565,
+      "away_win_fair_odds": 2.4815
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-11-zhejiang-professional-qingdao-hainiu",
+      "round": 18,
+      "match_date": "2026-07-11",
+      "kickoff_at": "2026-07-11T11:00:00+08:00",
+      "home_team": "Zhejiang Professional",
+      "away_team": "Qingdao Hainiu",
+      "home_win_prob": 0.555781,
+      "draw_prob": 0.253758,
+      "away_win_prob": 0.190461,
+      "home_win_fair_odds": 1.7993,
+      "draw_fair_odds": 3.9408,
+      "away_win_fair_odds": 5.2504
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-11-shanghai-shenhua-beijing-guoan",
+      "round": 18,
+      "match_date": "2026-07-11",
+      "kickoff_at": "2026-07-11T11:35:00+08:00",
+      "home_team": "Shanghai Shenhua",
+      "away_team": "Beijing Guoan",
+      "home_win_prob": 0.493229,
+      "draw_prob": 0.257018,
+      "away_win_prob": 0.249753,
+      "home_win_fair_odds": 2.0275,
+      "draw_fair_odds": 3.8908,
+      "away_win_fair_odds": 4.004
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-11-shenzhen-xinpengcheng-qingdao-west-coast",
+      "round": 18,
+      "match_date": "2026-07-11",
+      "kickoff_at": "2026-07-11T11:35:00+08:00",
+      "home_team": "Shenzhen Xinpengcheng",
+      "away_team": "Qingdao West Coast",
+      "home_win_prob": 0.294966,
+      "draw_prob": 0.374606,
+      "away_win_prob": 0.330428,
+      "home_win_fair_odds": 3.3902,
+      "draw_fair_odds": 2.6695,
+      "away_win_fair_odds": 3.0264
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-11-chengdu-rongcheng-chongqing-tonglianglong",
+      "round": 18,
+      "match_date": "2026-07-11",
+      "kickoff_at": "2026-07-11T12:00:00+08:00",
+      "home_team": "Chengdu Rongcheng",
+      "away_team": "Chongqing Tonglianglong",
+      "home_win_prob": 0.69929,
+      "draw_prob": 0.251726,
+      "away_win_prob": 0.048984,
+      "home_win_fair_odds": 1.43,
+      "draw_fair_odds": 3.9726,
+      "away_win_fair_odds": 20.4148
     }
   ]
 }
