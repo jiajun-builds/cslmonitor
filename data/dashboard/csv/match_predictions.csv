@@ -1,5 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-16-2026-06-28-qingdao-west-coast-zhejiang-professional,16,2026-06-28,2026-06-28T10:00:00+08:00,Qingdao West Coast,Zhejiang Professional,0.419942,0.3224,0.257658,2.3813,3.1017,3.8811
 CSL-2026-16-2026-06-28-dalian-yingbo-shanghai-shenhua,16,2026-06-28,2026-06-28T11:00:00+08:00,Dalian Yingbo,Shanghai Shenhua,0.287003,0.308214,0.404783,3.4843,3.2445,2.4705
 CSL-2026-17-2026-07-03-yunnan-yukun-henan-songshan-longmen,17,2026-07-03,2026-07-03T12:00:00+08:00,Yunnan Yukun,Henan Songshan Longmen,0.297832,0.311576,0.390592,3.3576,3.2095,2.5602
 CSL-2026-17-2026-07-04-liaoning-tieren-chongqing-tonglianglong,17,2026-07-04,2026-07-04T11:00:00+08:00,Liaoning Tieren,Chongqing Tonglianglong,0.422285,0.387187,0.190528,2.3681,2.5827,5.2486
@@ -15,3 +14,5 @@ CSL-2026-18-2026-07-11-zhejiang-professional-qingdao-hainiu,18,2026-07-11,2026-0
 CSL-2026-18-2026-07-11-shanghai-shenhua-beijing-guoan,18,2026-07-11,2026-07-11T11:35:00+08:00,Shanghai Shenhua,Beijing Guoan,0.493229,0.257018,0.249753,2.0275,3.8908,4.004
 CSL-2026-18-2026-07-11-shenzhen-xinpengcheng-qingdao-west-coast,18,2026-07-11,2026-07-11T11:35:00+08:00,Shenzhen Xinpengcheng,Qingdao West Coast,0.294966,0.374606,0.330428,3.3902,2.6695,3.0264
 CSL-2026-18-2026-07-11-chengdu-rongcheng-chongqing-tonglianglong,18,2026-07-11,2026-07-11T12:00:00+08:00,Chengdu Rongcheng,Chongqing Tonglianglong,0.69929,0.251726,0.048984,1.43,3.9726,20.4148
+CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren,18,2026-07-12,2026-07-12T11:00:00+08:00,Tianjin Jinmen Tiger,Liaoning Tieren,0.505387,0.298729,0.195884,1.9787,3.3475,5.1051
+CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo,18,2026-07-12,2026-07-12T11:35:00+08:00,Shanghai Port,Dalian Yingbo,0.590357,0.262636,0.147007,1.6939,3.8076,6.8024

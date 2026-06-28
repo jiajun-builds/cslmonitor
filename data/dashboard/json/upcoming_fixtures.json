@@ -2,18 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-28T02:23:52+08:00"
+    "updated_at": "2026-06-28T18:39:05+08:00"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-16-2026-06-28-qingdao-west-coast-zhejiang-professional",
-      "round": 16,
-      "match_date": "2026-06-28",
-      "match_time": "10:00",
-      "kickoff_at": "2026-06-28T10:00:00+08:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Zhejiang Professional"
-    },
     {
       "fixture_id": "CSL-2026-16-2026-06-28-dalian-yingbo-shanghai-shenhua",
       "round": 16,
@@ -148,6 +139,24 @@
       "kickoff_at": "2026-07-11T12:00:00+08:00",
       "home_team": "Chengdu Rongcheng",
       "away_team": "Chongqing Tonglianglong"
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren",
+      "round": 18,
+      "match_date": "2026-07-12",
+      "match_time": "11:00",
+      "kickoff_at": "2026-07-12T11:00:00+08:00",
+      "home_team": "Tianjin Jinmen Tiger",
+      "away_team": "Liaoning Tieren"
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo",
+      "round": 18,
+      "match_date": "2026-07-12",
+      "match_time": "11:35",
+      "kickoff_at": "2026-07-12T11:35:00+08:00",
+      "home_team": "Shanghai Port",
+      "away_team": "Dalian Yingbo"
     }
   ]
 }

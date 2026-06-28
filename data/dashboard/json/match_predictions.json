@@ -2,25 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-28T02:23:52+08:00",
+    "updated_at": "2026-06-28T18:39:05+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-16-2026-06-28-qingdao-west-coast-zhejiang-professional",
-      "round": 16,
-      "match_date": "2026-06-28",
-      "kickoff_at": "2026-06-28T10:00:00+08:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Zhejiang Professional",
-      "home_win_prob": 0.419942,
-      "draw_prob": 0.3224,
-      "away_win_prob": 0.257658,
-      "home_win_fair_odds": 2.3813,
-      "draw_fair_odds": 3.1017,
-      "away_win_fair_odds": 3.8811
-    },
     {
       "fixture_id": "CSL-2026-16-2026-06-28-dalian-yingbo-shanghai-shenhua",
       "round": 16,
@@ -230,6 +216,34 @@
       "home_win_fair_odds": 1.43,
       "draw_fair_odds": 3.9726,
       "away_win_fair_odds": 20.4148
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren",
+      "round": 18,
+      "match_date": "2026-07-12",
+      "kickoff_at": "2026-07-12T11:00:00+08:00",
+      "home_team": "Tianjin Jinmen Tiger",
+      "away_team": "Liaoning Tieren",
+      "home_win_prob": 0.505387,
+      "draw_prob": 0.298729,
+      "away_win_prob": 0.195884,
+      "home_win_fair_odds": 1.9787,
+      "draw_fair_odds": 3.3475,
+      "away_win_fair_odds": 5.1051
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo",
+      "round": 18,
+      "match_date": "2026-07-12",
+      "kickoff_at": "2026-07-12T11:35:00+08:00",
+      "home_team": "Shanghai Port",
+      "away_team": "Dalian Yingbo",
+      "home_win_prob": 0.590357,
+      "draw_prob": 0.262636,
+      "away_win_prob": 0.147007,
+      "home_win_fair_odds": 1.6939,
+      "draw_fair_odds": 3.8076,
+      "away_win_fair_odds": 6.8024
     }
   ]
 }
