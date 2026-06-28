@@ -2,18 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-06-28T18:39:05+08:00"
+    "updated_at": "2026-06-28T20:15:11+08:00"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-16-2026-06-28-dalian-yingbo-shanghai-shenhua",
-      "round": 16,
-      "match_date": "2026-06-28",
-      "match_time": "11:00",
-      "kickoff_at": "2026-06-28T11:00:00+08:00",
-      "home_team": "Dalian Yingbo",
-      "away_team": "Shanghai Shenhua"
-    },
     {
       "fixture_id": "CSL-2026-17-2026-07-03-yunnan-yukun-henan-songshan-longmen",
       "round": 17,

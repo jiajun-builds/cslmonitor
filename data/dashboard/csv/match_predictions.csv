@@ -1,5 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-16-2026-06-28-dalian-yingbo-shanghai-shenhua,16,2026-06-28,2026-06-28T11:00:00+08:00,Dalian Yingbo,Shanghai Shenhua,0.287003,0.308214,0.404783,3.4843,3.2445,2.4705
 CSL-2026-17-2026-07-03-yunnan-yukun-henan-songshan-longmen,17,2026-07-03,2026-07-03T12:00:00+08:00,Yunnan Yukun,Henan Songshan Longmen,0.297832,0.311576,0.390592,3.3576,3.2095,2.5602
 CSL-2026-17-2026-07-04-liaoning-tieren-chongqing-tonglianglong,17,2026-07-04,2026-07-04T11:00:00+08:00,Liaoning Tieren,Chongqing Tonglianglong,0.422285,0.387187,0.190528,2.3681,2.5827,5.2486
 CSL-2026-17-2026-07-04-qingdao-west-coast-shanghai-port,17,2026-07-04,2026-07-04T11:00:00+08:00,Qingdao West Coast,Shanghai Port,0.324392,0.312486,0.363122,3.0827,3.2001,2.7539
