@@ -152,6 +152,7 @@ This rebuilds:
 - dashboard JSON export: `src/csl/dashboard/export_dashboard_json.py`
 - Pinnacle fetch: `src/csl/odds/fetch_pinnacle_spreads.py`
 - market comparison export: `src/csl/odds/export_upcoming_market_comparison.py`
+- Pinnacle opening-time calendar: `src/csl/odds/opening_calendar.py` (`python -m csl.odds.opening_calendar`)
 - canonical path helpers: `src/csl/paths.py`
 
 ## Important Data Paths
@@ -169,6 +170,7 @@ This rebuilds:
 - team stats: `data/output_data/CHN_team_stats.csv`
 - match simulations: `data/output_data/CHN_team_stats_match_simulations.csv`
 - market comparison: `data/output_data/CHN_upcoming_market_comparison.csv`
+- opening-time calendar (predicted Pinnacle open windows): `data/output_data/CHN_opening_time_calendar.csv`
 
 ### Dashboard Assets
 - CSV directory: `data/dashboard/csv/`
@@ -186,6 +188,67 @@ This rebuilds:
 - For model experimentation, use:
   - `DC_CHN.py`
   - `model comparison/`
+
+## Strategy Context & Findings
+
+### What the project is ultimately for
+The dashboard/market-comparison output feeds a **CLV-based betting strategy**: find fixtures
+where the model diverges from the market and bet +EV lines at aggregator books.
+- The thesis is **not** "beat Pinnacle closing" (closing is assumed efficient). It is
+  "beat Pinnacle **opening**" — get down early at soft/aggregator books at prices better
+  than even Pinnacle, before the market corrects.
+- Success metric is long-run **+CLV** (closing line value vs Pinnacle close), not per-bet
+  wins. "Bet early ⇒ +CLV" is an *assumption* whose direction depends on model quality.
+- **Biggest gap:** opening/closing lines are not captured automatically, so CLV is measured
+  manually today (selection-bias risk) and the edge is unvalidated. Closing that loop is the
+  roadmap below.
+
+### Model
+- `src/csl/models/dc.py` is named "Dixon-Coles" but actually fits
+  `ZeroInflatedPoissonGoalsModel` (ZIP) on **xG targets** (`HExpG+`/`AExpG+`), 18-month
+  window, `xi=0.001`, Dixon-Coles time-decay weights.
+- **Finding (diagnostic `model comparison/zip_zero_inflation_param_test.py`):** the fitted
+  zero-inflation parameter sits at its ~1e-6 floor in 100% of refits → ZIP has collapsed to
+  Poisson. The ~0.0003 RPS edge of ZIP over Poisson on the backtest is noise. A future
+  simplification is to swap production ZIP → plain `PoissonGoalsModel` (same accuracy,
+  simpler/faster). Not yet done.
+- The model is fit **twice** per full run (STEP 2 model export + STEP 4 market comparison),
+  on identical inputs — redundant but cheap (seconds; small single-league data). Left as-is.
+  Watch-out: `xi=0.001` is hardcoded in two places (`dc.py`/`DC_CHN.py` and
+  `export_upcoming_market_comparison.MODEL_XI`); if they ever diverge the two exports would
+  silently use different models.
+
+### Timezone (important data quirk)
+- Source CSV `Time` columns (`chinese_super_league_data.csv`, `chn_upcoming_fixtures.csv`)
+  are **UTC (GMT / UK time WITHOUT daylight saving)**, *not* UK local wall-clock.
+- Always parse as UTC and convert to `Europe/London` so summer (BST) fixtures get +1h.
+  Treating raw values as already-local makes summer times 1h early. Handled in
+  `export_dashboard_csv.py` and `opening_calendar.py`.
+
+### Pinnacle opening-time pattern (validated 2026-07-03)
+- Pinnacle opens a match's line within **~1h after the later of the two teams' most-recent
+  (current-round) matches has kicked off** (kickoff start, not full-time).
+- `src/csl/odds/opening_calendar.py` predicts these windows from prior-round kickoffs.
+  Field-validated: round-17 predicted windows matched the actual Pinnacle open times.
+- This lets us catch the true opening (and closing) line on the **free** Odds-API plan
+  (no historical-odds endpoint) by scheduling narrow captures.
+
+## Roadmap / Open Tasks
+1. **Verify the dashboard TZ fix at runtime** — run `python -m csl.dashboard.export_dashboard_csv`
+   on the `csl-workflows` env and confirm a summer `kickoff_at` shows the London offset
+   (`+01:00`) and metadata `timezone` reads `Europe/London`. (Fix is logic-checked, not yet
+   run end-to-end.)
+2. **Scheduled odds-capture pipeline (next build):** driven by `opening_calendar`, poll the
+   free `soccer_china_superleague` odds endpoint at each predicted **open** window and once
+   just before **kickoff** (close), **appending** timestamped rows instead of overwriting.
+   Keep the row schema compatible with `fetch_pinnacle_spreads.py`; first check the free-plan
+   request quota (one call returns the whole slate, so cluster calls at anchor times).
+3. **Close the CLV loop:** join the user's bet-tracker fills to the captured closing lines →
+   automated, auditable, per-segment CLV. Replaces manual CLV computation.
+4. **Validation ladder for the edge** (before trusting it): paired Wilcoxon on per-fixture
+   RPS (ZIP vs Poisson), and per-segment calibration / reliability diagrams (by handicap
+   line, favourite vs underdog) — bet only in well-calibrated segments.
+5. **Optional simplification:** swap production ZIP → `PoissonGoalsModel` in `dc.py`.
 
 ## Agent Tips
 - Prefer `./scripts/csl.sh` over direct module execution for local workflow tasks.
