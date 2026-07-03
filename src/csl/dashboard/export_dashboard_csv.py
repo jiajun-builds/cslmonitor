@@ -249,7 +249,11 @@ def build_upcoming_fixtures(fixtures_path: str, season: str, export_now: pd.Time
         format="%Y-%m-%d %H:%M",
         errors="coerce",
     )
-    out["kickoff_at"] = kickoff.dt.tz_localize(TZ).dt.strftime("%Y-%m-%dT%H:%M:%S%z")
+    # Source kickoff times are UTC (GMT, UK time without DST): localize as UTC then
+    # convert to Europe/London so summer fixtures pick up the +1h BST offset.
+    out["kickoff_at"] = (
+        kickoff.dt.tz_localize("UTC").dt.tz_convert(TZ).dt.strftime("%Y-%m-%dT%H:%M:%S%z")
+    )
     out["kickoff_at"] = out["kickoff_at"].str.replace(r"([+-]\d{2})(\d{2})$", r"\1:\2", regex=True)
     out["fixture_id"] = out.apply(
         lambda row: (
