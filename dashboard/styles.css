@@ -492,10 +492,6 @@ th,
   background: hsl(var(--term-green) / 0.045);
 }
 
-.terminal-table tbody tr:first-child {
-  box-shadow: inset 2px 0 0 hsl(var(--term-green));
-}
-
 .numeric {
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -765,23 +761,98 @@ th,
   margin-top: 6px;
 }
 
+/* Fixed layout so the 9 columns share the full width evenly instead of one
+   greedy auto column shoving the numbers to the right edge. */
+.market-comparison-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
 .market-comparison-table th:nth-child(1),
-.market-comparison-table td:nth-child(1) {
-  width: 72px;
-}
-
-.market-comparison-table th:nth-child(3),
-.market-comparison-table td:nth-child(3),
-.market-comparison-table th:nth-child(4),
-.market-comparison-table td:nth-child(4),
-.market-comparison-table th:nth-child(5),
-.market-comparison-table td:nth-child(5) {
-  width: 92px;
-}
-
+.market-comparison-table td:nth-child(1) { width: 5%; }   /* Time */
 .market-comparison-table th:nth-child(2),
-.market-comparison-table td:nth-child(2) {
-  width: auto;
+.market-comparison-table td:nth-child(2) { width: 24%; }  /* Match */
+.market-comparison-table th:nth-child(3),
+.market-comparison-table td:nth-child(3) { width: 10%; }  /* Open Line */
+.market-comparison-table th:nth-child(4),
+.market-comparison-table td:nth-child(4) { width: 10%; }  /* Open Odds */
+.market-comparison-table th:nth-child(5),
+.market-comparison-table td:nth-child(5) { width: 9%; }   /* Open EV */
+.market-comparison-table th:nth-child(6),
+.market-comparison-table td:nth-child(6) { width: 11%; }  /* Current Line */
+.market-comparison-table th:nth-child(7),
+.market-comparison-table td:nth-child(7) { width: 11%; }  /* Current Odds */
+.market-comparison-table th:nth-child(8),
+.market-comparison-table td:nth-child(8) { width: 10%; }  /* Current EV */
+.market-comparison-table th:nth-child(9),
+.market-comparison-table td:nth-child(9) { width: 10%; }  /* Move */
+
+/* Keep every header on a single line so column labels align uniformly; the
+   tight letter-spacing lets "Current Odds" fit without wrapping. */
+.market-comparison-table th {
+  white-space: nowrap;
+  vertical-align: bottom;
+  letter-spacing: 0.04em;
+}
+
+/* Faint divider marking the Open | Current group boundary (Line column of each). */
+.market-comparison__group-start {
+  border-left: 1px solid hsl(var(--term-border) / 0.5);
+}
+
+.market-comparison__move {
+  color: hsl(var(--term-dim));
+}
+
+/* Open Line cells are hoverable for the opening-snapshot tooltip. */
+.market-comparison__line-cell {
+  cursor: help;
+}
+
+.odds-tooltip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  min-width: 184px;
+  padding: 10px 12px;
+  background: hsl(var(--term-surface-3));
+  border: 1px solid hsl(var(--term-border));
+  border-radius: 8px;
+  box-shadow: 0 10px 28px hsl(0 0% 0% / 0.45);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.odds-tooltip[hidden] {
+  display: none;
+}
+
+.odds-tooltip__time {
+  color: hsl(var(--term-text));
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid hsl(var(--term-border) / 0.7);
+}
+
+.odds-tooltip__grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 6px 20px;
+  align-items: baseline;
+}
+
+.odds-tooltip__key {
+  color: hsl(var(--term-dim));
+  text-align: left;
+}
+
+.odds-tooltip__val {
+  color: hsl(var(--term-text));
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
 .market-comparison__time,

@@ -150,9 +150,12 @@ This rebuilds:
 - Dixon-Coles model: `src/csl/models/dc.py`
 - dashboard CSV export: `src/csl/dashboard/export_dashboard_csv.py`
 - dashboard JSON export: `src/csl/dashboard/export_dashboard_json.py`
-- Pinnacle fetch: `src/csl/odds/fetch_pinnacle_spreads.py`
-- market comparison export: `src/csl/odds/export_upcoming_market_comparison.py`
-- Pinnacle opening-time calendar: `src/csl/odds/opening_calendar.py` (`python -m csl.odds.opening_calendar`)
+- Pinnacle fetch (single "current" snapshot): `src/csl/odds/fetch_pinnacle_spreads.py`
+- market comparison export (now + captured-open, with per-side EV): `src/csl/odds/export_upcoming_market_comparison.py`
+- Pinnacle opening-time calendar: `src/csl/odds/opening_calendar.py` (`python -m csl.odds.opening_calendar`; `build_open_windows()` returns tz-aware windows for the scheduler)
+- odds-capture history store (append-only): `src/csl/odds/snapshot_store.py`
+- single-shot snapshot capture: `src/csl/odds/capture_snapshot.py` (`python -m csl.odds.capture_snapshot`)
+- scheduler tick (captures opening lines in-window): `src/csl/odds/capture_scheduler.py` (`python -m csl.odds.capture_scheduler`)
 - canonical path helpers: `src/csl/paths.py`
 
 ## Important Data Paths
@@ -162,7 +165,9 @@ This rebuilds:
 - fresh fixture/schedule pull: `data/raw_data/chinese_super_league_data.csv`
 - upcoming fixtures for dashboard/export: `data/raw_data/chn_upcoming_fixtures.csv`
 - xG data: `data/raw_data/xg_data.csv`
-- Pinnacle spreads: `data/raw_data/CHN_pinnacle_spreads.csv`
+- Pinnacle spreads (single current snapshot, overwritten each run): `data/raw_data/CHN_pinnacle_spreads.csv`
+- Pinnacle spreads capture history (append-only, tracked in git so the GitHub capture
+  workflow can persist it): `data/raw_data/CHN_pinnacle_spreads_history.csv`
 - backups: `data/raw_data/backups/`
 
 ### Model / Processed Outputs
@@ -238,11 +243,23 @@ where the model diverges from the market and bet +EV lines at aggregator books.
    on the `csl-workflows` env and confirm a summer `kickoff_at` shows the London offset
    (`+01:00`) and metadata `timezone` reads `Europe/London`. (Fix is logic-checked, not yet
    run end-to-end.)
-2. **Scheduled odds-capture pipeline (next build):** driven by `opening_calendar`, poll the
-   free `soccer_china_superleague` odds endpoint at each predicted **open** window and once
-   just before **kickoff** (close), **appending** timestamped rows instead of overwriting.
-   Keep the row schema compatible with `fetch_pinnacle_spreads.py`; first check the free-plan
-   request quota (one call returns the whole slate, so cluster calls at anchor times).
+2. **Scheduled odds-capture pipeline — DONE (open side; close deferred to #3).**
+   Delivered as four modules + a GitHub Actions workflow:
+   - `snapshot_store.py` — append-only history CSV (`CHN_pinnacle_spreads_history.csv`),
+     schema = `fetch_pinnacle_spreads.OUTPUT_COLUMNS` + `snapshot_type`/`target_round`/
+     `capture_reason`; dedup key `(event_id, last_update, snapshot_type)`.
+   - `capture_snapshot.py` — single-shot capture with a pre-spend quota guard (reads the
+     free `/sports` endpoint first) and `--dry-run`.
+   - `capture_scheduler.py` — "tick" run every ~10 min: captures a fixture's opening line
+     only while it is inside its predicted open window and not yet captured; one `/odds`
+     call covers the whole slate, non-in-window fixtures are discarded.
+   - `.github/workflows/capture-odds.yml` — runs the tick on GitHub cron (UTC), commits new
+     rows back to `main`. Only fires from the default branch; GitHub cron delay is tolerated
+     because windows are ~1h and each fixture is captured at most once.
+   The dashboard market-comparison now shows an **Open** and a **Now** group per fixture
+   (line @ price + model EV each) plus a **Move** arrow; open EV is recomputed at the
+   captured opening line. **Close/CLV columns are intentionally NOT built** — see #3.
+   Free-plan quota: 500 requests/month; one `/odds` call = 1 request, `/sports` = 0.
 3. **Close the CLV loop:** join the user's bet-tracker fills to the captured closing lines →
    automated, auditable, per-segment CLV. Replaces manual CLV computation.
 4. **Validation ladder for the edge** (before trusting it): paired Wilcoxon on per-fixture

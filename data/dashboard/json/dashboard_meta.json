@@ -2,13 +2,13 @@
   "competition_code": "CSL",
   "competition_name": "Chinese Super League",
   "season": "2026",
-  "updated_at": "2026-07-03T19:03:32+08:00",
-  "timezone": "Asia/Shanghai",
-  "last_completed_match_date": "2026-06-28",
-  "next_fixture_date": "2026-07-03",
-  "matches_played": 128,
+  "updated_at": "2026-07-04T00:32:53+01:00",
+  "timezone": "Europe/London",
+  "last_completed_match_date": "2026-07-03",
+  "next_fixture_date": "2026-07-04",
+  "matches_played": 129,
   "current_round": 17,
   "total_rounds": 30,
   "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
-  "model_version": "v1"
+  "model_version": "v2.2"
 }

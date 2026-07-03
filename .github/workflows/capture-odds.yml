@@ -1,0 +1,83 @@
+name: Capture Odds
+
+# Scheduled odds-capture (AGENTS.md roadmap #2, Phase 4). Runs a lightweight tick
+# every ~10 minutes; the tick only spends an Odds API request when a fixture is
+# inside its predicted opening window and has not been captured yet, then appends
+# the opening line to data/raw_data/CHN_pinnacle_spreads_history.csv and commits it
+# back to main.
+#
+# NOTE: scheduled workflows only run from the default branch (main), so this has no
+# effect until merged there. GitHub's cron can be delayed/skipped under load; that is
+# tolerated here because open windows are ~1h wide and a fixture is captured at most
+# once (already-captured fixtures are skipped), so a single landed tick per window
+# suffices.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Decide only: report in-window fixtures, spend/write nothing"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "*/10 * * * *"  # every 10 minutes (UTC)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capture-odds
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history so the pre-push rebase can fast-forward
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lightweight deps
+        # The tick only needs pandas + requests (no model / penaltyblog), so we skip
+        # the full conda environment for a fast, cheap run.
+        run: pip install "pandas>=2.0" "requests>=2.28"
+
+      - name: Run capture tick
+        env:
+          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="--dry-run"
+          fi
+          python -m csl.odds.capture_scheduler $ARGS
+
+      - name: Commit captured snapshot
+        run: |
+          set -euo pipefail
+          if [ ! -f data/raw_data/CHN_pinnacle_spreads_history.csv ]; then
+            echo "No history file yet (idle tick); nothing to commit."
+            exit 0
+          fi
+          git add data/raw_data/CHN_pinnacle_spreads_history.csv
+          if git diff --cached --quiet; then
+            echo "No new snapshot rows; nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore(odds): capture opening-line snapshot [skip ci]"
+            # main may have moved (daily refresh, prior capture); rebase our
+            # append-only change on top before pushing.
+            git pull --rebase origin main
+            git push origin main
+          fi

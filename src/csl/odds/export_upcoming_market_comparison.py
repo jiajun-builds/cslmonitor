@@ -23,6 +23,7 @@ import pandas as pd
 
 from csl.dashboard.export_dashboard_csv import _normalize_probabilities
 from csl.models.dc import fit_dixon_coles_model_from_csv
+from csl.odds.snapshot_store import HISTORY_CSV, load_history
 from csl.paths import data_dashboard_csv_dir, data_output_dir, data_raw_dir
 
 logging.basicConfig(
@@ -33,6 +34,18 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 MODEL_XI = 0.001
+
+# Opening-line columns joined from the capture history (snapshot_type=open). These
+# are blank for fixtures whose open line has not been captured yet.
+OPEN_COLUMNS = [
+    "open_home_spread",
+    "open_away_spread",
+    "open_home_odds",
+    "open_away_odds",
+    "open_home_ah_ev",
+    "open_away_ah_ev",
+    "open_last_update",
+]
 
 FULL_COLUMNS = [
     "fixture_id",
@@ -62,6 +75,7 @@ FULL_COLUMNS = [
     "away_ah_push_prob",
     "away_ah_lose_prob",
     "away_ah_ev",
+    *OPEN_COLUMNS,
 ]
 
 DASHBOARD_COLUMNS = [
@@ -87,6 +101,7 @@ DASHBOARD_COLUMNS = [
     "away_ah_push_prob",
     "away_ah_lose_prob",
     "away_ah_ev",
+    *OPEN_COLUMNS,
 ]
 
 
@@ -96,6 +111,7 @@ class ExportPaths:
     simulations_csv: str = os.path.join(data_output_dir(), "CHN_team_stats_match_simulations.csv")
     pinnacle_csv: str = os.path.join(data_raw_dir(), "CHN_pinnacle_spreads.csv")
     matches_csv: str = os.path.join(data_raw_dir(), "CHN_Super League.csv")
+    history_csv: str = HISTORY_CSV
     full_out_csv: str = os.path.join(data_output_dir(), "CHN_upcoming_market_comparison.csv")
     dashboard_out_csv: str = os.path.join(data_dashboard_csv_dir(), "upcoming_market_comparison.csv")
 
@@ -187,6 +203,52 @@ def load_pinnacle(path: str) -> pd.DataFrame:
     return df
 
 
+OPEN_SNAPSHOT_COLUMNS = [
+    "home_team",
+    "away_team",
+    "open_home_spread",
+    "open_away_spread",
+    "open_home_odds",
+    "open_away_odds",
+    "open_last_update",
+]
+
+
+def load_open_snapshots(path: str) -> pd.DataFrame:
+    """One opening-line row per fixture from the capture history (may be empty).
+
+    Reads the append-only capture history, keeps ``snapshot_type == "open"`` rows,
+    and — since a line can in principle be captured more than once — takes the
+    earliest ``fetched_at`` per fixture as the true opening line. Returns a frame
+    keyed by (home_team, away_team) with ``open_*`` spread/odds columns, or an
+    empty (correctly-columned) frame when no opens have been captured yet.
+    """
+    hist = load_history(path)
+    opens = hist[hist["snapshot_type"] == "open"] if not hist.empty else hist
+    if opens.empty:
+        return pd.DataFrame(columns=OPEN_SNAPSHOT_COLUMNS)
+
+    opens = opens.copy()
+    opens["home_team"] = opens["home_team"].astype(str).str.strip()
+    opens["away_team"] = opens["away_team"].astype(str).str.strip()
+    for col in ("home_spread", "away_spread", "home_odds", "away_odds"):
+        opens[col] = pd.to_numeric(opens[col], errors="coerce")
+
+    opens = opens.sort_values("fetched_at").drop_duplicates(
+        subset=["home_team", "away_team"], keep="first"
+    )
+    opens = opens.rename(
+        columns={
+            "home_spread": "open_home_spread",
+            "away_spread": "open_away_spread",
+            "home_odds": "open_home_odds",
+            "away_odds": "open_away_odds",
+            "last_update": "open_last_update",
+        }
+    )
+    return opens[OPEN_SNAPSHOT_COLUMNS]
+
+
 def build_base_frame(upcoming: pd.DataFrame, simulations: pd.DataFrame, pinnacle: pd.DataFrame) -> pd.DataFrame:
     merged = upcoming.merge(simulations, on=["home_team", "away_team"], how="left", validate="one_to_one")
     missing_sim = merged.loc[
@@ -206,9 +268,21 @@ def build_base_frame(upcoming: pd.DataFrame, simulations: pd.DataFrame, pinnacle
     return with_odds
 
 
+def _ah_ev(pred, side: str, spread: float, odds: float) -> float:
+    """Model expected value of one unit staked on an Asian-handicap side.
+
+    EV = P(win) * (odds - 1) - P(lose); a half-win/half-lose quarter line is
+    already reflected in the win/lose split returned by ``asian_handicap_probs``.
+    """
+    probs = pred.asian_handicap_probs(side, float(spread))
+    return float(probs["win"]) * (float(odds) - 1.0) - float(probs["lose"])
+
+
 def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float) -> pd.DataFrame:
     clf = fit_dixon_coles_model_from_csv(matches_csv, xi=xi)
     out = frame.copy()
+
+    has_open = "open_home_spread" in out.columns
 
     home_win_probs: list[float] = []
     home_push_probs: list[float] = []
@@ -216,6 +290,8 @@ def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float
     away_win_probs: list[float] = []
     away_push_probs: list[float] = []
     away_lose_probs: list[float] = []
+    open_home_evs: list[float] = []
+    open_away_evs: list[float] = []
 
     for row in out.itertuples(index=False):
         pred = clf.predict(row.home_team, row.away_team)
@@ -228,6 +304,22 @@ def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float
         away_win_probs.append(float(away_probs["win"]))
         away_push_probs.append(float(away_probs["push"]))
         away_lose_probs.append(float(away_probs["lose"]))
+
+        # Open EV at the captured opening line, reusing the same fitted model.
+        # Left as NaN for fixtures whose open line hasn't been captured.
+        if has_open:
+            oh_spread = getattr(row, "open_home_spread", None)
+            oh_odds = getattr(row, "open_home_odds", None)
+            oa_spread = getattr(row, "open_away_spread", None)
+            oa_odds = getattr(row, "open_away_odds", None)
+            open_home_evs.append(
+                _ah_ev(pred, "home", oh_spread, oh_odds)
+                if pd.notna(oh_spread) and pd.notna(oh_odds) else float("nan")
+            )
+            open_away_evs.append(
+                _ah_ev(pred, "away", oa_spread, oa_odds)
+                if pd.notna(oa_spread) and pd.notna(oa_odds) else float("nan")
+            )
 
     out["home_ah_win_prob"] = home_win_probs
     out["home_ah_push_prob"] = home_push_probs
@@ -243,6 +335,9 @@ def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float
         out["away_ah_win_prob"] * (out["away_odds"] - 1.0)
         - out["away_ah_lose_prob"]
     )
+    if has_open:
+        out["open_home_ah_ev"] = open_home_evs
+        out["open_away_ah_ev"] = open_away_evs
     return out
 
 
@@ -274,6 +369,7 @@ def run(
     simulations_csv: str,
     pinnacle_csv: str,
     matches_csv: str,
+    history_csv: str,
     full_out_csv: str,
     dashboard_out_csv: str,
     xi: float,
@@ -284,6 +380,10 @@ def run(
 
     base = build_base_frame(upcoming, simulations, pinnacle)
     log.info("Matched %d upcoming fixtures with Pinnacle odds out of %d total upcoming fixtures", len(base), len(upcoming))
+
+    opens = load_open_snapshots(history_csv)
+    base = base.merge(opens, on=["home_team", "away_team"], how="left")
+    log.info("Joined captured opening lines for %d/%d fixtures", int(base["open_home_spread"].notna().sum()), len(base))
 
     if base.empty:
         log.info("No fixtures matched with Pinnacle odds; writing empty outputs and skipping model fit")
@@ -313,6 +413,7 @@ def main() -> None:
     parser.add_argument("--simulations", default=paths.simulations_csv, help="Path to CHN_team_stats_match_simulations.csv")
     parser.add_argument("--pinnacle", default=paths.pinnacle_csv, help="Path to CHN_pinnacle_spreads.csv")
     parser.add_argument("--matches", default=paths.matches_csv, help="Path to CHN_Super League.csv")
+    parser.add_argument("--history", default=paths.history_csv, help="Path to CHN_pinnacle_spreads_history.csv")
     parser.add_argument("--out", default=paths.full_out_csv, help="Path to full comparison CSV output")
     parser.add_argument(
         "--dashboard-out",
@@ -328,6 +429,7 @@ def main() -> None:
             simulations_csv=args.simulations,
             pinnacle_csv=args.pinnacle,
             matches_csv=args.matches,
+            history_csv=args.history,
             full_out_csv=args.out,
             dashboard_out_csv=args.dashboard_out,
             xi=args.xi,
