@@ -23,7 +23,7 @@ cp .env.local.example .env.local
 ```
 
 ## Execution Conventions
-- Prefer running commands from the repository root: `/Users/jordan/Projects/Chinese Super League Prediction`
+- Prefer running commands from the repository root: `/Users/jordan/Developer/python/cslmonitor`
 - The preferred local workflow entry point is `./scripts/csl.sh`
 - `./scripts/csl.sh`, `./scripts/run_csl_update.sh`, and `./scripts/csl-model.sh` activate Conda, load `.env.local`, and set `PYTHONPATH` automatically
 - `.env.local` is local-only and should define:
