@@ -21,7 +21,7 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TZ = ZoneInfo("Asia/Shanghai")
+TZ = ZoneInfo("Europe/London")
 COMPETITION_CODE = "CSL"
 COMPETITION_NAME = "Chinese Super League"
 MODEL_NAME = "Zero-Inflated Poisson with Dixon-Coles Time Decay"
@@ -399,7 +399,7 @@ def build_dashboard_meta(
                 "competition_name": COMPETITION_NAME,
                 "season": season,
                 "updated_at": export_now.tz_convert(TZ).isoformat(timespec="seconds"),
-                "timezone": "Asia/Shanghai",
+                "timezone": "Europe/London",
                 "last_completed_match_date": played["parsed_date"].max().strftime("%Y-%m-%d"),
                 "next_fixture_date": next_fixture_date,
                 "matches_played": round_progress["matches_played"],
