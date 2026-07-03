@@ -11,11 +11,13 @@ This is a timing test: run it with the current round as target (default) to chec
 predicted windows against the round's already-opened Pinnacle lines. Once the timing
 is confirmed, point --target at the next round to schedule live captures.
 
-Timezone: the source CSVs carry UK (Europe/London) wall-clock time; output stays in the
-same UK wall-clock, so no conversion is done — everything is naive and directly
-comparable to the observed open times.
+Timezone: the source CSVs store kickoff times in UTC (GMT, i.e. UK time WITHOUT
+daylight saving). We parse them as UTC and convert to Europe/London so the output is
+the real UK local kickoff — in summer this correctly adds the +1h BST offset, matching
+the observed open times. (An earlier version treated the raw values as already-local
+wall-clock and so came out 1h early in summer.)
 
-Deliberately stdlib-only (csv/datetime), so it runs anywhere without pandas.
+Deliberately stdlib-only (csv/datetime/zoneinfo), so it runs anywhere without pandas.
 
 Run (repo root):
     python -m csl.odds.opening_calendar
@@ -27,9 +29,13 @@ from __future__ import annotations
 import argparse
 import csv
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 from csl.paths import data_output_dir, data_raw_dir
+
+# Source CSVs store kickoff times in UTC; we convert to real UK local time.
+UK_TZ = ZoneInfo("Europe/London")
 
 DEFAULT_SCHEDULE_CSV = os.path.join(data_raw_dir(), "chinese_super_league_data.csv")
 DEFAULT_TARGET_CSV = os.path.join(data_raw_dir(), "chn_upcoming_fixtures.csv")
@@ -56,8 +62,10 @@ DT_FMT = "%Y-%m-%d %H:%M"
 
 
 def _parse_kickoff(date_str: str, time_str: str) -> datetime | None:
-    """Combine a canonical YYYY-MM-DD date and an HH:MM time into a naive datetime.
+    """Combine a canonical YYYY-MM-DD date and an HH:MM time into a UTC-aware datetime.
 
+    The source stores kickoff in UTC, so we attach UTC here and keep all internal
+    comparison/arithmetic in UTC; conversion to UK local happens only at format time.
     Returns None when either field is missing or unparseable, so rows without a
     scheduled time are skipped rather than crashing the run.
     """
@@ -68,13 +76,15 @@ def _parse_kickoff(date_str: str, time_str: str) -> datetime | None:
     # Times occasionally arrive as HH:MM:SS; keep the first five chars (HH:MM).
     time_str = time_str[:5]
     try:
-        return datetime.strptime(f"{date_str} {time_str}", DT_FMT)
+        naive = datetime.strptime(f"{date_str} {time_str}", DT_FMT)
     except ValueError:
         return None
+    return naive.replace(tzinfo=timezone.utc)
 
 
 def _fmt(dt: datetime | None) -> str:
-    return dt.strftime(DT_FMT) if dt is not None else ""
+    """Render a UTC-aware datetime as real UK local (Europe/London, DST-aware)."""
+    return dt.astimezone(UK_TZ).strftime(DT_FMT) if dt is not None else ""
 
 
 def load_schedule(path: str) -> dict[str, list[tuple[datetime, str, str]]]:
