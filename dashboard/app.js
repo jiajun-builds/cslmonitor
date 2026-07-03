@@ -1,5 +1,10 @@
 const DATA_BASES = ["./data", "../data/dashboard/json"];
 
+// All wall-clock times on the dashboard (system stamps, live clock, kickoff
+// times) are displayed in this single zone. Kickoff timestamps are stored in
+// Asia/Shanghai (+08:00) but converted here for a consistent reading.
+const DISPLAY_TZ = "Europe/London";
+
 const selectors = {
   signalRounds: document.getElementById("signal-rounds"),
   marketBody: document.getElementById("market-body"),
@@ -22,8 +27,9 @@ function formatUpdatedAt(value) {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-    timeZone: "UTC",
-  }).format(date).replace(",", "") + " UTC";
+    timeZone: DISPLAY_TZ,
+    timeZoneName: "short",
+  }).format(date).replace(",", "");
 }
 
 function formatClock(date = new Date()) {
@@ -32,7 +38,7 @@ function formatClock(date = new Date()) {
     minute: "2-digit",
     second: "2-digit",
     hour12: false,
-    timeZone: "Europe/London",
+    timeZone: DISPLAY_TZ,
   }).format(date);
 }
 
@@ -71,18 +77,50 @@ function formatFeedStamp(value) {
   if (Number.isNaN(date.getTime())) {
     return String(value);
   }
-  return (
-    new Intl.DateTimeFormat("en-GB", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-      timeZone: "UTC",
-    }).format(date).replace(",", "") + " UTC"
-  );
+  return new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZone: DISPLAY_TZ,
+    timeZoneName: "short",
+  }).format(date).replace(",", "");
+}
+
+function formatKickoffDate(kickoffAt, fallback = "--") {
+  if (!kickoffAt) {
+    return fallback;
+  }
+  const date = new Date(kickoffAt);
+  if (Number.isNaN(date.getTime())) {
+    return fallback;
+  }
+  // en-CA keeps the ISO YYYY-MM-DD style already used for match dates.
+  return new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: DISPLAY_TZ,
+  }).format(date);
+}
+
+function formatKickoffTime(kickoffAt, fallback = "--") {
+  if (!kickoffAt) {
+    return fallback;
+  }
+  const date = new Date(kickoffAt);
+  if (Number.isNaN(date.getTime())) {
+    return fallback;
+  }
+  return new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: DISPLAY_TZ,
+  }).format(date);
 }
 
 function evClass(value) {
@@ -190,8 +228,8 @@ function renderMarketRows(rows) {
       return `
         <tr>
           <td class="numeric">${row.round}</td>
-          <td>${row.match_date}</td>
-          <td>${row.match_time}</td>
+          <td>${formatKickoffDate(row.kickoff_at, row.match_date)}</td>
+          <td>${formatKickoffTime(row.kickoff_at, row.match_time)}</td>
           <td>
             <div class="match-cell">
               <span class="match-cell__home">
@@ -248,7 +286,7 @@ function renderMarketComparison(rows) {
     .map(
       (row) => `
         <tr class="market-comparison__row market-comparison__row--home">
-          <td class="numeric market-comparison__time" rowspan="2">${row.match_time}</td>
+          <td class="numeric market-comparison__time" rowspan="2">${formatKickoffTime(row.kickoff_at, row.match_time)}</td>
           <td class="market-comparison__match">${row.home_team}</td>
           <td class="numeric market-comparison__value market-comparison__value--line">H ${formatLine(row.home_spread)}</td>
           <td class="numeric market-comparison__value">${formatOdds(row.home_odds)}</td>
@@ -286,13 +324,16 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
     .sort((a, b) => b.signal.value - a.signal.value)[0];
   const bestBet = getBestBet(marketComparison);
 
-  setText("masthead-trail", `${meta.competition_name} · Season ${meta.season} · ${meta.model_name} · v2.0`);
+  setText("masthead-trail", `${meta.competition_name} · Season ${meta.season} · ${meta.model_name} · ${meta.model_version}`);
   setText("masthead-next-date", meta.next_fixture_date);
   setText("masthead-updated", formatUpdatedAt(meta.updated_at));
 
   if (nextFixture) {
     setText("metric-next-fixture", `${nextFixture.home_team} vs ${nextFixture.away_team}`);
-    setText("metric-next-fixture-note", `${nextFixture.match_date} ${nextFixture.match_time}`);
+    setText(
+      "metric-next-fixture-note",
+      `${formatKickoffDate(nextFixture.kickoff_at, nextFixture.match_date)} ${formatKickoffTime(nextFixture.kickoff_at, nextFixture.match_time)}`,
+    );
   }
 
   if (strongest) {
@@ -321,7 +362,7 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
   }
 
   setText("metric-last-completed", meta.last_completed_match_date);
-  setText("metric-season-window", `Season ${meta.season} · ${meta.timezone}`);
+  setText("metric-season-window", `Season ${meta.season} · ${DISPLAY_TZ}`);
   setText("panel-market-stamp", `Last Updated on ${formatUpdatedAt(meta.updated_at)}`);
   setText("panel-market-meta", `${fixtures.length} matches · ${meta.model_name}`);
   setText("panel-strength-meta", `${strength.length} clubs · recent 5 form`);
@@ -331,7 +372,7 @@ function renderMeta(meta) {
   setText("meta-competition", meta.competition_name);
   setText("meta-season", meta.season);
   setText("meta-updated-at", meta.updated_at);
-  setText("meta-timezone", meta.timezone);
+  setText("meta-timezone", DISPLAY_TZ);
   setText("meta-last-completed", meta.last_completed_match_date);
   setText("meta-next-fixture-date", meta.next_fixture_date);
   setText("meta-model-name", meta.model_name);
@@ -401,7 +442,15 @@ async function bootstrap() {
     const fixtures = fixturesPayload.rows;
     const predictions = predictionsPayload.rows;
     const strength = strengthPayload.rows;
-    const marketComparison = marketComparisonPayload.rows;
+    // Market comparison rows carry only match_time (no kickoff_at), so borrow
+    // the full kickoff timestamp from fixtures by team pairing for TZ display.
+    const kickoffByTeams = new Map(
+      fixtures.map((f) => [`${f.home_team}|${f.away_team}`, f.kickoff_at]),
+    );
+    const marketComparison = marketComparisonPayload.rows.map((row) => ({
+      ...row,
+      kickoff_at: row.kickoff_at ?? kickoffByTeams.get(`${row.home_team}|${row.away_team}`),
+    }));
     const predictionById = new Map(predictions.map((row) => [row.fixture_id, row]));
     const mergedMarketRows = fixtures
       .map((fixture) => {

@@ -25,7 +25,7 @@ TZ = ZoneInfo("Asia/Shanghai")
 COMPETITION_CODE = "CSL"
 COMPETITION_NAME = "Chinese Super League"
 MODEL_NAME = "Zero-Inflated Poisson with Dixon-Coles Time Decay"
-MODEL_VERSION = "v1"
+MODEL_VERSION = "v2.0"
 
 META_COLUMNS = [
     "competition_code",
