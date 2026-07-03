@@ -116,17 +116,17 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552547,15,2026-05-30,Chongqing Tonglianglong,Beijing Guoan,2,3,,,Ended
 15549863,15,2026-05-30,Henan Songshan Longmen,Zhejiang Professional,0,2,,,Ended
 15552544,15,2026-05-30,Qingdao West Coast,Shanghai Shenhua,2,2,,,Ended
-15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,3,2,,,Ended
-15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,1,0,,,Ended
+15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,3,2,2.72,1.13,Ended
+15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,1,0,1.26,1.31,Ended
 15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,1,1,,,Ended
-15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,,,,,Not started
-15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,,,,,Not started
-15552557,16,2026-06-27,Chongqing Tonglianglong,Tianjin Jinmen Tiger,,,,,Not started
-15552555,16,2026-06-27,Henan Songshan Longmen,Shanghai Port,,,,,Not started
-15552553,16,2026-06-27,Liaoning Tieren,Shandong Taishan,,,,,Not started
-15552554,16,2026-06-27,Shenzhen Xinpengcheng,Chengdu Rongcheng,,,,,Not started
-15552560,16,2026-06-28,Dalian Yingbo,Shanghai Shenhua,,,,,Not started
-15552556,16,2026-06-28,Qingdao West Coast,Zhejiang Professional,,,,,Not started
+15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,4,2,,,Ended
+15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,1,0,2.61,0.77,Ended
+15552557,16,2026-06-27,Chongqing Tonglianglong,Tianjin Jinmen Tiger,1,0,,,Ended
+15552555,16,2026-06-27,Henan Songshan Longmen,Shanghai Port,1,2,1.19,1.14,Ended
+15552553,16,2026-06-27,Liaoning Tieren,Shandong Taishan,1,5,,,Ended
+15552554,16,2026-06-27,Shenzhen Xinpengcheng,Chengdu Rongcheng,2,3,2.45,1.9,Ended
+15552560,16,2026-06-28,Dalian Yingbo,Shanghai Shenhua,1,4,,,Ended
+15552556,16,2026-06-28,Qingdao West Coast,Zhejiang Professional,3,1,,,Ended
 15552562,17,2026-07-03,Yunnan Yukun,Henan Songshan Longmen,,,,,Not started
 15552563,17,2026-07-04,Beijing Guoan,Shandong Taishan,,,,,Not started
 15552564,17,2026-07-04,Dalian Yingbo,Wuhan Three Towns,,,,,Not started

@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-02T19:04:50+08:00",
+    "updated_at": "2026-07-03T19:03:32+08:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v1"
   },
@@ -230,6 +230,48 @@
       "home_win_fair_odds": 1.678,
       "draw_fair_odds": 3.855,
       "away_win_fair_odds": 6.9141
+    },
+    {
+      "fixture_id": "CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren",
+      "round": 19,
+      "match_date": "2026-07-17",
+      "kickoff_at": "2026-07-17T11:35:00+08:00",
+      "home_team": "Beijing Guoan",
+      "away_team": "Liaoning Tieren",
+      "home_win_prob": 0.830705,
+      "draw_prob": 0.120664,
+      "away_win_prob": 0.048631,
+      "home_win_fair_odds": 1.2038,
+      "draw_fair_odds": 8.2875,
+      "away_win_fair_odds": 20.563
+    },
+    {
+      "fixture_id": "CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu",
+      "round": 19,
+      "match_date": "2026-07-17",
+      "kickoff_at": "2026-07-17T11:35:00+08:00",
+      "home_team": "Henan Songshan Longmen",
+      "away_team": "Qingdao Hainiu",
+      "home_win_prob": 0.644683,
+      "draw_prob": 0.224166,
+      "away_win_prob": 0.131151,
+      "home_win_fair_odds": 1.5511,
+      "draw_fair_odds": 4.461,
+      "away_win_fair_odds": 7.6248
+    },
+    {
+      "fixture_id": "CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port",
+      "round": 19,
+      "match_date": "2026-07-17",
+      "kickoff_at": "2026-07-17T12:00:00+08:00",
+      "home_team": "Yunnan Yukun",
+      "away_team": "Shanghai Port",
+      "home_win_prob": 0.291124,
+      "draw_prob": 0.279635,
+      "away_win_prob": 0.429241,
+      "home_win_fair_odds": 3.435,
+      "draw_fair_odds": 3.5761,
+      "away_win_fair_odds": 2.3297
     }
   ]
 }
