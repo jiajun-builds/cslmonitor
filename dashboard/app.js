@@ -133,6 +133,35 @@ function evClass(value) {
   return "market-comparison__value--neutral";
 }
 
+// "H -0.25" — side prefix + handicap line (odds shown in a separate column).
+function sideLine(side, line) {
+  if (line == null || Number.isNaN(Number(line))) {
+    return "--";
+  }
+  return `${side} ${formatLine(line)}`;
+}
+
+// Arrow for how a side's handicap moved from open to now, by absolute magnitude:
+// ↓ narrowed (|now| < |open|), ↑ widened (|now| > |open|), = unchanged.
+function lineMove(openLine, nowLine) {
+  if (openLine == null || nowLine == null) {
+    return "";
+  }
+  const o = Number(openLine);
+  const n = Number(nowLine);
+  if (Number.isNaN(o) || Number.isNaN(n)) {
+    return "";
+  }
+  const delta = Math.abs(n) - Math.abs(o);
+  if (delta < 0) {
+    return "↓";
+  }
+  if (delta > 0) {
+    return "↑";
+  }
+  return "=";
+}
+
 function getBestBet(rows) {
   return rows.reduce((best, row) => {
     const variants = [
@@ -288,15 +317,23 @@ function renderMarketComparison(rows) {
         <tr class="market-comparison__row market-comparison__row--home">
           <td class="numeric market-comparison__time" rowspan="2">${formatKickoffTime(row.kickoff_at, row.match_time)}</td>
           <td class="market-comparison__match">${row.home_team}</td>
-          <td class="numeric market-comparison__value market-comparison__value--line">H ${formatLine(row.home_spread)}</td>
+          <td class="numeric market-comparison__value market-comparison__value--line market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.open_last_update ?? ""}" data-tip-line="${row.open_home_spread ?? ""}" data-tip-hodds="${row.open_home_odds ?? ""}" data-tip-aodds="${row.open_away_odds ?? ""}">${sideLine("H", row.open_home_spread)}</td>
+          <td class="numeric market-comparison__value">${formatOdds(row.open_home_odds)}</td>
+          <td class="numeric market-comparison__value ${evClass(row.open_home_ah_ev)}">${formatEv(row.open_home_ah_ev)}</td>
+          <td class="numeric market-comparison__value market-comparison__value--line market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.last_update ?? ""}" data-tip-line="${row.home_spread ?? ""}" data-tip-hodds="${row.home_odds ?? ""}" data-tip-aodds="${row.away_odds ?? ""}">${sideLine("H", row.home_spread)}</td>
           <td class="numeric market-comparison__value">${formatOdds(row.home_odds)}</td>
           <td class="numeric market-comparison__value ${evClass(row.home_ah_ev)}">${formatEv(row.home_ah_ev)}</td>
+          <td class="numeric market-comparison__value market-comparison__move">${lineMove(row.open_home_spread, row.home_spread)}</td>
         </tr>
         <tr class="market-comparison__row market-comparison__row--away">
           <td class="market-comparison__match">${row.away_team}</td>
-          <td class="numeric market-comparison__value market-comparison__value--line">A ${formatLine(row.away_spread)}</td>
+          <td class="numeric market-comparison__value market-comparison__value--line market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.open_last_update ?? ""}" data-tip-line="${row.open_away_spread ?? ""}" data-tip-hodds="${row.open_home_odds ?? ""}" data-tip-aodds="${row.open_away_odds ?? ""}">${sideLine("A", row.open_away_spread)}</td>
+          <td class="numeric market-comparison__value">${formatOdds(row.open_away_odds)}</td>
+          <td class="numeric market-comparison__value ${evClass(row.open_away_ah_ev)}">${formatEv(row.open_away_ah_ev)}</td>
+          <td class="numeric market-comparison__value market-comparison__value--line market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.last_update ?? ""}" data-tip-line="${row.away_spread ?? ""}" data-tip-hodds="${row.home_odds ?? ""}" data-tip-aodds="${row.away_odds ?? ""}">${sideLine("A", row.away_spread)}</td>
           <td class="numeric market-comparison__value">${formatOdds(row.away_odds)}</td>
           <td class="numeric market-comparison__value ${evClass(row.away_ah_ev)}">${formatEv(row.away_ah_ev)}</td>
+          <td class="numeric market-comparison__value market-comparison__move">${lineMove(row.open_away_spread, row.away_spread)}</td>
         </tr>
       `,
     )
@@ -472,5 +509,108 @@ async function bootstrap() {
   }
 }
 
+// Hover tooltip for Open Line cells: shows the captured opening snapshot
+// (opening timestamp, the line, and both sides' odds).
+function formatOpenStamp(iso) {
+  if (!iso) {
+    return "";
+  }
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return String(iso);
+  }
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: DISPLAY_TZ,
+  })
+    .format(date)
+    .toUpperCase();
+}
+
+function ensureOddsTooltip() {
+  let el = document.getElementById("odds-tooltip");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "odds-tooltip";
+    el.className = "odds-tooltip";
+    el.hidden = true;
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+function showOddsTooltip(cell) {
+  const { tipTime, tipLine, tipHodds, tipAodds } = cell.dataset;
+  if (!tipTime && !tipLine && !tipHodds && !tipAodds) {
+    return; // no captured line for this side
+  }
+  const tip = ensureOddsTooltip();
+  tip.innerHTML = `
+    <div class="odds-tooltip__time">${formatOpenStamp(tipTime)}</div>
+    <div class="odds-tooltip__grid">
+      <span class="odds-tooltip__key">Line</span><span class="odds-tooltip__val">${tipLine === "" ? "--" : formatLine(tipLine)}</span>
+      <span class="odds-tooltip__key">home_odds</span><span class="odds-tooltip__val">${formatOdds(tipHodds || null)}</span>
+      <span class="odds-tooltip__key">away_odds</span><span class="odds-tooltip__val">${formatOdds(tipAodds || null)}</span>
+    </div>`;
+  tip.hidden = false;
+}
+
+function positionOddsTooltip(event) {
+  const tip = document.getElementById("odds-tooltip");
+  if (!tip || tip.hidden) {
+    return;
+  }
+  const pad = 14;
+  const rect = tip.getBoundingClientRect();
+  let x = event.clientX + pad;
+  let y = event.clientY + pad;
+  if (x + rect.width > window.innerWidth) {
+    x = event.clientX - rect.width - pad;
+  }
+  if (y + rect.height > window.innerHeight) {
+    y = event.clientY - rect.height - pad;
+  }
+  tip.style.left = `${Math.max(4, x)}px`;
+  tip.style.top = `${Math.max(4, y)}px`;
+}
+
+function hideOddsTooltip() {
+  const tip = document.getElementById("odds-tooltip");
+  if (tip) {
+    tip.hidden = true;
+  }
+}
+
+function initOddsTooltip() {
+  // Delegation on document so it keeps working after the table re-renders.
+  document.addEventListener("mouseover", (event) => {
+    const cell = event.target.closest(".market-comparison__line-cell");
+    if (cell) {
+      showOddsTooltip(cell);
+      positionOddsTooltip(event);
+    }
+  });
+  document.addEventListener("mousemove", (event) => {
+    if (event.target.closest(".market-comparison__line-cell")) {
+      positionOddsTooltip(event);
+    }
+  });
+  document.addEventListener("mouseout", (event) => {
+    const from = event.target.closest(".market-comparison__line-cell");
+    const to = event.relatedTarget && event.relatedTarget.closest
+      ? event.relatedTarget.closest(".market-comparison__line-cell")
+      : null;
+    if (from && !to) {
+      hideOddsTooltip();
+    }
+  });
+}
+
 initNav();
+initOddsTooltip();
 bootstrap();

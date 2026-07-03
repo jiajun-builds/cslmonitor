@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -138,14 +139,36 @@ def previous_match(
     return best
 
 
-def build_calendar(
-    schedule_path: str,
-    target_path: str,
-    window_hours: float,
-) -> list[dict[str, str]]:
+@dataclass(frozen=True)
+class OpenWindow:
+    """A fixture's predicted Pinnacle opening window, with UTC-aware datetimes.
+
+    build_calendar formats everything to UK-local strings for display/CSV; a
+    scheduler needs real tz-aware datetimes to compare against "now", so this is
+    the structured form the timing logic is derived from. All datetimes are UTC.
+    """
+
+    round: str
+    home: str
+    away: str
+    kickoff: datetime
+    home_prev: tuple[datetime, str] | None
+    away_prev: tuple[datetime, str] | None
+    anchor: datetime | None
+    open_from: datetime | None
+    open_to: datetime | None
+    note: str
+
+
+def build_open_windows(
+    schedule_path: str = DEFAULT_SCHEDULE_CSV,
+    target_path: str = DEFAULT_TARGET_CSV,
+    window_hours: float = DEFAULT_WINDOW_HOURS,
+) -> list[OpenWindow]:
+    """Compute each target fixture's predicted open window as tz-aware datetimes."""
     per_team = load_schedule(schedule_path)
     window = timedelta(hours=window_hours)
-    rows: list[dict[str, str]] = []
+    windows: list[OpenWindow] = []
 
     with open(target_path, newline="", encoding="utf-8-sig") as fh:
         reader = csv.DictReader(fh)
@@ -169,22 +192,47 @@ def build_calendar(
             else:
                 anchor = max(home_prev[0], away_prev[0])
 
-            rows.append(
-                {
-                    "round": round_str,
-                    "kickoff_at": _fmt(kickoff),
-                    "home": home,
-                    "away": away,
-                    "home_prev_opp": home_prev[1] if home_prev else "",
-                    "home_prev_kickoff": _fmt(home_prev[0]) if home_prev else "",
-                    "away_prev_opp": away_prev[1] if away_prev else "",
-                    "away_prev_kickoff": _fmt(away_prev[0]) if away_prev else "",
-                    "anchor_kickoff": _fmt(anchor),
-                    "predicted_open_from": _fmt(anchor),
-                    "predicted_open_to": _fmt(anchor + window) if anchor else "",
-                    "note": note,
-                }
+            windows.append(
+                OpenWindow(
+                    round=round_str,
+                    home=home,
+                    away=away,
+                    kickoff=kickoff,
+                    home_prev=home_prev,
+                    away_prev=away_prev,
+                    anchor=anchor,
+                    open_from=anchor,
+                    open_to=(anchor + window) if anchor else None,
+                    note=note,
+                )
             )
+    return windows
+
+
+def build_calendar(
+    schedule_path: str,
+    target_path: str,
+    window_hours: float,
+) -> list[dict[str, str]]:
+    """UK-local string rows for display/CSV, derived from build_open_windows."""
+    rows: list[dict[str, str]] = []
+    for w in build_open_windows(schedule_path, target_path, window_hours):
+        rows.append(
+            {
+                "round": w.round,
+                "kickoff_at": _fmt(w.kickoff),
+                "home": w.home,
+                "away": w.away,
+                "home_prev_opp": w.home_prev[1] if w.home_prev else "",
+                "home_prev_kickoff": _fmt(w.home_prev[0]) if w.home_prev else "",
+                "away_prev_opp": w.away_prev[1] if w.away_prev else "",
+                "away_prev_kickoff": _fmt(w.away_prev[0]) if w.away_prev else "",
+                "anchor_kickoff": _fmt(w.anchor),
+                "predicted_open_from": _fmt(w.anchor),
+                "predicted_open_to": _fmt(w.open_to) if w.anchor else "",
+                "note": w.note,
+            }
+        )
 
     rows.sort(key=lambda r: (r["predicted_open_from"] or "9999", r["kickoff_at"]))
     return rows

@@ -134,7 +134,12 @@ def get_api_key() -> str:
     return api_key
 
 
-def fetch_odds_payload(api_key: str, regions: str) -> list[dict[str, Any]]:
+def fetch_odds_response(api_key: str, regions: str) -> requests.Response:
+    """Request pre-match Pinnacle spreads and return the raw HTTP response.
+
+    Kept separate from ``fetch_odds_payload`` so callers that need the quota
+    headers (``x-requests-remaining`` etc.) can read them off the response.
+    """
     url = f"{THE_ODDS_API_BASE_URL}/sports/{ODDS_SPORT_KEY}/odds"
     commence_time_from = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     params = {
@@ -147,10 +152,15 @@ def fetch_odds_payload(api_key: str, regions: str) -> list[dict[str, Any]]:
     }
     response = requests.get(url, params=params, timeout=30)
     response.raise_for_status()
+    log.info("Requested %s odds with commenceTimeFrom=%s", ODDS_SPORT_KEY, commence_time_from)
+    return response
+
+
+def fetch_odds_payload(api_key: str, regions: str) -> list[dict[str, Any]]:
+    response = fetch_odds_response(api_key, regions)
     data = response.json()
     if not isinstance(data, list):
         raise ValueError(f"Expected list response from The Odds API, got: {type(data)}")
-    log.info("Requested %s odds with commenceTimeFrom=%s", ODDS_SPORT_KEY, commence_time_from)
     return data
 
 
