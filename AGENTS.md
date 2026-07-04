@@ -343,6 +343,16 @@ where the model diverges from the market and bet +EV lines at aggregator books.
      separate from the validated ~1h **display** window (`opening_calendar.DEFAULT_WINDOW_HOURS`,
      unchanged, still shown in the calendar). A still-uncaptured fixture is grabbed on first
      feed availability after its window, bounded so a long-open line isn't mislabeled `open`.
+   - **Open-only fixtures now shown — FIXED.** The comparison used to keep only fixtures with a
+     current **Now** line (`build_base_frame` filtered on `event_id.notna()`), so a fixture
+     captured *before* it appeared in a Now-line fetch (e.g. round-18 `Shenzhen vs Qingdao West
+     Coast`, captured at 12:45 while the 12:04 Now line lacked it) stayed invisible until the
+     next `odds` refresh — even though its opening line was in the history. `build_base_frame`
+     now keeps a fixture with a Now line **or** a captured open line (open-only rows render Now
+     columns as `--`), gated to a **future kickoff** so already-kicked-off matches don't linger
+     once the feed drops them. Now-side probs/EV are left NaN for open-only rows and
+     `validate_market_probabilities` skips them; `getBestBet` in `app.js` treats a null Now EV
+     as NaN so an open-only fixture is never chosen as the best bet.
 
 ## Agent Tips
 - Prefer `./scripts/csl.sh` over direct module execution for local workflow tasks.
