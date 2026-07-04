@@ -153,15 +153,44 @@ Three workflows in `.github/workflows/` (scheduled workflows only run from `main
     (skips if remaining < 50) and **never writes the history CSV** or the model sidecar.
   Uses a cached conda env (`use-mamba` + `actions/cache` on the pkgs dir); kept
   `conda-incubator/setup-miniconda` because `scripts/common.sh` needs the `conda` command.
-- **`capture-odds.yml`** — every-10-min opening-line capture tick (history CSV only);
-  independent concurrency group.
+- **`capture-odds.yml`** — every-10-min opening-line capture tick; independent concurrency
+  group. Two jobs: `capture` (lightweight pandas+requests) appends opening lines to the
+  history CSV and exposes an `appended` output; `publish` runs **only when `appended == 'true'`**
+  — it sets up the conda env, runs `./scripts/csl.sh republish` (rebuild comparison + site
+  from the existing Now-line + updated history, **no `/odds` spend**), commits the dashboard
+  artifacts, and deploys Pages itself (job-level `concurrency: pages` to serialize with
+  `deploy-pages.yml`). This surfaces a fresh open line on the site within one tick instead of
+  waiting up to ~3h for the next `odds` refresh, while idle ticks skip the publish job entirely.
 - **`deploy-pages.yml`** — builds + deploys Pages; `push` is path-filtered, and it chains
-  off the `CSL Refresh` `workflow_run` (so both `full` and `odds` runs redeploy).
+  off the `CSL Refresh` `workflow_run` (so both `full` and `odds` runs redeploy). The
+  capture-driven redeploy above is done inside `capture-odds.yml`, not here.
 
 All writer workflows push with a rebase+retry loop to survive the push race between the
 3h refresh, the daily refresh, and the 10-min capture tick.
 
 Free Odds-API budget ≈ 290–310 of 500 requests/month (30 daily + 240 for 3h + ~20–40 capture).
+
+### Dashboard refresh behaviour (two independent update streams)
+The page updates via **two streams** with different cadences/triggers — reason about them
+separately. The **Now** stream is independent of opening windows (always runs on schedule);
+the **Open** stream only writes when a fixture is inside its capture window, not yet captured,
+and present in the Odds API feed.
+
+| Stream   | Page columns it drives                         | Driven by      | Cadence / trigger                                   | Spends `/odds`?          |
+| -------- | ---------------------------------------------- | -------------- | --------------------------------------------------- | ------------------------ |
+| **Now**  | "Now" line/odds, model EV, Move-arrow baseline | `CSL Refresh`  | odds every 3h (UTC `0 */3`) + daily `full` 09:17 LDN | 1 per run                |
+| **Open** | "Open" line/odds (the opening line)            | `capture-odds` | 10-min tick; in-window + uncaptured + present-in-feed | 1 only when it captures |
+
+Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window, roadmap #6):
+
+| Situation                          | `capture-odds` tick                                   | `CSL Refresh`             | What the page shows                                      |
+| ---------------------------------- | ----------------------------------------------------- | ------------------------- | ------------------------------------------------------- |
+| **Outside any capture window**     | idle (0 req, no commit, no rebuild)                   | Now refresh every 3h      | Now cols update 3-hourly; Open cols static              |
+| **In window, feed has the fixture**| captures → append → gated `publish` rebuild + deploy  | 3h refresh continues      | Open cols appear within ~1 tick; Now every 3h           |
+| **In window, feed lacks it yet**   | nothing this tick; retries each tick (6h window)      | 3h refresh continues      | Open cols blank until the feed lists it (arrives in waves) |
+| **Fixture already captured**       | skipped (an `open` row exists)                        | 3h refresh continues      | Open locked to the true opening line; Move tracks Now vs Open |
+| **Quota < 50 remaining**           | capture aborts (`min-remaining` guard)                | odds refresh skips fetch  | Both streams pause until the monthly quota reset        |
+| **Manual dispatch**                | `Capture Odds` (optional `dry_run`)                   | `CSL Refresh` `mode=full`/`odds` | Forces the corresponding refresh                 |
 
 ## Key Source Modules
 - Fixtures/results ingestion: `src/csl/fixtures/chn_fixture_v5.py`
@@ -299,6 +328,21 @@ where the model diverges from the market and bet +EV lines at aggregator books.
    RPS (ZIP vs Poisson), and per-segment calibration / reliability diagrams (by handicap
    line, favourite vs underdog) — bet only in well-calibrated segments.
 5. **Optional simplification:** swap production ZIP → `PoissonGoalsModel` in `dc.py`.
+6. **Capture-loop hardening — DONE (two gaps found 2026-07-04, field-observed on round 18):**
+   - **Monitor lag after capture — FIXED.** `capture-odds.yml` used to write the history CSV
+     and stop, so a freshly captured opening line only surfaced at the next 3-hourly
+     `csl-refresh odds` run (up to ~3h later). Now a gated `publish` job runs only when the
+     tick appended rows: it runs `./scripts/csl.sh republish` (new command = rebuild
+     `upcoming_market_comparison` + dashboard + site from the existing Now-line and updated
+     history, **no `/odds` spend**) and deploys Pages. Idle ticks skip it. See Automation.
+   - **1h-window feed-lag miss — FIXED.** The Odds API lists fixtures in waves; a fixture whose
+     feed entry (or Pinnacle line) appeared only AFTER its predicted `[anchor, anchor+1h]`
+     window closed was never captured (`pending_open_fixtures` requires `now ∈ window`) — on
+     round 18, `Shanghai Port vs Dalian Yingbo` was at risk of a permanent miss. The scheduler
+     now uses a wider **capture** window `capture_scheduler.DEFAULT_CAPTURE_WINDOW_HOURS` (6h),
+     separate from the validated ~1h **display** window (`opening_calendar.DEFAULT_WINDOW_HOURS`,
+     unchanged, still shown in the calendar). A still-uncaptured fixture is grabbed on first
+     feed availability after its window, bounded so a long-open line isn't mislabeled `open`.
 
 ## Agent Tips
 - Prefer `./scripts/csl.sh` over direct module execution for local workflow tasks.

@@ -92,6 +92,16 @@ run_publish() {
   run_site_build
 }
 
+# Rebuild the market comparison + site WITHOUT re-fetching odds. Mirrors what the
+# every-3h `odds` refresh publishes, minus the `/odds` spend: the comparison export
+# re-reads the existing Now-line CSV joined to the (freshly captured) opening-line
+# history, so a just-captured open line surfaces on the dashboard immediately. Used
+# by capture-odds.yml's gated publish job.
+run_republish() {
+  run_market_comparison
+  run_publish
+}
+
 run_all() {
   local started_at
   local finished_at
@@ -137,6 +147,7 @@ Commands:
   dashboard  Export dashboard CSV and JSON
   odds       Fetch Pinnacle odds and export market comparison
   publish    Rebuild dashboard exports and site/
+  republish  Rebuild market comparison + dashboard + site/ WITHOUT fetching odds
   all        Run the full local workflow, including odds
   help       Show this help message
 EOF
@@ -149,6 +160,7 @@ dispatch_command() {
     dashboard) run_dashboard ;;
     odds) run_odds ;;
     publish) run_publish ;;
+    republish) run_republish ;;
     all) run_all ;;
     help|-h|--help) show_help ;;
     *)
