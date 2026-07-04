@@ -142,13 +142,36 @@ This rebuilds:
 - dashboard CSV / JSON
 - GitHub Pages `site/`
 
+## Automation (GitHub Actions)
+Three workflows in `.github/workflows/` (scheduled workflows only run from `main`):
+- **`csl-refresh.yml` (`name: CSL Refresh`) — dual-mode.** Mode is resolved from the
+  trigger (cron string / `workflow_dispatch` `mode` input):
+  - `full` — daily `17 9` Europe/London cron → `./scripts/csl.sh all` (data + model +
+    odds + dashboard + site). Runs the model, so it (re)writes `CHN_model_meta.json`.
+  - `odds` — every-3h `0 */3` UTC cron → `./scripts/csl.sh odds && ./scripts/csl.sh publish`
+    (re-fetch the "Now" line + rebuild the site). Has a pre-spend `/sports` quota guard
+    (skips if remaining < 50) and **never writes the history CSV** or the model sidecar.
+  Uses a cached conda env (`use-mamba` + `actions/cache` on the pkgs dir); kept
+  `conda-incubator/setup-miniconda` because `scripts/common.sh` needs the `conda` command.
+- **`capture-odds.yml`** — every-10-min opening-line capture tick (history CSV only);
+  independent concurrency group.
+- **`deploy-pages.yml`** — builds + deploys Pages; `push` is path-filtered, and it chains
+  off the `CSL Refresh` `workflow_run` (so both `full` and `odds` runs redeploy).
+
+All writer workflows push with a rebase+retry loop to survive the push race between the
+3h refresh, the daily refresh, and the 10-min capture tick.
+
+Free Odds-API budget ≈ 290–310 of 500 requests/month (30 daily + 240 for 3h + ~20–40 capture).
+
 ## Key Source Modules
 - Fixtures/results ingestion: `src/csl/fixtures/chn_fixture_v5.py`
 - xG pipeline: `src/csl/xg/xg_pipeline.py`
 - xG merge: `src/csl/xg/chn_merge.py`
 - expected-goals-plus calculation: `src/csl/xg/compute_expg.py`
 - Dixon-Coles model: `src/csl/models/dc.py`
-- dashboard CSV export: `src/csl/dashboard/export_dashboard_csv.py`
+- dashboard CSV export: `src/csl/dashboard/export_dashboard_csv.py` (emits `updated_at`
+  = export time AND `model_updated_at` = last model-fit time, read from the
+  `CHN_model_meta.json` sidecar via `paths.model_meta_json()`)
 - dashboard JSON export: `src/csl/dashboard/export_dashboard_json.py`
 - Pinnacle fetch (single "current" snapshot): `src/csl/odds/fetch_pinnacle_spreads.py`
 - market comparison export (now + captured-open, with per-side EV): `src/csl/odds/export_upcoming_market_comparison.py`
@@ -176,6 +199,9 @@ This rebuilds:
 - match simulations: `data/output_data/CHN_team_stats_match_simulations.csv`
 - market comparison: `data/output_data/CHN_upcoming_market_comparison.csv`
 - opening-time calendar (predicted Pinnacle open windows): `data/output_data/CHN_opening_time_calendar.csv`
+- model-fit timestamp sidecar (written by `DC_CHN.py`, read by the dashboard meta
+  export; NOT touched by odds-only refreshes so it stays pinned to the last model run):
+  `data/output_data/CHN_model_meta.json`
 
 ### Dashboard Assets
 - CSV directory: `data/dashboard/csv/`
@@ -260,6 +286,13 @@ where the model diverges from the market and bet +EV lines at aggregator books.
    (line @ price + model EV each) plus a **Move** arrow; open EV is recomputed at the
    captured opening line. **Close/CLV columns are intentionally NOT built** — see #3.
    Free-plan quota: 500 requests/month; one `/odds` call = 1 request, `/sports` = 0.
+
+   **Intraday extension — DONE (PR #17).** `csl-refresh.yml` is now dual-mode: the daily
+   cron rebuilds the model, and a new every-3h `odds` cron refreshes only the "Now" line +
+   site (see Automation section). Because odds-only publishes bump the dashboard export time
+   every 3h, a persisted `model_updated_at` (from the `CHN_model_meta.json` sidecar) now
+   travels through the meta export so the EV-panel footer shows **model-update time vs
+   odds-fetch time** separately (`Model … · Odds fetched …`).
 3. **Close the CLV loop:** join the user's bet-tracker fills to the captured closing lines →
    automated, auditable, per-segment CLV. Replaces manual CLV computation.
 4. **Validation ladder for the edge** (before trusting it): paired Wilcoxon on per-fixture
