@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-04T20:18:25+01:00"
+    "updated_at": "2026-07-04T23:01:44+01:00"
   },
   "rows": [
     {
@@ -11,10 +11,10 @@
       "match_time": "11:00",
       "home_spread": 1,
       "away_spread": -1,
-      "home_odds": 1.89,
-      "away_odds": 1.98,
-      "home_ah_ev": 0.0581178405534175,
-      "away_ah_ev": -0.1105314467579238,
+      "home_odds": 1.92,
+      "away_odds": 1.95,
+      "home_ah_ev": 0.0706943576932238,
+      "away_ah_ev": -0.1199810117957488,
       "open_home_spread": 0.75,
       "open_away_spread": -0.75,
       "open_home_odds": 1.82,
@@ -22,8 +22,8 @@
       "open_home_ah_ev": -0.1041259964789422,
       "open_away_ah_ev": 0.0241880523237682,
       "open_last_update": "2026-06-28T13:13:08Z",
-      "last_update": "2026-07-04T19:18:08Z",
-      "fetched_at": "2026-07-04T19:18:22Z"
+      "last_update": "2026-07-04T22:01:36Z",
+      "fetched_at": "2026-07-04T22:01:41Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -31,10 +31,10 @@
       "match_time": "11:35",
       "home_spread": -0.75,
       "away_spread": 0.75,
-      "home_odds": 1.91,
-      "away_odds": 1.96,
-      "home_ah_ev": 0.2111617200304116,
-      "away_ah_ev": -0.2746407944412953,
+      "home_odds": 1.9,
+      "away_odds": 1.97,
+      "home_ah_ev": 0.2054714080674291,
+      "away_ah_ev": -0.2715742277552852,
       "open_home_spread": -0.75,
       "open_away_spread": 0.75,
       "open_home_odds": 1.87,
@@ -42,8 +42,8 @@
       "open_home_ah_ev": 0.1884004721784814,
       "open_away_ah_ev": -0.2838404944993254,
       "open_last_update": "2026-06-28T13:13:08Z",
-      "last_update": "2026-07-04T19:18:08Z",
-      "fetched_at": "2026-07-04T19:18:22Z"
+      "last_update": "2026-07-04T22:01:36Z",
+      "fetched_at": "2026-07-04T22:01:41Z"
     },
     {
       "home_team": "Shandong Taishan",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": 0.1691842530466094,
       "open_away_ah_ev": -0.2406926811751477,
       "open_last_update": "2026-07-04T12:02:19Z",
-      "last_update": "2026-07-04T19:18:08Z",
-      "fetched_at": "2026-07-04T19:18:22Z"
+      "last_update": "2026-07-04T22:01:36Z",
+      "fetched_at": "2026-07-04T22:01:41Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -82,8 +82,8 @@
       "open_home_ah_ev": -0.0197712351391614,
       "open_away_ah_ev": -0.0662973820318894,
       "open_last_update": "2026-07-04T12:02:18Z",
-      "last_update": "2026-07-04T19:18:08Z",
-      "fetched_at": "2026-07-04T19:18:22Z"
+      "last_update": "2026-07-04T22:01:36Z",
+      "fetched_at": "2026-07-04T22:01:41Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -102,8 +102,8 @@
       "open_home_ah_ev": -0.0938976229441767,
       "open_away_ah_ev": 0.0407644661558387,
       "open_last_update": "2026-07-04T12:44:56Z",
-      "last_update": "2026-07-04T19:18:08Z",
-      "fetched_at": "2026-07-04T19:18:22Z"
+      "last_update": "2026-07-04T22:01:36Z",
+      "fetched_at": "2026-07-04T22:01:41Z"
     }
   ]
 }
