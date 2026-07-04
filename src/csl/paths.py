@@ -18,6 +18,16 @@ def data_output_dir() -> str:
     return os.path.join(project_root(), "data", "output_data")
 
 
+def model_meta_json() -> str:
+    """Sidecar recording when the model was last (re)fit.
+
+    Written by the model step (DC_CHN.py), read by the dashboard meta export. It is
+    intentionally *not* touched by odds-only refreshes, so ``model_updated_at`` stays
+    pinned to the last full/model run even as the Now-line refreshes every few hours.
+    """
+    return os.path.join(data_output_dir(), "CHN_model_meta.json")
+
+
 def data_dashboard_dir() -> str:
     return os.path.join(project_root(), "data", "dashboard")
 

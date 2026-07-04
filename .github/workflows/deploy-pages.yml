@@ -1,9 +1,18 @@
 name: Deploy Dashboard to GitHub Pages
 
 on:
-  # Manual code changes merged to main.
+  # Manual code changes merged to main. Scope to paths the built site actually
+  # depends on (build_dashboard_site.sh copies dashboard/ + data/dashboard/json/)
+  # so unrelated pushes (AGENTS.md, model code, other workflows) don't rebuild
+  # and redeploy Pages. The daily data refresh doesn't rely on this filter — it
+  # deploys via the workflow_run trigger below.
   push:
     branches: [main]
+    paths:
+      - 'dashboard/**'
+      - 'data/dashboard/json/**'
+      - 'scripts/build_dashboard_site.sh'
+      - '.github/workflows/deploy-pages.yml'
   # The daily refresh pushes with GITHUB_TOKEN, which never fires `push`
   # workflows (GitHub's anti-recursion rule), so chain off the run instead.
   workflow_run:

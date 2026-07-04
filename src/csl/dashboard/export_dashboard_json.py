@@ -196,6 +196,7 @@ def run() -> None:
             "competition_name",
             "season",
             "updated_at",
+            "model_updated_at",
             "timezone",
             "last_completed_match_date",
             "next_fixture_date",

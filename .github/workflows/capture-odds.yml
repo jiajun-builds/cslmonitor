@@ -77,7 +77,19 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "chore(odds): capture opening-line snapshot [skip ci]"
             # main may have moved (daily refresh, prior capture); rebase our
-            # append-only change on top before pushing.
-            git pull --rebase origin main
-            git push origin main
+            # append-only change on top before pushing. Retry to close the
+            # pull->push race when another writer lands between our rebase and push.
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push origin main; then
+                pushed=1
+                break
+              fi
+              echo "push attempt $attempt failed; retrying..."
+              sleep 3
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "push failed after retries" >&2
+              exit 1
+            fi
           fi

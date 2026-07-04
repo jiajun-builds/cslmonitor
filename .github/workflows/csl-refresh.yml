@@ -1,10 +1,27 @@
 name: CSL Refresh
 
+# Dual-mode refresh (AGENTS.md roadmap: intraday odds + daily model).
+#   full  -> ./scripts/csl.sh all            (data + model + odds + dashboard + site)
+#   odds  -> ./scripts/csl.sh odds + publish  (re-fetch the "Now" line + rebuild site)
+# The daily 09:17 London cron runs `full`; the every-3h UTC cron runs `odds`. Both
+# share the cached conda env and one commit/push path. Pages redeploys after either
+# mode via deploy-pages.yml's workflow_run chain (keyed on this workflow's name).
+#
+# The odds mode does NOT touch the append-only history CSV — capture-odds.yml stays
+# the sole writer of opening lines. See AGENTS.md roadmap #2/#3.
+
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Which refresh to run"
+        type: choice
+        options: [full, odds]
+        default: full
   schedule:
-    - cron: "17 9 * * *"
+    - cron: "17 9 * * *"    # daily full (model) refresh
       timezone: "Europe/London"
+    - cron: "0 */3 * * *"   # every 3h odds-only "Now" refresh (UTC)
 
 permissions:
   contents: write
@@ -18,6 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
+    env:
+      # Package cache location so actions/cache can persist conda/mamba downloads.
+      CONDA_PKGS_DIRS: /home/runner/conda_pkgs_dir
+
     defaults:
       run:
         shell: bash -el {0}
@@ -28,38 +49,109 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Resolve mode
+        id: mode
+        shell: bash {0}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+          elif [ "${{ github.event.schedule }}" = "0 */3 * * *" ]; then
+            MODE="odds"
+          else
+            MODE="full"
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Resolved mode: $MODE"
+
+      - name: Cache conda packages
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/conda_pkgs_dir
+          key: conda-pkgs-${{ runner.os }}-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            conda-pkgs-${{ runner.os }}-
+
       - name: Set up Conda environment
         uses: conda-incubator/setup-miniconda@v4
         with:
           activate-environment: csl-workflows
           auto-activate-base: false
           environment-file: environment.yml
+          miniforge-variant: Miniforge3
+          use-mamba: true
 
       - name: Show environment details
         run: |
           conda info
           python --version
 
-      - name: Run full CSL refresh
+      - name: Run refresh (${{ steps.mode.outputs.mode }})
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
-        run: ./scripts/csl.sh all
+          PYTHONPATH: src
+          MODE: ${{ steps.mode.outputs.mode }}
+        run: |
+          set -euo pipefail
+          if [ "$MODE" = "odds" ]; then
+            # csl.sh odds uses the UNguarded fetch_pinnacle_spreads, so do the
+            # pre-spend quota check here (the free /sports read costs 0). Reuse
+            # read_quota() from the capture pipeline. Missing headers -> 9999 so a
+            # quota we can't read never blocks the refresh.
+            REMAINING="$(python -c "from csl.odds.capture_snapshot import read_quota; from csl.odds.fetch_pinnacle_spreads import get_api_key; r,_,_=read_quota(get_api_key()); print(r if r is not None else 9999)")"
+            echo "Odds API requests remaining: $REMAINING"
+            if [ "$REMAINING" -lt 50 ]; then
+              echo "Quota remaining $REMAINING < 50; skipping odds refresh this tick."
+            else
+              ./scripts/csl.sh odds
+              ./scripts/csl.sh publish
+            fi
+          else
+            ./scripts/csl.sh all
+          fi
 
       - name: Commit refreshed data
         # Plain bash avoids login-shell EXIT traps (conda) turning exit 0 into failure.
         shell: bash {0}
+        env:
+          MODE: ${{ steps.mode.outputs.mode }}
         run: |
           set -euo pipefail
-          git add data/raw_data data/output_data data/dashboard
+          if [ "$MODE" = "odds" ]; then
+            # Stage only the intraday odds outputs; never the append-only history CSV
+            # (capture-odds.yml owns that file).
+            git add data/raw_data/CHN_pinnacle_spreads.csv \
+                    data/output_data/CHN_upcoming_market_comparison.csv \
+                    data/dashboard
+            MSG="chore(odds): 3h Now-line refresh"
+          else
+            git add data/raw_data data/output_data data/dashboard
+            MSG="chore(data): automated dashboard refresh"
+          fi
           if git diff --cached --quiet; then
-            echo "No data changes to commit."
+            echo "No changes to commit."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             # The Pages deploy (deploy-pages.yml) chains off this workflow via
-            # workflow_run, not off this push, so no `[skip ci]` is needed and
-            # the commit message stays clean.
-            git commit -m "chore(data): automated dashboard refresh"
-            git push origin main
+            # workflow_run, not off this push, so no `[skip ci]` is needed.
+            git commit -m "$MSG"
+            # Robust push: main may have moved while csl.sh ran — a ~10-min
+            # capture-odds tick can land a history-only commit. That commit touches a
+            # different file, so the rebase is always conflict-free; the retry loop
+            # just closes the pull->push race (main moving between our rebase and push).
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push origin main; then
+                pushed=1
+                break
+              fi
+              echo "push attempt $attempt failed; retrying..."
+              sleep 3
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "push failed after retries" >&2
+              exit 1
+            fi
           fi
