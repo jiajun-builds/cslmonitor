@@ -169,13 +169,15 @@ function getBestBet(rows) {
         team: row.home_team,
         side: "H",
         line: row.home_spread,
-        ev: Number(row.home_ah_ev),
+        // null (open-only fixture, no Now line) -> NaN so it's skipped below;
+        // Number(null) is 0, which would otherwise look like a real 0-EV bet.
+        ev: row.home_ah_ev == null ? NaN : Number(row.home_ah_ev),
       },
       {
         team: row.away_team,
         side: "A",
         line: row.away_spread,
-        ev: Number(row.away_ah_ev),
+        ev: row.away_ah_ev == null ? NaN : Number(row.away_ah_ev),
       },
     ];
 

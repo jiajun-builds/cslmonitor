@@ -249,7 +249,14 @@ def load_open_snapshots(path: str) -> pd.DataFrame:
     return opens[OPEN_SNAPSHOT_COLUMNS]
 
 
-def build_base_frame(upcoming: pd.DataFrame, simulations: pd.DataFrame, pinnacle: pd.DataFrame) -> pd.DataFrame:
+def build_base_frame(
+    upcoming: pd.DataFrame,
+    simulations: pd.DataFrame,
+    pinnacle: pd.DataFrame,
+    opens: pd.DataFrame,
+    *,
+    now: pd.Timestamp | None = None,
+) -> pd.DataFrame:
     merged = upcoming.merge(simulations, on=["home_team", "away_team"], how="left", validate="one_to_one")
     missing_sim = merged.loc[
         merged[["home_win_prob", "draw_prob", "away_win_prob"]].isna().any(axis=1),
@@ -264,8 +271,22 @@ def build_base_frame(upcoming: pd.DataFrame, simulations: pd.DataFrame, pinnacle
         how="left",
         validate="one_to_one",
     )
-    with_odds = merged[merged["event_id"].notna()].copy()
-    return with_odds
+    merged = merged.merge(opens, on=["home_team", "away_team"], how="left", validate="one_to_one")
+    # Keep a fixture if it has a current Now line (Pinnacle event_id) OR a captured
+    # opening line. Open-only fixtures — captured before they appeared in a Now-line
+    # fetch — are shown with blank Now columns rather than dropped, so a freshly
+    # captured open line surfaces immediately instead of waiting for the next Now fetch.
+    # Now-line fixtures come from the live feed and are inherently upcoming; an open-only
+    # fixture is gated to a future kickoff so already-kicked-off matches don't linger on
+    # the board until the daily upcoming CSV trims them (the feed drops them at kickoff,
+    # which used to self-clean the comparison before open-only rows were surfaced).
+    now = now or pd.Timestamp.now(tz="UTC")
+    kickoff = pd.to_datetime(merged["kickoff_at"], utc=True, errors="coerce")
+    is_upcoming = kickoff.isna() | (kickoff >= now)
+    has_now = merged["event_id"].notna()
+    has_open = merged["open_home_spread"].notna()
+    keep = has_now | (has_open & is_upcoming)
+    return merged[keep].copy()
 
 
 def _ah_ev(pred, side: str, spread: float, odds: float) -> float:
@@ -293,17 +314,28 @@ def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float
     open_home_evs: list[float] = []
     open_away_evs: list[float] = []
 
+    nan = float("nan")
     for row in out.itertuples(index=False):
         pred = clf.predict(row.home_team, row.away_team)
-        home_probs = pred.asian_handicap_probs("home", float(row.home_spread))
-        away_probs = pred.asian_handicap_probs("away", float(row.away_spread))
 
-        home_win_probs.append(float(home_probs["win"]))
-        home_push_probs.append(float(home_probs["push"]))
-        home_lose_probs.append(float(home_probs["lose"]))
-        away_win_probs.append(float(away_probs["win"]))
-        away_push_probs.append(float(away_probs["push"]))
-        away_lose_probs.append(float(away_probs["lose"]))
+        # Now-side settlement probs only exist where a current Now line does; an
+        # open-only fixture has no Now handicap yet, so leave these NaN (rendered "--").
+        if pd.notna(row.home_spread) and pd.notna(row.away_spread):
+            home_probs = pred.asian_handicap_probs("home", float(row.home_spread))
+            away_probs = pred.asian_handicap_probs("away", float(row.away_spread))
+            home_win_probs.append(float(home_probs["win"]))
+            home_push_probs.append(float(home_probs["push"]))
+            home_lose_probs.append(float(home_probs["lose"]))
+            away_win_probs.append(float(away_probs["win"]))
+            away_push_probs.append(float(away_probs["push"]))
+            away_lose_probs.append(float(away_probs["lose"]))
+        else:
+            home_win_probs.append(nan)
+            home_push_probs.append(nan)
+            home_lose_probs.append(nan)
+            away_win_probs.append(nan)
+            away_push_probs.append(nan)
+            away_lose_probs.append(nan)
 
         # Open EV at the captured opening line, reusing the same fitted model.
         # Left as NaN for fixtures whose open line hasn't been captured.
@@ -342,18 +374,21 @@ def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float
 
 
 def validate_market_probabilities(frame: pd.DataFrame) -> None:
+    # Now-side settlement probs/EV only exist for fixtures with a current Now line;
+    # open-only rows legitimately carry NaN there, so restrict these checks to Now rows.
+    now = frame[frame["event_id"].notna()]
     for prefix in ("home_ah", "away_ah"):
         cols = [f"{prefix}_win_prob", f"{prefix}_push_prob", f"{prefix}_lose_prob"]
-        if frame[cols].isna().any(axis=1).any():
-            bad = frame.loc[frame[cols].isna().any(axis=1), ["fixture_id", "home_team", "away_team"]].to_dict("records")
+        if now[cols].isna().any(axis=1).any():
+            bad = now.loc[now[cols].isna().any(axis=1), ["fixture_id", "home_team", "away_team"]].to_dict("records")
             raise ValueError(f"Missing {prefix} settlement probabilities: {bad}")
-        total = frame[cols].sum(axis=1)
+        total = now[cols].sum(axis=1)
         if not ((total - 1.0).abs() <= 1e-6).all():
-            bad = frame.loc[(total - 1.0).abs() > 1e-6, ["fixture_id", "home_team", "away_team"]].to_dict("records")
+            bad = now.loc[(total - 1.0).abs() > 1e-6, ["fixture_id", "home_team", "away_team"]].to_dict("records")
             raise ValueError(f"{prefix} settlement probabilities do not sum to 1: {bad}")
     for col in ("home_ah_ev", "away_ah_ev"):
-        if frame[col].isna().any():
-            bad = frame.loc[frame[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
+        if now[col].isna().any():
+            bad = now.loc[now[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
             raise ValueError(f"Missing EV values in {col}: {bad}")
 
 
@@ -378,12 +413,15 @@ def run(
     simulations = load_simulations(simulations_csv)
     pinnacle = load_pinnacle(pinnacle_csv)
 
-    base = build_base_frame(upcoming, simulations, pinnacle)
-    log.info("Matched %d upcoming fixtures with Pinnacle odds out of %d total upcoming fixtures", len(base), len(upcoming))
-
     opens = load_open_snapshots(history_csv)
-    base = base.merge(opens, on=["home_team", "away_team"], how="left")
-    log.info("Joined captured opening lines for %d/%d fixtures", int(base["open_home_spread"].notna().sum()), len(base))
+    base = build_base_frame(upcoming, simulations, pinnacle, opens)
+    n_now = int(base["event_id"].notna().sum())
+    n_open = int(base["open_home_spread"].notna().sum())
+    n_open_only = int((base["event_id"].isna() & base["open_home_spread"].notna()).sum())
+    log.info(
+        "Comparison fixtures: %d of %d upcoming (%d with Now line, %d with open line, %d open-only)",
+        len(base), len(upcoming), n_now, n_open, n_open_only,
+    )
 
     if base.empty:
         log.info("No fixtures matched with Pinnacle odds; writing empty outputs and skipping model fit")
