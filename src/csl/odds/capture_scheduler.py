@@ -44,10 +44,20 @@ from csl.odds.fetch_pinnacle_spreads import (
 from csl.odds.opening_calendar import (
     DEFAULT_SCHEDULE_CSV,
     DEFAULT_TARGET_CSV,
-    DEFAULT_WINDOW_HOURS,
     build_open_windows,
 )
 from csl.odds.snapshot_store import DEDUP_KEY, HISTORY_CSV, append_snapshots, load_history
+
+# The scheduler's *capture* window is deliberately wider than the ~1h *display*
+# window (opening_calendar.DEFAULT_WINDOW_HOURS) it is derived from. The Odds API
+# lists fixtures in waves, so a fixture's feed entry (or Pinnacle's posted line) can
+# appear only AFTER the validated 1h open window has closed; with a 1h capture bound
+# such a fixture is never seen inside its window and its opening line is lost forever
+# (observed on round 18: Shanghai Port vs Dalian Yingbo). Widening only the lower..upper
+# *capture* bound to [anchor, anchor + this] lets a still-uncaptured fixture be grabbed
+# on first feed availability after its window, while the bound keeps a long-open line
+# from being mislabeled `open`. The calendar/display still uses the true 1h prediction.
+DEFAULT_CAPTURE_WINDOW_HOURS = 6.0
 
 logging.basicConfig(
     level=logging.INFO,
@@ -95,7 +105,7 @@ def tick(
     now: datetime | None = None,
     schedule_path: str = DEFAULT_SCHEDULE_CSV,
     target_path: str = DEFAULT_TARGET_CSV,
-    window_hours: float = DEFAULT_WINDOW_HOURS,
+    window_hours: float = DEFAULT_CAPTURE_WINDOW_HOURS,
     regions: str = DEFAULT_REGIONS,
     min_remaining: int = DEFAULT_MIN_REMAINING,
     history_path: str = HISTORY_CSV,
@@ -166,8 +176,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Odds-capture scheduler tick (open windows).")
     parser.add_argument("--schedule", default=DEFAULT_SCHEDULE_CSV, help="Full-season schedule CSV")
     parser.add_argument("--target", default=DEFAULT_TARGET_CSV, help="Upcoming fixtures CSV")
-    parser.add_argument("--window-hours", type=float, default=DEFAULT_WINDOW_HOURS,
-                        help="Hours after the anchor kickoff the line is expected to open")
+    parser.add_argument("--window-hours", type=float, default=DEFAULT_CAPTURE_WINDOW_HOURS,
+                        help="Capture window width in hours after the anchor kickoff: a fixture is "
+                             "captured while now is in [anchor, anchor+this]. Wider than the ~1h "
+                             "predicted-open window so feed-lagged fixtures aren't missed.")
     parser.add_argument("--regions", default=DEFAULT_REGIONS, help="Odds API regions (default: us)")
     parser.add_argument("--min-remaining", type=int, default=DEFAULT_MIN_REMAINING,
                         help="Abort before spending if quota remaining is below this")

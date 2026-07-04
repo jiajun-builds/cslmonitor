@@ -33,6 +33,10 @@ jobs:
   capture:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      # "true" only when this tick actually appended + pushed new opening-line rows.
+      # The publish job keys off this so idle ticks never rebuild/redeploy the site.
+      appended: ${{ steps.commit.outputs.appended }}
 
     steps:
       - name: Check out repository
@@ -63,8 +67,11 @@ jobs:
           python -m csl.odds.capture_scheduler $ARGS
 
       - name: Commit captured snapshot
+        id: commit
         run: |
           set -euo pipefail
+          # Default: nothing appended. Overridden to true only after a successful push.
+          echo "appended=false" >> "$GITHUB_OUTPUT"
           if [ ! -f data/raw_data/CHN_pinnacle_spreads_history.csv ]; then
             echo "No history file yet (idle tick); nothing to commit."
             exit 0
@@ -92,4 +99,108 @@ jobs:
               echo "push failed after retries" >&2
               exit 1
             fi
+            # Signal the publish job to rebuild + redeploy the dashboard.
+            echo "appended=true" >> "$GITHUB_OUTPUT"
           fi
+
+  # Rebuild the dashboard + redeploy Pages, but ONLY when the tick above actually
+  # appended new opening lines. This closes the "capture doesn't refresh the site"
+  # gap (a fresh open line otherwise waited up to ~3h for the next csl-refresh odds
+  # run) without redeploying on every idle 10-min tick. It re-reads the existing
+  # Now-line joined to the updated history — no /odds request is spent here.
+  publish:
+    needs: capture
+    if: ${{ needs.capture.outputs.appended == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    # Serialize Pages deploys with deploy-pages.yml (same "pages" group) so a
+    # capture-driven redeploy and a CSL Refresh redeploy can't clobber each other.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    env:
+      CONDA_PKGS_DIRS: /home/runner/conda_pkgs_dir
+
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main          # includes the opening-line commit the capture job just pushed
+          fetch-depth: 0      # full history so the commit step's rebase can fast-forward
+
+      - name: Cache conda packages
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/conda_pkgs_dir
+          key: conda-pkgs-${{ runner.os }}-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            conda-pkgs-${{ runner.os }}-
+
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v4
+        with:
+          activate-environment: csl-workflows
+          auto-activate-base: false
+          environment-file: environment.yml
+          miniforge-variant: Miniforge3
+          use-mamba: true
+
+      - name: Rebuild dashboard from captured lines (no odds fetch)
+        env:
+          PYTHONPATH: src
+        run: ./scripts/csl.sh republish
+
+      - name: Commit rebuilt dashboard
+        shell: bash {0}   # plain bash: avoid conda login-shell EXIT traps flipping exit 0 to failure
+        run: |
+          set -euo pipefail
+          git add data/output_data/CHN_upcoming_market_comparison.csv data/dashboard
+          if git diff --cached --quiet; then
+            echo "Rebuild produced no dashboard changes; nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore(odds): rebuild dashboard after opening-line capture [skip ci]"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push origin main; then
+                pushed=1
+                break
+              fi
+              echo "push attempt $attempt failed; retrying..."
+              sleep 3
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "push failed after retries" >&2
+              exit 1
+            fi
+          fi
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site           # built by `csl.sh republish` (run_site_build)
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
