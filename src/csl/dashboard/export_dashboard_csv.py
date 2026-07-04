@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 import math
 import os
@@ -12,7 +13,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 from csl.date_utils import format_date_only_series, parse_date_only_series
-from csl.paths import data_dashboard_csv_dir, data_output_dir, data_raw_dir
+from csl.paths import data_dashboard_csv_dir, data_output_dir, data_raw_dir, model_meta_json
 
 logging.basicConfig(
     level=logging.INFO,
@@ -32,6 +33,7 @@ META_COLUMNS = [
     "competition_name",
     "season",
     "updated_at",
+    "model_updated_at",
     "timezone",
     "last_completed_match_date",
     "next_fixture_date",
@@ -375,6 +377,22 @@ def build_team_strength_rankings(team_stats_path: str, matches_path: str) -> pd.
     return out
 
 
+def _read_model_updated_at(default: str) -> str:
+    """Return the model's last-fit timestamp from the sidecar, or ``default``."""
+    path = model_meta_json()
+    try:
+        with open(path, encoding="utf-8") as fh:
+            value = json.load(fh).get("model_updated_at")
+        if value:
+            return str(value)
+        log.warning("%s has no model_updated_at; falling back to export time", path)
+    except FileNotFoundError:
+        log.warning("Model meta sidecar %s not found; falling back to export time", path)
+    except (json.JSONDecodeError, OSError) as exc:
+        log.warning("Could not read %s (%s); falling back to export time", path, exc)
+    return default
+
+
 def build_dashboard_meta(
     matches: pd.DataFrame,
     upcoming: pd.DataFrame,
@@ -396,13 +414,21 @@ def build_dashboard_meta(
     # leaving the entire dashboard frozen at the previous run's snapshot.
     next_fixture_date = upcoming["match_date"].min() if not upcoming.empty else None
 
+    export_updated_at = export_now.tz_convert(TZ).isoformat(timespec="seconds")
+    # model_updated_at is pinned to the last model/full run via the sidecar written by
+    # DC_CHN.py; odds-only refreshes re-run this export but never the model, so this
+    # stays put while updated_at (export time) advances. Fall back to the export time
+    # if the sidecar is missing (e.g. before the first model run has written it).
+    model_updated_at = _read_model_updated_at(default=export_updated_at)
+
     meta = pd.DataFrame(
         [
             {
                 "competition_code": COMPETITION_CODE,
                 "competition_name": COMPETITION_NAME,
                 "season": season,
-                "updated_at": export_now.tz_convert(TZ).isoformat(timespec="seconds"),
+                "updated_at": export_updated_at,
+                "model_updated_at": model_updated_at,
                 "timezone": "Europe/London",
                 "last_completed_match_date": played["parsed_date"].max().strftime("%Y-%m-%d"),
                 "next_fixture_date": next_fixture_date,

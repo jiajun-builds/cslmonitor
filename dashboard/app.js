@@ -310,7 +310,7 @@ function renderStrength(rows) {
     .join("");
 }
 
-function renderMarketComparison(rows) {
+function renderMarketComparison(rows, meta) {
   selectors.marketComparisonBody.innerHTML = rows
     .map(
       (row) => `
@@ -339,17 +339,16 @@ function renderMarketComparison(rows) {
     )
     .join("");
 
-  const latestUpdate = rows.reduce(
-    (best, row) => (!best || (row.last_update && row.last_update > best) ? row.last_update : best),
-    "",
-  );
+  // The model is rebuilt daily; the Now line refreshes every few hours. Label the two
+  // times distinctly so a stale/fresh feed is never mistaken for a stale/fresh model.
   const latestFetch = rows.reduce(
     (best, row) => (!best || (row.fetched_at && row.fetched_at > best) ? row.fetched_at : best),
     "",
   );
+  const modelUpdated = meta?.model_updated_at ?? meta?.updated_at ?? "";
   setText(
     "panel-market-comparison-meta",
-    `Updated ${formatFeedStamp(latestUpdate)} · Fetched ${formatFeedStamp(latestFetch)}`,
+    `Model ${formatFeedStamp(modelUpdated)} · Odds fetched ${formatFeedStamp(latestFetch)}`,
   );
 }
 
@@ -500,7 +499,7 @@ async function bootstrap() {
     renderSignalBar(meta);
     renderMeta(meta);
     renderMarketRows(mergedMarketRows);
-    renderMarketComparison(marketComparison);
+    renderMarketComparison(marketComparison, meta);
     renderStrength(strength);
     startClock();
   } catch (error) {
