@@ -170,6 +170,28 @@ All writer workflows push with a rebase+retry loop to survive the push race betw
 
 Free Odds-API budget ≈ 290–310 of 500 requests/month (30 daily + 240 for 3h + ~20–40 capture).
 
+### Dashboard refresh behaviour (two independent update streams)
+The page updates via **two streams** with different cadences/triggers — reason about them
+separately. The **Now** stream is independent of opening windows (always runs on schedule);
+the **Open** stream only writes when a fixture is inside its capture window, not yet captured,
+and present in the Odds API feed.
+
+| Stream   | Page columns it drives                         | Driven by      | Cadence / trigger                                   | Spends `/odds`?          |
+| -------- | ---------------------------------------------- | -------------- | --------------------------------------------------- | ------------------------ |
+| **Now**  | "Now" line/odds, model EV, Move-arrow baseline | `CSL Refresh`  | odds every 3h (UTC `0 */3`) + daily `full` 09:17 LDN | 1 per run                |
+| **Open** | "Open" line/odds (the opening line)            | `capture-odds` | 10-min tick; in-window + uncaptured + present-in-feed | 1 only when it captures |
+
+Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window, roadmap #6):
+
+| Situation                          | `capture-odds` tick                                   | `CSL Refresh`             | What the page shows                                      |
+| ---------------------------------- | ----------------------------------------------------- | ------------------------- | ------------------------------------------------------- |
+| **Outside any capture window**     | idle (0 req, no commit, no rebuild)                   | Now refresh every 3h      | Now cols update 3-hourly; Open cols static              |
+| **In window, feed has the fixture**| captures → append → gated `publish` rebuild + deploy  | 3h refresh continues      | Open cols appear within ~1 tick; Now every 3h           |
+| **In window, feed lacks it yet**   | nothing this tick; retries each tick (6h window)      | 3h refresh continues      | Open cols blank until the feed lists it (arrives in waves) |
+| **Fixture already captured**       | skipped (an `open` row exists)                        | 3h refresh continues      | Open locked to the true opening line; Move tracks Now vs Open |
+| **Quota < 50 remaining**           | capture aborts (`min-remaining` guard)                | odds refresh skips fetch  | Both streams pause until the monthly quota reset        |
+| **Manual dispatch**                | `Capture Odds` (optional `dry_run`)                   | `CSL Refresh` `mode=full`/`odds` | Forces the corresponding refresh                 |
+
 ## Key Source Modules
 - Fixtures/results ingestion: `src/csl/fixtures/chn_fixture_v5.py`
 - xG pipeline: `src/csl/xg/xg_pipeline.py`
