@@ -1,20 +1,24 @@
 fixture_id,round,match_date,match_time,kickoff_at,home_team,away_team
-CSL-2026-17-2026-07-03-yunnan-yukun-henan-songshan-longmen,17,2026-07-03,12:00,2026-07-03T12:00:00+08:00,Yunnan Yukun,Henan Songshan Longmen
-CSL-2026-17-2026-07-04-liaoning-tieren-chongqing-tonglianglong,17,2026-07-04,11:00,2026-07-04T11:00:00+08:00,Liaoning Tieren,Chongqing Tonglianglong
-CSL-2026-17-2026-07-04-qingdao-west-coast-shanghai-port,17,2026-07-04,11:00,2026-07-04T11:00:00+08:00,Qingdao West Coast,Shanghai Port
-CSL-2026-17-2026-07-04-beijing-guoan-shandong-taishan,17,2026-07-04,11:35,2026-07-04T11:35:00+08:00,Beijing Guoan,Shandong Taishan
-CSL-2026-17-2026-07-04-dalian-yingbo-wuhan-three-towns,17,2026-07-04,11:35,2026-07-04T11:35:00+08:00,Dalian Yingbo,Wuhan Three Towns
-CSL-2026-17-2026-07-04-tianjin-jinmen-tiger-shenzhen-xinpengcheng,17,2026-07-04,12:00,2026-07-04T12:00:00+08:00,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng
-CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng,17,2026-07-05,11:00,2026-07-05T11:00:00+08:00,Qingdao Hainiu,Chengdu Rongcheng
-CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional,17,2026-07-05,11:35,2026-07-05T11:35:00+08:00,Shanghai Shenhua,Zhejiang Professional
-CSL-2026-18-2026-07-10-shandong-taishan-yunnan-yukun,18,2026-07-10,11:35,2026-07-10T11:35:00+08:00,Shandong Taishan,Yunnan Yukun
-CSL-2026-18-2026-07-11-wuhan-three-towns-henan-songshan-longmen,18,2026-07-11,11:00,2026-07-11T11:00:00+08:00,Wuhan Three Towns,Henan Songshan Longmen
-CSL-2026-18-2026-07-11-zhejiang-professional-qingdao-hainiu,18,2026-07-11,11:00,2026-07-11T11:00:00+08:00,Zhejiang Professional,Qingdao Hainiu
-CSL-2026-18-2026-07-11-shanghai-shenhua-beijing-guoan,18,2026-07-11,11:35,2026-07-11T11:35:00+08:00,Shanghai Shenhua,Beijing Guoan
-CSL-2026-18-2026-07-11-shenzhen-xinpengcheng-qingdao-west-coast,18,2026-07-11,11:35,2026-07-11T11:35:00+08:00,Shenzhen Xinpengcheng,Qingdao West Coast
-CSL-2026-18-2026-07-11-chengdu-rongcheng-chongqing-tonglianglong,18,2026-07-11,12:00,2026-07-11T12:00:00+08:00,Chengdu Rongcheng,Chongqing Tonglianglong
-CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren,18,2026-07-12,11:00,2026-07-12T11:00:00+08:00,Tianjin Jinmen Tiger,Liaoning Tieren
-CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo,18,2026-07-12,11:35,2026-07-12T11:35:00+08:00,Shanghai Port,Dalian Yingbo
-CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren,19,2026-07-17,11:35,2026-07-17T11:35:00+08:00,Beijing Guoan,Liaoning Tieren
-CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu,19,2026-07-17,11:35,2026-07-17T11:35:00+08:00,Henan Songshan Longmen,Qingdao Hainiu
-CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port,19,2026-07-17,12:00,2026-07-17T12:00:00+08:00,Yunnan Yukun,Shanghai Port
+CSL-2026-17-2026-07-04-liaoning-tieren-chongqing-tonglianglong,17,2026-07-04,11:00,2026-07-04T12:00:00+01:00,Liaoning Tieren,Chongqing Tonglianglong
+CSL-2026-17-2026-07-04-qingdao-west-coast-shanghai-port,17,2026-07-04,11:00,2026-07-04T12:00:00+01:00,Qingdao West Coast,Shanghai Port
+CSL-2026-17-2026-07-04-beijing-guoan-shandong-taishan,17,2026-07-04,11:35,2026-07-04T12:35:00+01:00,Beijing Guoan,Shandong Taishan
+CSL-2026-17-2026-07-04-dalian-yingbo-wuhan-three-towns,17,2026-07-04,11:35,2026-07-04T12:35:00+01:00,Dalian Yingbo,Wuhan Three Towns
+CSL-2026-17-2026-07-04-tianjin-jinmen-tiger-shenzhen-xinpengcheng,17,2026-07-04,12:00,2026-07-04T13:00:00+01:00,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng
+CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng,17,2026-07-05,11:00,2026-07-05T12:00:00+01:00,Qingdao Hainiu,Chengdu Rongcheng
+CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional,17,2026-07-05,11:35,2026-07-05T12:35:00+01:00,Shanghai Shenhua,Zhejiang Professional
+CSL-2026-18-2026-07-10-shandong-taishan-yunnan-yukun,18,2026-07-10,11:35,2026-07-10T12:35:00+01:00,Shandong Taishan,Yunnan Yukun
+CSL-2026-18-2026-07-11-wuhan-three-towns-henan-songshan-longmen,18,2026-07-11,11:00,2026-07-11T12:00:00+01:00,Wuhan Three Towns,Henan Songshan Longmen
+CSL-2026-18-2026-07-11-zhejiang-professional-qingdao-hainiu,18,2026-07-11,11:00,2026-07-11T12:00:00+01:00,Zhejiang Professional,Qingdao Hainiu
+CSL-2026-18-2026-07-11-shanghai-shenhua-beijing-guoan,18,2026-07-11,11:35,2026-07-11T12:35:00+01:00,Shanghai Shenhua,Beijing Guoan
+CSL-2026-18-2026-07-11-shenzhen-xinpengcheng-qingdao-west-coast,18,2026-07-11,11:35,2026-07-11T12:35:00+01:00,Shenzhen Xinpengcheng,Qingdao West Coast
+CSL-2026-18-2026-07-11-chengdu-rongcheng-chongqing-tonglianglong,18,2026-07-11,12:00,2026-07-11T13:00:00+01:00,Chengdu Rongcheng,Chongqing Tonglianglong
+CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren,18,2026-07-12,11:00,2026-07-12T12:00:00+01:00,Tianjin Jinmen Tiger,Liaoning Tieren
+CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo,18,2026-07-12,11:35,2026-07-12T12:35:00+01:00,Shanghai Port,Dalian Yingbo
+CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren,19,2026-07-17,11:35,2026-07-17T12:35:00+01:00,Beijing Guoan,Liaoning Tieren
+CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu,19,2026-07-17,11:35,2026-07-17T12:35:00+01:00,Henan Songshan Longmen,Qingdao Hainiu
+CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port,19,2026-07-17,12:00,2026-07-17T13:00:00+01:00,Yunnan Yukun,Shanghai Port
+CSL-2026-19-2026-07-18-chongqing-tonglianglong-zhejiang-professional,19,2026-07-18,11:00,2026-07-18T12:00:00+01:00,Chongqing Tonglianglong,Zhejiang Professional
+CSL-2026-19-2026-07-18-qingdao-west-coast-chengdu-rongcheng,19,2026-07-18,11:00,2026-07-18T12:00:00+01:00,Qingdao West Coast,Chengdu Rongcheng
+CSL-2026-19-2026-07-18-dalian-yingbo-shandong-taishan,19,2026-07-18,11:35,2026-07-18T12:35:00+01:00,Dalian Yingbo,Shandong Taishan
+CSL-2026-19-2026-07-18-shanghai-shenhua-tianjin-jinmen-tiger,19,2026-07-18,11:35,2026-07-18T12:35:00+01:00,Shanghai Shenhua,Tianjin Jinmen Tiger
+CSL-2026-19-2026-07-18-wuhan-three-towns-shenzhen-xinpengcheng,19,2026-07-18,12:00,2026-07-18T13:00:00+01:00,Wuhan Three Towns,Shenzhen Xinpengcheng
