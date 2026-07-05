@@ -128,11 +128,11 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552560,16,2026-06-28,Dalian Yingbo,Shanghai Shenhua,1,4,,,Ended
 15552556,16,2026-06-28,Qingdao West Coast,Zhejiang Professional,3,1,,,Ended
 15552562,17,2026-07-03,Yunnan Yukun,Henan Songshan Longmen,2,1,,,Ended
-15552563,17,2026-07-04,Beijing Guoan,Shandong Taishan,,,,,Not started
-15552564,17,2026-07-04,Dalian Yingbo,Wuhan Three Towns,,,,,Not started
-15552559,17,2026-07-04,Liaoning Tieren,Chongqing Tonglianglong,,,,,Not started
-15552558,17,2026-07-04,Qingdao West Coast,Shanghai Port,,,,,Not started
-15552565,17,2026-07-04,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng,,,,,Not started
+15552563,17,2026-07-04,Beijing Guoan,Shandong Taishan,2,0,4.41,0.11,Ended
+15552564,17,2026-07-04,Dalian Yingbo,Wuhan Three Towns,3,2,2.28,1.96,Ended
+15552559,17,2026-07-04,Liaoning Tieren,Chongqing Tonglianglong,3,1,,,Ended
+15552558,17,2026-07-04,Qingdao West Coast,Shanghai Port,2,1,,,Ended
+15552565,17,2026-07-04,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng,3,0,,,Ended
 15552566,17,2026-07-05,Qingdao Hainiu,Chengdu Rongcheng,,,,,Not started
 15552567,17,2026-07-05,Shanghai Shenhua,Zhejiang Professional,,,,,Not started
 15552568,18,2026-07-10,Shandong Taishan,Yunnan Yukun,,,,,Not started
