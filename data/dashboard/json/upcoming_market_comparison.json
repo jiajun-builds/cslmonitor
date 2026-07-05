@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-05T12:43:15+01:00"
+    "updated_at": "2026-07-05T13:57:47+01:00"
   },
   "rows": [
     {
@@ -64,6 +64,46 @@
       "open_last_update": "2026-07-04T12:02:18Z",
       "last_update": "2026-07-05T11:07:35Z",
       "fetched_at": "2026-07-05T11:07:42Z"
+    },
+    {
+      "home_team": "Zhejiang Professional",
+      "away_team": "Qingdao Hainiu",
+      "match_time": "11:00",
+      "home_spread": null,
+      "away_spread": null,
+      "home_odds": null,
+      "away_odds": null,
+      "home_ah_ev": null,
+      "away_ah_ev": null,
+      "open_home_spread": -1,
+      "open_away_spread": 1,
+      "open_home_odds": 1.94,
+      "open_away_odds": 1.89,
+      "open_home_ah_ev": -0.1947915346240663,
+      "open_away_ah_ev": 0.1271912224454207,
+      "open_last_update": "2026-07-05T12:56:24Z",
+      "last_update": null,
+      "fetched_at": null
+    },
+    {
+      "home_team": "Shanghai Shenhua",
+      "away_team": "Beijing Guoan",
+      "match_time": "11:35",
+      "home_spread": null,
+      "away_spread": null,
+      "home_odds": null,
+      "away_odds": null,
+      "home_ah_ev": null,
+      "away_ah_ev": null,
+      "open_home_spread": 0,
+      "open_away_spread": 0,
+      "open_home_odds": 1.81,
+      "open_away_odds": 2.04,
+      "open_home_ah_ev": 0.1222700078001184,
+      "open_away_ah_ev": -0.2020213837704211,
+      "open_last_update": "2026-07-05T12:56:24Z",
+      "last_update": null,
+      "fetched_at": null
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
