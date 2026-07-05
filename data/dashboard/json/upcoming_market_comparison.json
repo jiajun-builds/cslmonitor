@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-05T04:40:23+01:00"
+    "updated_at": "2026-07-05T09:56:34+01:00"
   },
   "rows": [
     {
@@ -11,39 +11,39 @@
       "match_time": "11:00",
       "home_spread": 1,
       "away_spread": -1,
-      "home_odds": 1.9,
-      "away_odds": 1.99,
-      "home_ah_ev": 0.0623100129333529,
-      "away_ah_ev": -0.1073815917453154,
+      "home_odds": 1.98,
+      "away_odds": 1.91,
+      "home_ah_ev": 0.0958473525141976,
+      "away_ah_ev": -0.1325803909600389,
       "open_home_spread": 0.75,
       "open_away_spread": -0.75,
       "open_home_odds": 1.82,
       "open_away_odds": 1.99,
-      "open_home_ah_ev": -0.1041259964789422,
-      "open_away_ah_ev": 0.0241880523237682,
+      "open_home_ah_ev": -0.1041260544003981,
+      "open_away_ah_ev": 0.0241881183259616,
       "open_last_update": "2026-06-28T13:13:08Z",
-      "last_update": "2026-07-05T03:40:09Z",
-      "fetched_at": "2026-07-05T03:40:20Z"
+      "last_update": "2026-07-05T08:56:20Z",
+      "fetched_at": "2026-07-05T08:56:31Z"
     },
     {
       "home_team": "Shanghai Shenhua",
       "away_team": "Zhejiang Professional",
       "match_time": "11:35",
-      "home_spread": -0.75,
-      "away_spread": 0.75,
-      "home_odds": 1.88,
-      "away_odds": 2.01,
-      "home_ah_ev": 0.1940907841414638,
-      "away_ah_ev": -0.2593079610112451,
+      "home_spread": -1,
+      "away_spread": 1,
+      "home_odds": 2.01,
+      "away_odds": 1.88,
+      "home_ah_ev": 0.1425098426852315,
+      "away_ah_ev": -0.1748614368168604,
       "open_home_spread": -0.75,
       "open_away_spread": 0.75,
       "open_home_odds": 1.87,
       "open_away_odds": 1.93,
-      "open_home_ah_ev": 0.1884004721784814,
-      "open_away_ah_ev": -0.2838404944993254,
+      "open_home_ah_ev": 0.1884007017825392,
+      "open_away_ah_ev": -0.2838407326638312,
       "open_last_update": "2026-06-28T13:13:08Z",
-      "last_update": "2026-07-05T03:40:09Z",
-      "fetched_at": "2026-07-05T03:40:20Z"
+      "last_update": "2026-07-05T08:56:20Z",
+      "fetched_at": "2026-07-05T08:56:31Z"
     },
     {
       "home_team": "Shandong Taishan",
@@ -53,17 +53,17 @@
       "away_spread": 1,
       "home_odds": 1.97,
       "away_odds": 1.86,
-      "home_ah_ev": 0.1932941633654465,
-      "away_ah_ev": -0.2461814431115475,
+      "home_ah_ev": 0.1932938510436937,
+      "away_ah_ev": -0.2461811562933787,
       "open_home_spread": -1,
       "open_away_spread": 1,
       "open_home_odds": 1.92,
       "open_away_odds": 1.88,
-      "open_home_ah_ev": 0.1691842530466094,
-      "open_away_ah_ev": -0.2406926811751477,
+      "open_home_ah_ev": 0.1691839462198692,
+      "open_away_ah_ev": -0.2406923902426087,
       "open_last_update": "2026-07-04T12:02:19Z",
-      "last_update": "2026-07-05T03:40:09Z",
-      "fetched_at": "2026-07-05T03:40:20Z"
+      "last_update": "2026-07-05T08:56:20Z",
+      "fetched_at": "2026-07-05T08:56:31Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -73,17 +73,17 @@
       "away_spread": -0.25,
       "home_odds": 1.89,
       "away_odds": 1.94,
-      "home_ah_ev": -0.0108990894386576,
-      "away_ah_ev": -0.0622402863007786,
+      "home_ah_ev": -0.010898819986763,
+      "away_ah_ev": -0.0622405641340494,
       "open_home_spread": 0.25,
       "open_away_spread": -0.25,
       "open_home_odds": 1.87,
       "open_away_odds": 1.93,
-      "open_home_ah_ev": -0.0197712351391614,
-      "open_away_ah_ev": -0.0662973820318894,
+      "open_home_ah_ev": -0.0197709686919779,
+      "open_away_ah_ev": -0.0662976585077377,
       "open_last_update": "2026-07-04T12:02:18Z",
-      "last_update": "2026-07-05T03:40:09Z",
-      "fetched_at": "2026-07-05T03:40:20Z"
+      "last_update": "2026-07-05T08:56:20Z",
+      "fetched_at": "2026-07-05T08:56:31Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -93,17 +93,17 @@
       "away_spread": 0,
       "home_odds": 1.79,
       "away_odds": 2.06,
-      "home_ah_ev": -0.0908844311165228,
-      "away_ah_ev": 0.0473429978658623,
+      "home_ah_ev": -0.090884216559943,
+      "away_ah_ev": 0.0473427673930413,
       "open_home_spread": 0,
       "open_away_spread": 0,
       "open_home_odds": 1.78,
       "open_away_odds": 2.04,
-      "open_home_ah_ev": -0.0938976229441767,
-      "open_away_ah_ev": 0.0407644661558387,
+      "open_home_ah_ev": -0.0938974085747337,
+      "open_away_ah_ev": 0.040764239678473,
       "open_last_update": "2026-07-04T12:44:56Z",
-      "last_update": "2026-07-05T03:40:09Z",
-      "fetched_at": "2026-07-05T03:40:20Z"
+      "last_update": "2026-07-05T08:56:20Z",
+      "fetched_at": "2026-07-05T08:56:31Z"
     }
   ]
 }
