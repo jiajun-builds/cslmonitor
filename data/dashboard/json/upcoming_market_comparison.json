@@ -2,29 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-05T11:30:26+01:00"
+    "updated_at": "2026-07-05T12:07:45+01:00"
   },
   "rows": [
-    {
-      "home_team": "Qingdao Hainiu",
-      "away_team": "Chengdu Rongcheng",
-      "match_time": "11:00",
-      "home_spread": 1,
-      "away_spread": -1,
-      "home_odds": 1.96,
-      "away_odds": 1.93,
-      "home_ah_ev": 0.1089373629347204,
-      "away_ah_ev": -0.147487349283748,
-      "open_home_spread": 0.75,
-      "open_away_spread": -0.75,
-      "open_home_odds": 1.82,
-      "open_away_odds": 1.99,
-      "open_home_ah_ev": -0.0837075734417374,
-      "open_away_ah_ev": 0.0018047491048107,
-      "open_last_update": "2026-06-28T13:13:08Z",
-      "last_update": "2026-07-05T10:29:58Z",
-      "fetched_at": "2026-07-05T10:30:24Z"
-    },
     {
       "home_team": "Shanghai Shenhua",
       "away_team": "Zhejiang Professional",
@@ -42,8 +22,8 @@
       "open_home_ah_ev": 0.2082010220739071,
       "open_away_ah_ev": -0.3043838566781212,
       "open_last_update": "2026-06-28T13:13:08Z",
-      "last_update": "2026-07-05T10:29:58Z",
-      "fetched_at": "2026-07-05T10:30:24Z"
+      "last_update": "2026-07-05T11:07:35Z",
+      "fetched_at": "2026-07-05T11:07:42Z"
     },
     {
       "home_team": "Shandong Taishan",
@@ -62,8 +42,8 @@
       "open_home_ah_ev": 0.1413871044660538,
       "open_away_ah_ev": -0.2133366344743338,
       "open_last_update": "2026-07-04T12:02:19Z",
-      "last_update": "2026-07-05T10:29:58Z",
-      "fetched_at": "2026-07-05T10:30:24Z"
+      "last_update": "2026-07-05T11:07:35Z",
+      "fetched_at": "2026-07-05T11:07:42Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -71,10 +51,10 @@
       "match_time": "11:00",
       "home_spread": 0.25,
       "away_spread": -0.25,
-      "home_odds": 1.89,
-      "away_odds": 1.94,
-      "home_ah_ev": -0.012519777947601,
-      "away_ah_ev": -0.0606423407574901,
+      "home_odds": 1.88,
+      "away_odds": 1.95,
+      "home_ah_ev": -0.0169512915356203,
+      "away_ah_ev": -0.0565730958846769,
       "open_home_spread": 0.25,
       "open_away_spread": -0.25,
       "open_home_odds": 1.87,
@@ -82,8 +62,8 @@
       "open_home_ah_ev": -0.0213828051236394,
       "open_away_ah_ev": -0.0647115856303032,
       "open_last_update": "2026-07-04T12:02:18Z",
-      "last_update": "2026-07-05T10:29:58Z",
-      "fetched_at": "2026-07-05T10:30:24Z"
+      "last_update": "2026-07-05T11:07:35Z",
+      "fetched_at": "2026-07-05T11:07:42Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -102,8 +82,8 @@
       "open_home_ah_ev": -0.0996877286333208,
       "open_away_ah_ev": 0.0474296064131844,
       "open_last_update": "2026-07-04T12:44:56Z",
-      "last_update": "2026-07-05T10:29:58Z",
-      "fetched_at": "2026-07-05T10:30:24Z"
+      "last_update": "2026-07-05T11:07:35Z",
+      "fetched_at": "2026-07-05T11:07:42Z"
     }
   ]
 }
