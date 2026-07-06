@@ -27,7 +27,10 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # Never interrupt an in-flight Pages deploy: cancelling the *job* mid-deploy
+  # leaves the backend deployment half-finished, and the next run fails with
+  # "Deployment failed, try again later." Queue deploys instead of cancelling.
+  cancel-in-progress: false
 
 jobs:
   deploy:
