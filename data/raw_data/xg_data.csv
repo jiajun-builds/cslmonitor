@@ -133,8 +133,8 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552559,17,2026-07-04,Liaoning Tieren,Chongqing Tonglianglong,3,1,,,Ended
 15552558,17,2026-07-04,Qingdao West Coast,Shanghai Port,2,1,,,Ended
 15552565,17,2026-07-04,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng,3,0,,,Ended
-15552566,17,2026-07-05,Qingdao Hainiu,Chengdu Rongcheng,,,,,Not started
-15552567,17,2026-07-05,Shanghai Shenhua,Zhejiang Professional,,,,,Not started
+15552566,17,2026-07-05,Qingdao Hainiu,Chengdu Rongcheng,1,1,1.41,1.98,Ended
+15552567,17,2026-07-05,Shanghai Shenhua,Zhejiang Professional,3,2,,,Ended
 15552568,18,2026-07-10,Shandong Taishan,Yunnan Yukun,,,,,Not started
 15552573,18,2026-07-11,Chengdu Rongcheng,Chongqing Tonglianglong,,,,,Not started
 15552572,18,2026-07-11,Shanghai Shenhua,Beijing Guoan,,,,,Not started
