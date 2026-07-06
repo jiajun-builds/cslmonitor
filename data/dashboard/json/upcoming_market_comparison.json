@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-06T21:02:14+01:00"
+    "updated_at": "2026-07-06T23:15:43+01:00"
   },
   "rows": [
     {
@@ -22,8 +22,8 @@
       "open_home_ah_ev": 0.1401181830707336,
       "open_away_ah_ev": -0.2122038040501459,
       "open_last_update": "2026-07-04T12:02:19Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -42,8 +42,8 @@
       "open_home_ah_ev": -0.0107693369725297,
       "open_away_ah_ev": -0.0756484864612784,
       "open_last_update": "2026-07-04T12:02:18Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Zhejiang Professional",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": -0.1950465776249268,
       "open_away_ah_ev": 0.127422337764846,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -82,8 +82,8 @@
       "open_home_ah_ev": 0.130581852838309,
       "open_away_ah_ev": -0.21143138813568,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -102,8 +102,8 @@
       "open_home_ah_ev": -0.0849757552315373,
       "open_away_ah_ev": 0.0309367386088078,
       "open_last_update": "2026-07-04T12:44:56Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Chengdu Rongcheng",
@@ -122,8 +122,8 @@
       "open_home_ah_ev": -0.1005127547715789,
       "open_away_ah_ev": 0.0229468195033795,
       "open_last_update": "2026-07-05T11:41:59Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Tianjin Jinmen Tiger",
@@ -142,8 +142,8 @@
       "open_home_ah_ev": 0.2774434685304732,
       "open_away_ah_ev": -0.3090415569889754,
       "open_last_update": "2026-07-05T13:45:36Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     },
     {
       "home_team": "Shanghai Port",
@@ -162,8 +162,8 @@
       "open_home_ah_ev": 0.0631616992347504,
       "open_away_ah_ev": -0.1269047634215308,
       "open_last_update": "2026-07-05T13:45:36Z",
-      "last_update": "2026-07-06T20:02:08Z",
-      "fetched_at": "2026-07-06T20:02:12Z"
+      "last_update": "2026-07-06T22:15:32Z",
+      "fetched_at": "2026-07-06T22:15:41Z"
     }
   ]
 }
