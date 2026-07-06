@@ -2,39 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-05T23:04:49+01:00",
+    "updated_at": "2026-07-06T04:49:06+01:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v2.2"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng",
-      "round": 17,
-      "match_date": "2026-07-05",
-      "kickoff_at": "2026-07-05T12:00:00+01:00",
-      "home_team": "Qingdao Hainiu",
-      "away_team": "Chengdu Rongcheng",
-      "home_win_prob": 0.17801,
-      "draw_prob": 0.252733,
-      "away_win_prob": 0.569257,
-      "home_win_fair_odds": 5.6177,
-      "draw_fair_odds": 3.9567,
-      "away_win_fair_odds": 1.7567
-    },
-    {
-      "fixture_id": "CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional",
-      "round": 17,
-      "match_date": "2026-07-05",
-      "kickoff_at": "2026-07-05T12:35:00+01:00",
-      "home_team": "Shanghai Shenhua",
-      "away_team": "Zhejiang Professional",
-      "home_win_prob": 0.703442,
-      "draw_prob": 0.186656,
-      "away_win_prob": 0.109902,
-      "home_win_fair_odds": 1.4216,
-      "draw_fair_odds": 5.3574,
-      "away_win_fair_odds": 9.099
-    },
     {
       "fixture_id": "CSL-2026-18-2026-07-10-shandong-taishan-yunnan-yukun",
       "round": 18,

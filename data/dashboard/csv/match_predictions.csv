@@ -1,6 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-17-2026-07-05-qingdao-hainiu-chengdu-rongcheng,17,2026-07-05,2026-07-05T12:00:00+01:00,Qingdao Hainiu,Chengdu Rongcheng,0.17801,0.252733,0.569257,5.6177,3.9567,1.7567
-CSL-2026-17-2026-07-05-shanghai-shenhua-zhejiang-professional,17,2026-07-05,2026-07-05T12:35:00+01:00,Shanghai Shenhua,Zhejiang Professional,0.703442,0.186656,0.109902,1.4216,5.3574,9.099
 CSL-2026-18-2026-07-10-shandong-taishan-yunnan-yukun,18,2026-07-10,2026-07-10T12:35:00+01:00,Shandong Taishan,Yunnan Yukun,0.711751,0.182621,0.105628,1.405,5.4758,9.4672
 CSL-2026-18-2026-07-11-wuhan-three-towns-henan-songshan-longmen,18,2026-07-11,2026-07-11T12:00:00+01:00,Wuhan Three Towns,Henan Songshan Longmen,0.293227,0.299848,0.406924,3.4103,3.335,2.4575
 CSL-2026-18-2026-07-11-zhejiang-professional-qingdao-hainiu,18,2026-07-11,2026-07-11T12:00:00+01:00,Zhejiang Professional,Qingdao Hainiu,0.539585,0.256565,0.20385,1.8533,3.8976,4.9056
