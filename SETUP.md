@@ -27,8 +27,9 @@ cp .env.local.example .env.local
 
 Fill in:
 
-- `RAPIDAPI_KEY`
 - `THE_ODDS_API_KEY`
+
+(xG is fetched from the official SofaScore API — no key required.)
 
 The unified workflow script loads `.env.local` automatically.
 
@@ -79,5 +80,5 @@ What each command does:
 - All other packages are pulled from `conda-forge` for better compatibility on both Windows and macOS/Linux
 - Live data grabbing depends on external APIs:
   - `csl.fixtures.chn_fixture_v5` uses TheSportsDB
-  - `csl.xg.xg_pipeline` uses SofaScore / RapidAPI and requires `RAPIDAPI_KEY`
+  - `csl.xg.xg_pipeline` uses the official SofaScore API (via `curl_cffi` browser impersonation); no key required
   - `csl.odds.fetch_pinnacle_spreads` uses The Odds API and requires `THE_ODDS_API_KEY`

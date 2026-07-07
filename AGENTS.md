@@ -27,8 +27,7 @@ cp .env.local.example .env.local
 - The preferred local workflow entry point is `./scripts/csl.sh`
 - `./scripts/csl.sh`, `./scripts/run_csl_update.sh`, and `./scripts/csl-model.sh` activate Conda, load `.env.local`, and set `PYTHONPATH` automatically
 - `.env.local` is local-only and should define:
-  - `RAPIDAPI_KEY`
-  - `THE_ODDS_API_KEY`
+  - `THE_ODDS_API_KEY`  (xG uses the official SofaScore API — no key needed)
 - Conda initialization defaults to `~/anaconda3/etc/profile.d/conda.sh`
 
 ## Primary Workflows
@@ -239,7 +238,7 @@ Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window,
 
 ## External Dependencies
 - `csl.fixtures.chn_fixture_v5` depends on TheSportsDB
-- `csl.xg.xg_pipeline` depends on SofaScore / RapidAPI and requires `RAPIDAPI_KEY`
+- `csl.xg.xg_pipeline` depends on the official SofaScore API via `curl_cffi` browser impersonation (no key); the merge lets fresh values win (xG tracks SofaScore's latest) but a blank scrape never erases an xG already in the cache
 - `csl.odds.fetch_pinnacle_spreads` depends on The Odds API
 
 ## Validation Guidance

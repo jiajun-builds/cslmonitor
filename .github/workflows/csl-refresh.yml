@@ -88,10 +88,12 @@ jobs:
 
       - name: Run refresh (${{ steps.mode.outputs.mode }})
         env:
-          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           PYTHONPATH: src
           MODE: ${{ steps.mode.outputs.mode }}
+          # SofaScore Cloudflare-blocks datacenter IPs; skip the xG fetch on CI
+          # and merge the committed xg_data.csv (refreshed by the home Mac).
+          CSL_SKIP_XG_FETCH: "1"
         run: |
           set -euo pipefail
           if [ "$MODE" = "odds" ]; then
