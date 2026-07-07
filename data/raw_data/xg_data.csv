@@ -15,16 +15,16 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15551897,2,2026-03-15,Chengdu Rongcheng,Qingdao Hainiu,1,0,1.79,0.6,Ended
 15551895,2,2026-03-15,Henan Songshan Longmen,Yunnan Yukun,2,1,2.09,0.52,Ended
 15551896,2,2026-03-15,Shanghai Port,Qingdao West Coast,4,1,4.05,1.72,Ended
-15551898,3,2026-03-20,Dalian Yingbo,Shanghai Port,1,0,,,Ended
+15551898,3,2026-03-20,Dalian Yingbo,Shanghai Port,1,0,0.96,0.34,Ended
 15551899,3,2026-03-20,Qingdao Hainiu,Zhejiang Professional,1,4,1.98,2.35,Ended
 15551900,3,2026-03-21,Beijing Guoan,Shanghai Shenhua,1,1,1.37,0.57,Ended
 15551902,3,2026-03-21,Chongqing Tonglianglong,Chengdu Rongcheng,3,3,1.8,2.13,Ended
 15549792,3,2026-03-21,Henan Songshan Longmen,Wuhan Three Towns,1,1,1.83,0.63,Ended
 15551901,3,2026-03-21,Liaoning Tieren,Tianjin Jinmen Tiger,3,0,2.66,2.15,Ended
-15551903,3,2026-03-21,Qingdao West Coast,Shenzhen Xinpengcheng,1,0,1.79,1.05,Ended
-15551904,3,2026-03-21,Yunnan Yukun,Shandong Taishan,4,0,0.81,0.59,Ended
+15551903,3,2026-03-21,Qingdao West Coast,Shenzhen Xinpengcheng,1,0,1.79,1.1,Ended
+15551904,3,2026-03-21,Yunnan Yukun,Shandong Taishan,4,0,0.81,0.67,Ended
 15551905,4,2026-04-03,Chengdu Rongcheng,Qingdao West Coast,5,1,2.97,0.54,Ended
-15552476,4,2026-04-04,Liaoning Tieren,Beijing Guoan,2,1,2.53,1.38,Ended
+15552476,4,2026-04-04,Liaoning Tieren,Beijing Guoan,2,1,2.56,1.38,Ended
 15551906,4,2026-04-04,Qingdao Hainiu,Henan Songshan Longmen,1,0,0.87,1.72,Ended
 15552477,4,2026-04-04,Shandong Taishan,Dalian Yingbo,1,2,1.0,0.84,Ended
 15552479,4,2026-04-04,Shanghai Port,Yunnan Yukun,2,1,1.16,1.36,Ended
@@ -33,7 +33,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552481,4,2026-04-05,Zhejiang Professional,Chongqing Tonglianglong,0,1,0.75,0.38,Ended
 15552483,5,2026-04-10,Dalian Yingbo,Zhejiang Professional,3,0,2.06,0.99,Ended
 15552485,5,2026-04-11,Chongqing Tonglianglong,Wuhan Three Towns,2,1,1.52,0.45,Ended
-15552486,5,2026-04-11,Henan Songshan Longmen,Shandong Taishan,0,1,0.61,0.71,Ended
+15552486,5,2026-04-11,Henan Songshan Longmen,Shandong Taishan,0,1,0.71,0.74,Ended
 15552484,5,2026-04-11,Qingdao West Coast,Liaoning Tieren,1,1,1.13,0.77,Ended
 15552487,5,2026-04-11,Shanghai Shenhua,Shanghai Port,1,0,1.66,0.18,Ended
 15552489,5,2026-04-12,Beijing Guoan,Chengdu Rongcheng,1,2,1.03,1.08,Ended
@@ -52,7 +52,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552498,7,2026-04-21,Shenzhen Xinpengcheng,Beijing Guoan,0,1,0.55,0.52,Ended
 15552503,7,2026-04-21,Tianjin Jinmen Tiger,Shandong Taishan,1,2,1.55,1.04,Ended
 15552501,7,2026-04-21,Wuhan Three Towns,Zhejiang Professional,2,0,1.69,0.27,Ended
-15552506,7,2026-04-22,Liaoning Tieren,Dalian Yingbo,0,1,0.54,1.28,Ended
+15552506,7,2026-04-22,Liaoning Tieren,Dalian Yingbo,0,1,0.54,1.25,Ended
 15552505,7,2026-04-22,Qingdao West Coast,Henan Songshan Longmen,0,0,0.12,0.65,Ended
 15552508,7,2026-04-22,Shanghai Shenhua,Qingdao Hainiu,2,0,3.76,0.83,Ended
 15552507,8,2026-04-25,Beijing Guoan,Tianjin Jinmen Tiger,2,4,1.94,1.13,Ended
@@ -62,79 +62,79 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552513,8,2026-04-26,Dalian Yingbo,Yunnan Yukun,1,3,2.93,1.25,Ended
 15552512,8,2026-04-26,Henan Songshan Longmen,Shanghai Shenhua,0,3,0.8,3.35,Ended
 15552516,8,2026-04-26,Qingdao Hainiu,Shandong Taishan,4,1,2.63,1.8,Ended
-15552509,8,2026-04-26,Shenzhen Xinpengcheng,Liaoning Tieren,1,0,1.06,0.42,Ended
+15552509,8,2026-04-26,Shenzhen Xinpengcheng,Liaoning Tieren,1,0,1.07,0.42,Ended
 15552517,9,2026-05-01,Dalian Yingbo,Chongqing Tonglianglong,1,0,0.56,0.22,Ended
 15552515,9,2026-05-01,Henan Songshan Longmen,Liaoning Tieren,4,0,1.01,0.72,Ended
-15552518,9,2026-05-01,Shandong Taishan,Qingdao West Coast,1,1,2.09,1.19,Ended
-15552520,9,2026-05-01,Shanghai Shenhua,Chengdu Rongcheng,2,3,2.78,2.09,Ended
+15552518,9,2026-05-01,Shandong Taishan,Qingdao West Coast,1,1,2.12,1.19,Ended
+15552520,9,2026-05-01,Shanghai Shenhua,Chengdu Rongcheng,2,3,2.78,2.15,Ended
 15552514,9,2026-05-01,Tianjin Jinmen Tiger,Wuhan Three Towns,2,2,1.06,1.43,Ended
-15552527,9,2026-05-02,Qingdao Hainiu,Shanghai Port,3,1,,,Ended
-15552529,9,2026-05-02,Yunnan Yukun,Beijing Guoan,3,3,1.45,2.31,Ended
-15552528,9,2026-05-02,Zhejiang Professional,Shenzhen Xinpengcheng,2,1,3.02,0.88,Ended
+15552527,9,2026-05-02,Qingdao Hainiu,Shanghai Port,3,1,1.59,1.14,Ended
+15552529,9,2026-05-02,Yunnan Yukun,Beijing Guoan,3,3,1.45,2.32,Ended
+15552528,9,2026-05-02,Zhejiang Professional,Shenzhen Xinpengcheng,2,1,3.02,0.91,Ended
 15552531,10,2026-05-05,Chongqing Tonglianglong,Henan Songshan Longmen,1,1,0.55,0.81,Ended
-15552532,10,2026-05-05,Liaoning Tieren,Chengdu Rongcheng,0,1,0.5,1.82,Ended
-15552530,10,2026-05-05,Qingdao West Coast,Tianjin Jinmen Tiger,1,1,,,Ended
-15552535,10,2026-05-05,Shandong Taishan,Shanghai Shenhua,4,1,,,Ended
+15552532,10,2026-05-05,Liaoning Tieren,Chengdu Rongcheng,0,1,0.53,1.85,Ended
+15552530,10,2026-05-05,Qingdao West Coast,Tianjin Jinmen Tiger,1,1,2.19,0.87,Ended
+15552535,10,2026-05-05,Shandong Taishan,Shanghai Shenhua,4,1,1.2,0.72,Ended
 15552536,10,2026-05-06,Beijing Guoan,Dalian Yingbo,3,0,2.66,0.74,Ended
-15552534,10,2026-05-06,Shanghai Port,Shenzhen Xinpengcheng,1,1,1.68,1.13,Ended
-15552533,10,2026-05-06,Wuhan Three Towns,Qingdao Hainiu,1,3,1.25,1.75,Ended
+15552534,10,2026-05-06,Shanghai Port,Shenzhen Xinpengcheng,1,1,1.75,1.13,Ended
+15552533,10,2026-05-06,Wuhan Three Towns,Qingdao Hainiu,1,3,1.25,1.78,Ended
 15552537,10,2026-05-06,Yunnan Yukun,Zhejiang Professional,1,2,1.16,1.96,Ended
-15552539,11,2026-05-09,Chengdu Rongcheng,Henan Songshan Longmen,3,0,2.12,1.53,Ended
+15552539,11,2026-05-09,Chengdu Rongcheng,Henan Songshan Longmen,3,0,2.24,1.53,Ended
 15552538,11,2026-05-09,Shanghai Shenhua,Chongqing Tonglianglong,2,2,2.02,1.57,Ended
-15552546,11,2026-05-10,Beijing Guoan,Shanghai Port,2,2,2.08,1.23,Ended
-15552543,11,2026-05-10,Liaoning Tieren,Yunnan Yukun,1,2,1.19,1.2,Ended
+15552546,11,2026-05-10,Beijing Guoan,Shanghai Port,2,2,2.07,1.18,Ended
+15552543,11,2026-05-10,Liaoning Tieren,Yunnan Yukun,1,2,1.29,1.2,Ended
 15552541,11,2026-05-10,Qingdao Hainiu,Dalian Yingbo,3,1,1.64,1.94,Ended
-15552540,11,2026-05-10,Qingdao West Coast,Wuhan Three Towns,1,1,1.26,1.18,Ended
-15552545,11,2026-05-10,Shenzhen Xinpengcheng,Shandong Taishan,1,2,0.62,1.77,Ended
+15552540,11,2026-05-10,Qingdao West Coast,Wuhan Three Towns,1,1,1.4,1.18,Ended
+15552545,11,2026-05-10,Shenzhen Xinpengcheng,Shandong Taishan,1,2,0.69,1.92,Ended
 15552542,11,2026-05-10,Zhejiang Professional,Tianjin Jinmen Tiger,1,1,1.37,1.45,Ended
-15549838,12,2026-05-15,Beijing Guoan,Qingdao Hainiu,4,2,2.84,0.98,Ended
-15549841,12,2026-05-15,Dalian Yingbo,Qingdao West Coast,2,3,1.66,2.78,Ended
+15549838,12,2026-05-15,Beijing Guoan,Qingdao Hainiu,4,2,2.84,0.99,Ended
+15549841,12,2026-05-15,Dalian Yingbo,Qingdao West Coast,2,3,1.57,2.78,Ended
 15549837,12,2026-05-15,Henan Songshan Longmen,Shenzhen Xinpengcheng,1,0,1.55,0.55,Ended
-15549839,12,2026-05-15,Shanghai Port,Zhejiang Professional,2,2,1.04,1.84,Ended
+15549839,12,2026-05-15,Shanghai Port,Zhejiang Professional,2,2,1.03,1.84,Ended
 15549840,12,2026-05-15,Tianjin Jinmen Tiger,Chengdu Rongcheng,1,2,0.44,1.8,Ended
 15549844,12,2026-05-16,Shandong Taishan,Chongqing Tonglianglong,3,1,1.69,0.81,Ended
-15549842,12,2026-05-16,Wuhan Three Towns,Liaoning Tieren,2,2,2.13,1.04,Ended
+15549842,12,2026-05-16,Wuhan Three Towns,Liaoning Tieren,2,2,2.17,1.04,Ended
 15549848,12,2026-05-16,Yunnan Yukun,Shanghai Shenhua,1,0,1.04,0.68,Ended
 15549846,13,2026-05-19,Chengdu Rongcheng,Shanghai Port,0,1,1.61,0.31,Ended
-15549843,13,2026-05-19,Qingdao West Coast,Beijing Guoan,1,1,,,Ended
-15549845,13,2026-05-19,Shenzhen Xinpengcheng,Dalian Yingbo,1,1,0.75,1.67,Ended
-15549847,13,2026-05-19,Tianjin Jinmen Tiger,Henan Songshan Longmen,1,2,1.07,1.02,Ended
-15549852,13,2026-05-20,Chongqing Tonglianglong,Yunnan Yukun,0,0,0.68,0.19,Ended
+15549843,13,2026-05-19,Qingdao West Coast,Beijing Guoan,1,1,0.35,2.42,Ended
+15549845,13,2026-05-19,Shenzhen Xinpengcheng,Dalian Yingbo,1,1,0.87,1.71,Ended
+15549847,13,2026-05-19,Tianjin Jinmen Tiger,Henan Songshan Longmen,1,2,0.99,1.08,Ended
+15549852,13,2026-05-20,Chongqing Tonglianglong,Yunnan Yukun,0,0,0.91,0.44,Ended
 15549849,13,2026-05-20,Liaoning Tieren,Qingdao Hainiu,2,1,3.15,1.08,Ended
-15549851,13,2026-05-20,Shanghai Shenhua,Wuhan Three Towns,2,2,2.14,2.45,Ended
-15549853,13,2026-05-20,Zhejiang Professional,Shandong Taishan,4,1,3.29,1.09,Ended
-15549855,14,2026-05-23,Beijing Guoan,Henan Songshan Longmen,1,2,,,Ended
-15549856,14,2026-05-23,Dalian Yingbo,Chengdu Rongcheng,2,0,,,Ended
+15549851,13,2026-05-20,Shanghai Shenhua,Wuhan Three Towns,2,2,2.11,2.45,Ended
+15549853,13,2026-05-20,Zhejiang Professional,Shandong Taishan,4,1,3.29,1.07,Ended
+15549855,14,2026-05-23,Beijing Guoan,Henan Songshan Longmen,1,2,2.1,1.34,Ended
+15549856,14,2026-05-23,Dalian Yingbo,Chengdu Rongcheng,2,0,1.17,0.5,Ended
 15549854,14,2026-05-23,Shanghai Port,Tianjin Jinmen Tiger,1,1,1.86,1.05,Ended
-15549860,14,2026-05-24,Qingdao Hainiu,Chongqing Tonglianglong,0,1,,,Ended
-15549858,14,2026-05-24,Shandong Taishan,Wuhan Three Towns,3,3,,,Ended
-15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,1,2,,,Ended
-15549857,14,2026-05-24,Yunnan Yukun,Qingdao West Coast,2,3,,,Ended
-15549859,14,2026-05-24,Zhejiang Professional,Liaoning Tieren,0,5,,,Ended
-15549861,15,2026-05-29,Liaoning Tieren,Shanghai Port,3,2,,,Ended
-15552548,15,2026-05-30,Chengdu Rongcheng,Shandong Taishan,1,0,,,Ended
-15552547,15,2026-05-30,Chongqing Tonglianglong,Beijing Guoan,2,3,,,Ended
-15549863,15,2026-05-30,Henan Songshan Longmen,Zhejiang Professional,0,2,,,Ended
-15552544,15,2026-05-30,Qingdao West Coast,Shanghai Shenhua,2,2,,,Ended
-15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,3,2,2.72,1.13,Ended
+15549860,14,2026-05-24,Qingdao Hainiu,Chongqing Tonglianglong,0,1,1.47,0.09,Ended
+15549858,14,2026-05-24,Shandong Taishan,Wuhan Three Towns,3,3,3.76,2.93,Ended
+15549862,14,2026-05-24,Shanghai Shenhua,Shenzhen Xinpengcheng,1,2,1.42,2.49,Ended
+15549857,14,2026-05-24,Yunnan Yukun,Qingdao West Coast,2,3,1.99,1.95,Ended
+15549859,14,2026-05-24,Zhejiang Professional,Liaoning Tieren,0,5,1.55,1.98,Ended
+15549861,15,2026-05-29,Liaoning Tieren,Shanghai Port,3,2,1.19,2.26,Ended
+15552548,15,2026-05-30,Chengdu Rongcheng,Shandong Taishan,1,0,1.26,1.38,Ended
+15552547,15,2026-05-30,Chongqing Tonglianglong,Beijing Guoan,2,3,0.55,5.32,Ended
+15549863,15,2026-05-30,Henan Songshan Longmen,Zhejiang Professional,0,2,2.45,1.12,Ended
+15552544,15,2026-05-30,Qingdao West Coast,Shanghai Shenhua,2,2,1.99,0.56,Ended
+15552550,15,2026-05-30,Shenzhen Xinpengcheng,Qingdao Hainiu,3,2,2.69,1.11,Ended
 15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,1,0,1.26,1.31,Ended
-15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,1,1,,,Ended
-15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,4,2,,,Ended
-15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,1,0,2.61,0.77,Ended
-15552557,16,2026-06-27,Chongqing Tonglianglong,Tianjin Jinmen Tiger,1,0,,,Ended
-15552555,16,2026-06-27,Henan Songshan Longmen,Shanghai Port,1,2,1.19,1.14,Ended
-15552553,16,2026-06-27,Liaoning Tieren,Shandong Taishan,1,5,,,Ended
-15552554,16,2026-06-27,Shenzhen Xinpengcheng,Chengdu Rongcheng,2,3,2.45,1.9,Ended
-15552560,16,2026-06-28,Dalian Yingbo,Shanghai Shenhua,1,4,,,Ended
-15552556,16,2026-06-28,Qingdao West Coast,Zhejiang Professional,3,1,,,Ended
-15552562,17,2026-07-03,Yunnan Yukun,Henan Songshan Longmen,2,1,,,Ended
-15552563,17,2026-07-04,Beijing Guoan,Shandong Taishan,2,0,4.41,0.11,Ended
-15552564,17,2026-07-04,Dalian Yingbo,Wuhan Three Towns,3,2,2.28,1.96,Ended
-15552559,17,2026-07-04,Liaoning Tieren,Chongqing Tonglianglong,3,1,,,Ended
-15552558,17,2026-07-04,Qingdao West Coast,Shanghai Port,2,1,,,Ended
-15552565,17,2026-07-04,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng,3,0,,,Ended
-15552566,17,2026-07-05,Qingdao Hainiu,Chengdu Rongcheng,,,,,Not started
-15552567,17,2026-07-05,Shanghai Shenhua,Zhejiang Professional,,,,,Not started
+15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,1,1,1.47,0.99,Ended
+15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,4,2,2.15,2.57,Ended
+15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,1,0,2.83,0.64,Ended
+15552557,16,2026-06-27,Chongqing Tonglianglong,Tianjin Jinmen Tiger,1,0,0.59,1.22,Ended
+15552555,16,2026-06-27,Henan Songshan Longmen,Shanghai Port,1,2,1.01,1.11,Ended
+15552553,16,2026-06-27,Liaoning Tieren,Shandong Taishan,1,5,0.52,5.09,Ended
+15552554,16,2026-06-27,Shenzhen Xinpengcheng,Chengdu Rongcheng,2,3,2.46,1.97,Ended
+15552560,16,2026-06-28,Dalian Yingbo,Shanghai Shenhua,1,4,1.07,2.97,Ended
+15552556,16,2026-06-28,Qingdao West Coast,Zhejiang Professional,3,1,2.08,0.86,Ended
+15552562,17,2026-07-03,Yunnan Yukun,Henan Songshan Longmen,2,1,2.61,1.27,Ended
+15552563,17,2026-07-04,Beijing Guoan,Shandong Taishan,2,0,4.4,0.11,Ended
+15552564,17,2026-07-04,Dalian Yingbo,Wuhan Three Towns,3,2,2.14,2.08,Ended
+15552559,17,2026-07-04,Liaoning Tieren,Chongqing Tonglianglong,3,1,3.36,0.87,Ended
+15552558,17,2026-07-04,Qingdao West Coast,Shanghai Port,2,1,1.92,1.17,Ended
+15552565,17,2026-07-04,Tianjin Jinmen Tiger,Shenzhen Xinpengcheng,3,0,1.38,0.72,Ended
+15552566,17,2026-07-05,Qingdao Hainiu,Chengdu Rongcheng,1,1,1.49,2.15,Ended
+15552567,17,2026-07-05,Shanghai Shenhua,Zhejiang Professional,3,2,1.48,1.66,Ended
 15552568,18,2026-07-10,Shandong Taishan,Yunnan Yukun,,,,,Not started
 15552573,18,2026-07-11,Chengdu Rongcheng,Chongqing Tonglianglong,,,,,Not started
 15552572,18,2026-07-11,Shanghai Shenhua,Beijing Guoan,,,,,Not started

@@ -88,7 +88,6 @@ jobs:
 
       - name: Run refresh (${{ steps.mode.outputs.mode }})
         env:
-          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           PYTHONPATH: src
           MODE: ${{ steps.mode.outputs.mode }}

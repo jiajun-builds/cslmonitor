@@ -55,7 +55,8 @@ run_timed_phase() {
 }
 
 run_update() {
-  csl_require_env RAPIDAPI_KEY || return 1
+  # xG now comes from the official SofaScore API (no key needed); only the
+  # odds step still requires a key.
   ./scripts/run_csl_update.sh
 }
 
@@ -107,7 +108,7 @@ run_all() {
   local finished_at
   local elapsed
 
-  csl_require_env RAPIDAPI_KEY THE_ODDS_API_KEY || return 1
+  csl_require_env THE_ODDS_API_KEY || return 1
 
   started_at="$(date +%s)"
 

@@ -1,9 +1,15 @@
 """
-xG Scraping Pipeline — SofaScore via RapidAPI
+xG Scraping Pipeline — official SofaScore API
 ==============================================
 By default, re-scrapes only the most recently completed round plus the
 previous round, then merges those updates back into a full-season cache.
 Use --full-season to fetch every round from round 1 until the first empty one.
+
+Data comes from the official SofaScore API (api.sofascore.com) via curl_cffi
+browser impersonation — the same xG the SofaScore app shows, no API key needed.
+The merge lets fresh values win (so xG tracks SofaScore's latest, including
+post-match revisions) but a blank scrape never erases an xG already in the
+cache. See merge_with_existing_cache.
 
 Team names: load data/output_data/CHN_team_name_mapping.csv and treat the
 known alias columns (sofa_team / match_team / odds_team / standard_team) as
@@ -22,8 +28,8 @@ import os
 import sys
 import time
 import logging
-import requests
 import pandas as pd
+from curl_cffi import requests
 from dataclasses import dataclass, field, asdict
 from typing import Optional, Union
 
@@ -36,9 +42,20 @@ _TEAM_MAPPING_CANDIDATES = (
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-API_HOST            = "sofascore6.p.rapidapi.com"
-BASE_URL            = f"https://{API_HOST}/api/sofascore/v1"
-API_KEY_ENV         = "RAPIDAPI_KEY"
+# Official SofaScore API. Cloudflare fingerprints the TLS handshake, so requests
+# must be made with curl_cffi's browser impersonation (see _get). This returns
+# the same xG the SofaScore app shows — and fresher than the RapidAPI reseller.
+BASE_URL            = "https://api.sofascore.com/api/v1"
+IMPERSONATE         = "chrome"   # curl_cffi browser TLS profile
+BROWSER_HEADERS     = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "*/*",
+    "Referer": "https://www.sofascore.com/",
+    "Origin": "https://www.sofascore.com",
+}
 
 UNIQUE_TOURNAMENT_ID = 649       # Chinese Super League
 SEASON_ID            = 90049   # 2025/26 season
@@ -153,31 +170,21 @@ class MatchXG:
 
 # ── API helpers ───────────────────────────────────────────────────────────────
 
-def get_api_key() -> str:
-    api_key = os.environ.get(API_KEY_ENV, "").strip()
-    if not api_key:
-        raise RuntimeError(f"Missing required environment variable: {API_KEY_ENV}")
-    return api_key
-
-
-def build_headers() -> dict[str, str]:
-    return {
-        "Content-Type": "application/json",
-        "x-rapidapi-host": API_HOST,
-        "x-rapidapi-key": get_api_key(),
-    }
-
 def _get(url: str, params: dict = None) -> Optional[Union[dict, list]]:
-    """GET with retry/back-off. Returns parsed JSON (dict or list) or None on failure."""
-    try:
-        headers = build_headers()
-    except RuntimeError as exc:
-        log.error("%s", exc)
-        sys.exit(1)
+    """GET with retry/back-off. Returns parsed JSON (dict or list) or None on failure.
 
+    Uses curl_cffi browser impersonation so SofaScore's Cloudflare accepts the
+    request; a plain requests/urllib call is rejected with HTTP 403.
+    """
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=15)
+            resp = requests.get(
+                url,
+                headers=BROWSER_HEADERS,
+                params=params,
+                timeout=15,
+                impersonate=IMPERSONATE,
+            )
             if resp.status_code == 429:
                 wait = RETRY_BACKOFF * (2 ** attempt)
                 log.warning("Rate-limited. Waiting %.1fs before retry %d…", wait, attempt)
@@ -185,7 +192,7 @@ def _get(url: str, params: dict = None) -> Optional[Union[dict, list]]:
                 continue
             resp.raise_for_status()
             return resp.json()
-        except requests.exceptions.RequestException as exc:
+        except requests.RequestsError as exc:
             log.warning("Attempt %d/%d failed: %s", attempt, MAX_RETRIES, exc)
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_BACKOFF * attempt)
@@ -197,13 +204,11 @@ def _get(url: str, params: dict = None) -> Optional[Union[dict, list]]:
 
 def fetch_round_matches(round_num: int) -> list[dict]:
     """Return raw match objects for a single round."""
-    url = f"{BASE_URL}/unique-tournament/season/round/matches"
-    params = {
-        "round":                 round_num,
-        "season_id":             SEASON_ID,
-        "unique_tournament_id":  UNIQUE_TOURNAMENT_ID,
-    }
-    data = _get(url, params)
+    url = (
+        f"{BASE_URL}/unique-tournament/{UNIQUE_TOURNAMENT_ID}"
+        f"/season/{SEASON_ID}/events/round/{round_num}"
+    )
+    data = _get(url)
     if not data:
         return []
 
@@ -232,8 +237,8 @@ def fetch_round_matches(round_num: int) -> list[dict]:
 
 def fetch_match_statistics(match_id: int) -> Optional[Union[dict, list]]:
     """Return the raw statistics payload for a single match."""
-    url = f"{BASE_URL}/match/statistics"
-    return _get(url, {"match_id": match_id})
+    url = f"{BASE_URL}/event/{match_id}/statistics"
+    return _get(url)
 
 
 def extract_xg(stats_payload: Optional[Union[dict, list]]) -> tuple[Optional[float], Optional[float]]:
@@ -275,7 +280,7 @@ def extract_xg(stats_payload: Optional[Union[dict, list]]) -> tuple[Optional[flo
             chosen_groups = period_map[period_key]
             break
 
-    xg_keys = {"Expected goals", "xG", "xg", "expected_goals"}
+    xg_keys = {"Expected goals", "xG", "xg", "expected_goals", "expectedGoals"}
 
     for group in chosen_groups:
         if not isinstance(group, dict):
@@ -498,6 +503,59 @@ def _warn_duplicate_keys(df: pd.DataFrame, label: str) -> pd.DataFrame:
     return out
 
 
+# Columns whose existing value is carried forward when a fresh scrape returns a
+# blank — a fresh gap never erases data already in the cache (see below).
+COALESCE_COLUMNS = ("home_xg", "away_xg", "home_score", "away_score")
+
+
+def _add_protection_key(df: pd.DataFrame) -> pd.DataFrame:
+    """Add a stable per-match key (`_key`) used to align existing vs fresh rows.
+
+    Prefers match_id (immutable across re-scrapes); falls back to the
+    date|home|away match key for the rare row missing a match_id.
+    """
+    out = df if "_match_key" in df.columns else _add_match_key(df)
+    out = out.copy()
+    mid = pd.to_numeric(out["match_id"], errors="coerce").astype("Int64").astype("string")
+    out["_key"] = mid.where(mid.notna(), "mk:" + out["_match_key"].astype(str))
+    return out
+
+
+def _merge_fresh_over_existing(existing: pd.DataFrame, fresh: pd.DataFrame) -> pd.DataFrame:
+    """Merge a fresh scrape over the cache — fresh wins, but never erases.
+
+    Since the official SofaScore API is the source of truth, a fresh non-blank
+    value always replaces the cached one (so xG tracks SofaScore's latest,
+    including post-match revisions). The one guard: a *blank* in the fresh row
+    (e.g. the API hasn't computed xG yet just after full-time) is back-filled
+    from the existing row, so a missing/late scrape can't wipe good data.
+    Existing matches absent from the fresh scrape are retained (history).
+    """
+    existing = _add_protection_key(existing).drop_duplicates(subset=["_key"], keep="last")
+    fresh = _add_protection_key(fresh).drop_duplicates(subset=["_key"], keep="last")
+    existing = existing.set_index("_key", drop=False)
+    fresh = fresh.set_index("_key", drop=False)
+
+    # Fresh rows win, back-filling any blank xG/score from the existing row.
+    fresh_keep = fresh.copy()
+    for col in COALESCE_COLUMNS:
+        exist_col = existing[col].reindex(fresh_keep.index)
+        fresh_keep[col] = fresh_keep[col].where(fresh_keep[col].notna(), exist_col)
+
+    # Existing matches the scrape didn't touch — retain as history.
+    remaining = existing[~existing.index.isin(fresh.index)].copy()
+
+    new_matches = int((~fresh.index.isin(existing.index)).sum())
+    log.info(
+        "xG cache merge: %d updated, %d retained (not re-scraped), %d new",
+        len(fresh_keep) - new_matches,
+        len(remaining),
+        new_matches,
+    )
+
+    return pd.concat([fresh_keep, remaining], ignore_index=True)
+
+
 def merge_with_existing_cache(
     fresh_df: pd.DataFrame,
     output_path: str,
@@ -509,9 +567,6 @@ def merge_with_existing_cache(
         _standardize_team_columns(_normalize_xg_frame(fresh_df), team_aliases),
         "Fresh xG payload",
     )
-    if full_season:
-        final_df = fresh.drop(columns=["_match_key"], errors="ignore")
-        return final_df.sort_values(["round", "date", "home_team", "away_team"], na_position="last").reset_index(drop=True)
 
     if os.path.isfile(output_path):
         existing = pd.read_csv(output_path)
@@ -522,26 +577,12 @@ def merge_with_existing_cache(
     else:
         existing = pd.DataFrame(columns=OUTPUT_COLUMNS + ["_match_key"])
 
-    if fresh.empty:
-        retained = existing.drop(columns=["_match_key"], errors="ignore")
-        log.info("No fresh xG rows collected; retained %d cached row(s)", len(retained))
-        return retained.sort_values(["round", "date", "home_team", "away_team"], na_position="last").reset_index(drop=True)
-
-    fresh_keys = set(fresh["_match_key"])
-    replaced_count = int(existing["_match_key"].isin(fresh_keys).sum()) if "_match_key" in existing.columns else 0
-    retained = existing[~existing["_match_key"].isin(fresh_keys)].copy()
-    retained_count = len(retained)
-
-    merged = pd.concat([retained, fresh], ignore_index=True)
-    merged = merged.drop(columns=["_match_key"], errors="ignore")
-    merged = merged.sort_values(["round", "date", "home_team", "away_team"], na_position="last").reset_index(drop=True)
-    log.info(
-        "Merged incremental xG update into cache: replaced %d row(s), retained %d historical row(s), final total %d",
-        replaced_count,
-        retained_count,
-        len(merged),
-    )
-    return merged
+    log.info("Merging fresh xG into cache (mode=%s)", "full-season" if full_season else "incremental")
+    merged = _merge_fresh_over_existing(existing, fresh)
+    merged = merged.drop(columns=["_match_key", "_key"], errors="ignore")
+    return merged[OUTPUT_COLUMNS].sort_values(
+        ["round", "date", "home_team", "away_team"], na_position="last"
+    ).reset_index(drop=True)
 
 
 def scrape_round_records(
@@ -708,7 +749,7 @@ def run_pipeline(full_season: bool = False) -> tuple[pd.DataFrame, dict[str, obj
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Scrape CSL xG data from SofaScore via RapidAPI")
+    parser = argparse.ArgumentParser(description="Scrape CSL xG data from the official SofaScore API")
     parser.add_argument(
         "--full-season",
         action="store_true",

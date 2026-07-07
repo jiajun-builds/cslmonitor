@@ -27,8 +27,9 @@ cp .env.local.example .env.local       # then fill in the keys below
 
 `.env.local` (local-only, never committed) defines:
 
-- `RAPIDAPI_KEY` — SofaScore xG source, required by `update`.
 - `THE_ODDS_API_KEY` — The Odds API, required by `odds`.
+
+(xG is fetched from the official SofaScore API — no key needed.)
 
 Optional overrides also live in `.env.local` (see `.env.local.example`):
 `PYTHON`, `CSL_CONDA_SH`, `CSL_ENV_NAME`.
@@ -46,7 +47,7 @@ Single entry point — run with no argument for an interactive menu:
 
 | Command | Does | Needs keys |
 |---------|------|-----------|
-| `./scripts/csl.sh update`    | Run the data pipeline (fixtures → xG → merge → expg) | `RAPIDAPI_KEY` |
+| `./scripts/csl.sh update`    | Run the data pipeline (fixtures → xG → merge → expg) | — |
 | `./scripts/csl.sh model`     | Fit Dixon-Coles and export model CSVs | — |
 | `./scripts/csl.sh dashboard` | Export dashboard CSV + JSON | — |
 | `./scripts/csl.sh odds`      | Fetch Pinnacle spreads + export market comparison | `THE_ODDS_API_KEY` |
@@ -79,7 +80,7 @@ Underlying Python entry points (all runnable as `python -m ...` with `PYTHONPATH
 
 - **Data update**
   - `csl.fixtures.chn_fixture_v5` — results + upcoming fixtures (TheSportsDB)
-  - `csl.xg.xg_pipeline` — fetch xG (SofaScore via RapidAPI)
+  - `csl.xg.xg_pipeline` — fetch xG (official SofaScore API, no key)
   - `csl.xg.chn_merge` — merge xG back into the main table
   - `csl.xg.compute_expg` — compute `HExpG+` / `AExpG+`
 - **Model** — `python DC_CHN.py` (thin wrapper over `src/csl/models/dc.py`)
