@@ -26,7 +26,15 @@ run_step() {
 run_step "Update Fixtures" "$PYTHON" -m csl.fixtures.chn_fixture_v5
 
 pull_xg_and_merge() {
-  "$PYTHON" -m csl.xg.xg_pipeline && "$PYTHON" -m csl.xg.chn_merge
+  # SofaScore's Cloudflare 403s datacenter IPs, so the fetch can't run on CI.
+  # Set CSL_SKIP_XG_FETCH=1 there to skip the fetch and merge the committed
+  # xg_data.csv (kept fresh by the home Mac; see scripts/LOCAL_XG_SETUP.md).
+  if [ -n "${CSL_SKIP_XG_FETCH:-}" ]; then
+    echo "CSL_SKIP_XG_FETCH set -- skipping SofaScore fetch, using committed xg_data.csv"
+  else
+    "$PYTHON" -m csl.xg.xg_pipeline
+  fi
+  "$PYTHON" -m csl.xg.chn_merge
 }
 run_step "Pull xG & Update to Fixtures" pull_xg_and_merge
 
