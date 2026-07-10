@@ -2,29 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-10T12:21:56+01:00"
+    "updated_at": "2026-07-10T15:32:55+01:00"
   },
   "rows": [
-    {
-      "home_team": "Shandong Taishan",
-      "away_team": "Yunnan Yukun",
-      "match_time": "11:35",
-      "home_spread": -0.75,
-      "away_spread": 0.75,
-      "home_odds": 1.87,
-      "away_odds": 2.03,
-      "home_ah_ev": 0.2052902067329324,
-      "away_ah_ev": -0.2715786772540792,
-      "open_home_spread": -1,
-      "open_away_spread": 1,
-      "open_home_odds": 1.92,
-      "open_away_odds": 1.88,
-      "open_home_ah_ev": 0.1210019918094598,
-      "open_away_ah_ev": -0.1932388617487159,
-      "open_last_update": "2026-07-04T12:02:19Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
-    },
     {
       "home_team": "Wuhan Three Towns",
       "away_team": "Henan Songshan Longmen",
@@ -42,8 +22,8 @@
       "open_home_ah_ev": -0.0159184909212137,
       "open_away_ah_ev": -0.0703920701826344,
       "open_last_update": "2026-07-04T12:02:18Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     },
     {
       "home_team": "Zhejiang Professional",
@@ -62,8 +42,8 @@
       "open_home_ah_ev": -0.1838992669462565,
       "open_away_ah_ev": 0.1166730651552232,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -71,10 +51,10 @@
       "match_time": "11:35",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 1.83,
-      "away_odds": 2.03,
-      "home_ah_ev": 0.1010519180807928,
-      "away_ah_ev": -0.1700023355449746,
+      "home_odds": 1.81,
+      "away_odds": 2.08,
+      "home_ah_ev": 0.0919659277400957,
+      "away_ah_ev": -0.1562015014920676,
       "open_home_spread": 0,
       "open_away_spread": 0,
       "open_home_odds": 1.81,
@@ -82,8 +62,8 @@
       "open_home_ah_ev": 0.0919659277400957,
       "open_away_ah_ev": -0.1672421687343932,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     },
     {
       "home_team": "Shenzhen Xinpengcheng",
@@ -91,10 +71,10 @@
       "match_time": "11:35",
       "home_spread": -0.25,
       "away_spread": 0.25,
-      "home_odds": 1.95,
-      "away_odds": 1.9,
-      "home_ah_ev": -0.2113467541767485,
-      "away_ah_ev": 0.1455567413770502,
+      "home_odds": 1.96,
+      "away_odds": 1.91,
+      "home_ah_ev": -0.208267075736609,
+      "away_ah_ev": 0.1505959034369502,
       "open_home_spread": 0,
       "open_away_spread": 0,
       "open_home_odds": 1.78,
@@ -102,8 +82,8 @@
       "open_home_ah_ev": -0.0755853376630808,
       "open_away_ah_ev": 0.0204644222197694,
       "open_last_update": "2026-07-04T12:44:56Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     },
     {
       "home_team": "Chengdu Rongcheng",
@@ -111,10 +91,10 @@
       "match_time": "12:00",
       "home_spread": -1.5,
       "away_spread": 1.5,
-      "home_odds": 2.03,
-      "away_odds": 1.83,
-      "home_ah_ev": -0.1071335403876122,
-      "away_ah_ev": 0.0251006792656799,
+      "home_odds": 2.04,
+      "away_odds": 1.84,
+      "home_ah_ev": -0.1027351834437087,
+      "away_ah_ev": 0.0307023223217765,
       "open_home_spread": -1.25,
       "open_away_spread": 1.25,
       "open_home_odds": 1.83,
@@ -122,8 +102,8 @@
       "open_home_ah_ev": -0.0410094724578057,
       "open_away_ah_ev": -0.0418840575645875,
       "open_last_update": "2026-07-05T11:41:59Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     },
     {
       "home_team": "Tianjin Jinmen Tiger",
@@ -142,8 +122,8 @@
       "open_home_ah_ev": 0.2292507945066161,
       "open_away_ah_ev": -0.2669078485639705,
       "open_last_update": "2026-07-05T13:45:36Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     },
     {
       "home_team": "Shanghai Port",
@@ -162,8 +142,8 @@
       "open_home_ah_ev": 0.0833652499195108,
       "open_away_ah_ev": -0.1455590942915842,
       "open_last_update": "2026-07-05T13:45:36Z",
-      "last_update": "2026-07-10T11:21:43Z",
-      "fetched_at": "2026-07-10T11:21:54Z"
+      "last_update": "2026-07-10T14:32:43Z",
+      "fetched_at": "2026-07-10T14:32:52Z"
     }
   ]
 }
