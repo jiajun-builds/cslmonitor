@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-11T14:25:14+01:00"
+    "updated_at": "2026-07-11T14:50:13+01:00"
   },
   "rows": [
     {
@@ -95,13 +95,13 @@
       "away_odds": 2.02,
       "home_ah_ev": 0.0595308078189801,
       "away_ah_ev": -0.1376629494249358,
-      "open_home_spread": null,
-      "open_away_spread": null,
-      "open_home_odds": null,
-      "open_away_odds": null,
-      "open_home_ah_ev": null,
-      "open_away_ah_ev": null,
-      "open_last_update": null,
+      "open_home_spread": 0.75,
+      "open_away_spread": -0.75,
+      "open_home_odds": 1.83,
+      "open_away_odds": 2.01,
+      "open_home_ah_ev": 0.0595308078189801,
+      "open_away_ah_ev": -0.1412307095425185,
+      "open_last_update": "2026-07-11T13:49:00Z",
       "last_update": "2026-07-11T13:24:54Z",
       "fetched_at": "2026-07-11T13:25:11Z"
     },
@@ -135,13 +135,13 @@
       "away_odds": 2,
       "home_ah_ev": 0.1594568975890064,
       "away_ah_ev": -0.2483716984676565,
-      "open_home_spread": null,
-      "open_away_spread": null,
-      "open_home_odds": null,
-      "open_away_odds": null,
-      "open_home_ah_ev": null,
-      "open_away_ah_ev": null,
-      "open_last_update": null,
+      "open_home_spread": -0.25,
+      "open_away_spread": 0.25,
+      "open_home_odds": 1.84,
+      "open_away_odds": 2,
+      "open_home_ah_ev": 0.1594568975890064,
+      "open_away_ah_ev": -0.2483716984676565,
+      "open_last_update": "2026-07-11T13:49:00Z",
       "last_update": "2026-07-11T13:24:54Z",
       "fetched_at": "2026-07-11T13:25:11Z"
     }
