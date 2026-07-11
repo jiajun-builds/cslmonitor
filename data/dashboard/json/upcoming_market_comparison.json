@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-11T14:50:13+01:00"
+    "updated_at": "2026-07-11T16:59:17+01:00"
   },
   "rows": [
     {
@@ -11,10 +11,10 @@
       "match_time": "11:00",
       "home_spread": -1.25,
       "away_spread": 1.25,
-      "home_odds": 2.03,
-      "away_odds": 1.82,
-      "home_ah_ev": -0.2892310052916024,
-      "away_ah_ev": 0.1926241554207315,
+      "home_odds": 2.04,
+      "away_odds": 1.81,
+      "home_ah_ev": -0.2863645143702135,
+      "away_ah_ev": 0.186779359718785,
       "open_home_spread": -1,
       "open_away_spread": 1,
       "open_home_odds": 1.94,
@@ -22,8 +22,8 @@
       "open_home_ah_ev": -0.1861580859176373,
       "open_away_ah_ev": 0.1188422348112037,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-11T13:24:54Z",
-      "fetched_at": "2026-07-11T13:25:11Z"
+      "last_update": "2026-07-11T15:58:55Z",
+      "fetched_at": "2026-07-11T15:59:14Z"
     },
     {
       "home_team": "Tianjin Jinmen Tiger",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": 0.0677480623208934,
       "open_away_ah_ev": -0.1311128784506972,
       "open_last_update": "2026-07-05T13:45:36Z",
-      "last_update": "2026-07-11T13:24:54Z",
-      "fetched_at": "2026-07-11T13:25:11Z"
+      "last_update": "2026-07-11T15:58:55Z",
+      "fetched_at": "2026-07-11T15:59:14Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -82,8 +82,8 @@
       "open_home_ah_ev": null,
       "open_away_ah_ev": null,
       "open_last_update": null,
-      "last_update": "2026-07-11T13:24:54Z",
-      "fetched_at": "2026-07-11T13:25:11Z"
+      "last_update": "2026-07-11T15:58:55Z",
+      "fetched_at": "2026-07-11T15:59:14Z"
     },
     {
       "home_team": "Qingdao West Coast",
@@ -92,9 +92,9 @@
       "home_spread": 0.75,
       "away_spread": -0.75,
       "home_odds": 1.83,
-      "away_odds": 2.02,
+      "away_odds": 2.01,
       "home_ah_ev": 0.0595308078189801,
-      "away_ah_ev": -0.1376629494249358,
+      "away_ah_ev": -0.1412307095425185,
       "open_home_spread": 0.75,
       "open_away_spread": -0.75,
       "open_home_odds": 1.83,
@@ -102,8 +102,8 @@
       "open_home_ah_ev": 0.0595308078189801,
       "open_away_ah_ev": -0.1412307095425185,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-11T13:24:54Z",
-      "fetched_at": "2026-07-11T13:25:11Z"
+      "last_update": "2026-07-11T15:58:55Z",
+      "fetched_at": "2026-07-11T15:59:14Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -122,8 +122,8 @@
       "open_home_ah_ev": null,
       "open_away_ah_ev": null,
       "open_last_update": null,
-      "last_update": "2026-07-11T13:24:54Z",
-      "fetched_at": "2026-07-11T13:25:11Z"
+      "last_update": "2026-07-11T15:58:55Z",
+      "fetched_at": "2026-07-11T15:59:14Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -142,8 +142,8 @@
       "open_home_ah_ev": 0.1594568975890064,
       "open_away_ah_ev": -0.2483716984676565,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-11T13:24:54Z",
-      "fetched_at": "2026-07-11T13:25:11Z"
+      "last_update": "2026-07-11T15:58:55Z",
+      "fetched_at": "2026-07-11T15:59:14Z"
     }
   ]
 }
