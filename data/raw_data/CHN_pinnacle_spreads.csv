@@ -1,8 +1,8 @@
 event_id,commence_time,api_home_team,api_away_team,home_team,away_team,home_spread,away_spread,home_odds,away_odds,bookmaker,market,regions,last_update,fetched_at
-8f7c3eac91842d39f23f4d070864c016,2026-07-14T11:35:00Z,Zhejiang,Qingdao Hainiu FC,Zhejiang Professional,Qingdao Hainiu,-1.0,1.0,1.92,1.92,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
-033319c081ee30d81bbf6daf96897bba,2026-07-17T11:35:00Z,Beijing FC,Liaoning Tieren FC,Beijing Guoan,Liaoning Tieren,-1.5,1.5,1.98,1.85,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
-354532026104d407ef116b6ed2f0f05e,2026-07-17T12:00:00Z,Yunnan Yukun,Shanghai SIPG FC,Yunnan Yukun,Shanghai Port,0.0,-0.0,1.85,1.98,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
-ac8361a0f9ddadb6d5429f1daac8a995,2026-07-18T11:00:00Z,Qingdao West Coast FC,Chengdu Rongcheng FC,Qingdao West Coast,Chengdu Rongcheng,0.75,-0.75,1.83,2.01,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
-a2f48c8669537b56409b960e6f4b5da8,2026-07-18T11:35:00Z,Dalian Yingbo,Shandong Luneng Taishan FC,Dalian Yingbo,Shandong Taishan,-0.25,0.25,1.89,1.94,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
-3abd5d6ab676880db7d46e5c1a267269,2026-07-18T11:35:00Z,Shanghai Shenhua FC,Tianjin Jinmen Tiger FC,Shanghai Shenhua,Tianjin Jinmen Tiger,-1.25,1.25,1.93,1.9,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
-6d213f33c60b8339c5c6ff5c5d9cf15d,2026-07-18T12:00:00Z,Wuhan Three Towns,Shenzhen Peng City FC,Wuhan Three Towns,Shenzhen Xinpengcheng,-0.25,0.25,1.84,2.0,pinnacle,spreads,us,2026-07-12T13:25:06Z,2026-07-12T13:25:42Z
+8f7c3eac91842d39f23f4d070864c016,2026-07-14T11:35:00Z,Zhejiang,Qingdao Hainiu FC,Zhejiang Professional,Qingdao Hainiu,-1.25,1.25,1.91,1.93,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
+033319c081ee30d81bbf6daf96897bba,2026-07-17T11:35:00Z,Beijing FC,Liaoning Tieren FC,Beijing Guoan,Liaoning Tieren,-1.5,1.5,1.98,1.85,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
+354532026104d407ef116b6ed2f0f05e,2026-07-17T12:00:00Z,Yunnan Yukun,Shanghai SIPG FC,Yunnan Yukun,Shanghai Port,0.0,-0.0,1.85,1.98,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
+ac8361a0f9ddadb6d5429f1daac8a995,2026-07-18T11:00:00Z,Qingdao West Coast FC,Chengdu Rongcheng FC,Qingdao West Coast,Chengdu Rongcheng,0.75,-0.75,1.83,2.01,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
+a2f48c8669537b56409b960e6f4b5da8,2026-07-18T11:35:00Z,Dalian Yingbo,Shandong Luneng Taishan FC,Dalian Yingbo,Shandong Taishan,-0.25,0.25,1.89,1.94,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
+3abd5d6ab676880db7d46e5c1a267269,2026-07-18T11:35:00Z,Shanghai Shenhua FC,Tianjin Jinmen Tiger FC,Shanghai Shenhua,Tianjin Jinmen Tiger,-1.25,1.25,1.93,1.9,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
+6d213f33c60b8339c5c6ff5c5d9cf15d,2026-07-18T12:00:00Z,Wuhan Three Towns,Shenzhen Peng City FC,Wuhan Three Towns,Shenzhen Xinpengcheng,-0.25,0.25,1.84,2.0,pinnacle,spreads,us,2026-07-12T16:02:11Z,2026-07-12T16:02:20Z
