@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-12T07:11:20+01:00"
+    "updated_at": "2026-07-12T11:04:44+01:00"
   },
   "rows": [
     {
@@ -22,6 +22,15 @@
       "kickoff_at": "2026-07-12T12:35:00+01:00",
       "home_team": "Shanghai Port",
       "away_team": "Dalian Yingbo"
+    },
+    {
+      "fixture_id": "CSL-2026-18-2026-07-14-zhejiang-professional-qingdao-hainiu",
+      "round": 18,
+      "match_date": "2026-07-14",
+      "match_time": "11:35",
+      "kickoff_at": "2026-07-14T12:35:00+01:00",
+      "home_team": "Zhejiang Professional",
+      "away_team": "Qingdao Hainiu"
     },
     {
       "fixture_id": "CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren",
@@ -130,6 +139,42 @@
       "kickoff_at": "2026-07-25T13:00:00+01:00",
       "home_team": "Wuhan Three Towns",
       "away_team": "Chongqing Tonglianglong"
+    },
+    {
+      "fixture_id": "CSL-2026-20-2026-07-26-yunnan-yukun-shenzhen-xinpengcheng",
+      "round": 20,
+      "match_date": "2026-07-26",
+      "match_time": "11:00",
+      "kickoff_at": "2026-07-26T12:00:00+01:00",
+      "home_team": "Yunnan Yukun",
+      "away_team": "Shenzhen Xinpengcheng"
+    },
+    {
+      "fixture_id": "CSL-2026-20-2026-07-26-chengdu-rongcheng-beijing-guoan",
+      "round": 20,
+      "match_date": "2026-07-26",
+      "match_time": "11:35",
+      "kickoff_at": "2026-07-26T12:35:00+01:00",
+      "home_team": "Chengdu Rongcheng",
+      "away_team": "Beijing Guoan"
+    },
+    {
+      "fixture_id": "CSL-2026-20-2026-07-26-shandong-taishan-henan-songshan-longmen",
+      "round": 20,
+      "match_date": "2026-07-26",
+      "match_time": "11:35",
+      "kickoff_at": "2026-07-26T12:35:00+01:00",
+      "home_team": "Shandong Taishan",
+      "away_team": "Henan Songshan Longmen"
+    },
+    {
+      "fixture_id": "CSL-2026-20-2026-07-26-zhejiang-professional-dalian-yingbo",
+      "round": 20,
+      "match_date": "2026-07-26",
+      "match_time": "12:00",
+      "kickoff_at": "2026-07-26T13:00:00+01:00",
+      "home_team": "Zhejiang Professional",
+      "away_team": "Dalian Yingbo"
     }
   ]
 }
