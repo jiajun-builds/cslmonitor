@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-12T17:02:23+01:00"
+    "updated_at": "2026-07-12T20:09:43+01:00"
   },
   "rows": [
     {
@@ -22,8 +22,8 @@
       "open_home_ah_ev": -0.1861580354200155,
       "open_away_ah_ev": 0.118842186028277,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -42,8 +42,8 @@
       "open_home_ah_ev": 0.2618205323944638,
       "open_away_ah_ev": -0.3618174645304439,
       "open_last_update": "2026-07-11T08:42:52Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     },
     {
       "home_team": "Yunnan Yukun",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": -0.1153230625175205,
       "open_away_ah_ev": 0.0582183977868881,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     },
     {
       "home_team": "Qingdao West Coast",
@@ -82,8 +82,8 @@
       "open_home_ah_ev": 0.059530896071313,
       "open_away_ah_ev": -0.1412308074511671,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -102,8 +102,8 @@
       "open_home_ah_ev": -0.2024334532812671,
       "open_away_ah_ev": 0.1344031360207286,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -122,8 +122,8 @@
       "open_home_ah_ev": -0.0160505581083729,
       "open_away_ah_ev": -0.0582217601503362,
       "open_last_update": "2026-07-11T12:42:52Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -142,8 +142,8 @@
       "open_home_ah_ev": 0.1594568192169002,
       "open_away_ah_ev": -0.2483716115894118,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-12T16:02:11Z",
-      "fetched_at": "2026-07-12T16:02:20Z"
+      "last_update": "2026-07-12T19:09:11Z",
+      "fetched_at": "2026-07-12T19:09:40Z"
     }
   ]
 }
