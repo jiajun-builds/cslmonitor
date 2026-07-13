@@ -24,6 +24,7 @@ Run (repo root, conda env csl-workflows or any env with penaltyblog):
 
 import os
 import statistics
+import sys
 
 import pandas as pd
 import penaltyblog as pb
@@ -33,6 +34,11 @@ from tqdm import tqdm
 # so the script is portable across machines. Mirrors poisson_vs_zip_18mo_test.py.
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV = os.path.join(REPO_ROOT, "data", "raw_data", "CHN_Super League.csv")
+
+# The CSV dates are DD/MM/YYYY; a bare to_datetime() day/month-swaps them and
+# drops every day>12 row. Use the production parser instead.
+sys.path.insert(0, os.path.join(REPO_ROOT, "src"))
+from csl.date_utils import parse_date_only_series  # noqa: E402
 
 XI = 0.001
 LOOKBACK = pd.DateOffset(months=18)   # aligned to production dc.py
@@ -69,7 +75,7 @@ def find_zero_inflation_key(params):
 
 
 df = pd.read_csv(CSV)
-df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+df["Date"] = parse_date_only_series(df["Date"])
 df = df.dropna(subset=["Date"]).sort_values("Date").set_index("Date", drop=False)
 
 df["HExpG+"] = pd.to_numeric(df["HExpG+"], errors="coerce")

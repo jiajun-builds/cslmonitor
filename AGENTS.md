@@ -353,6 +353,22 @@ where the model diverges from the market and bet +EV lines at aggregator books.
      `validate_market_probabilities` skips them; `getBestBet` in `app.js` treats a null Now EV
      as NaN so an open-only fixture is never chosen as the best bet.
 
+7. **Date-parse bug in `model comparison/` scripts — FIXED (2026-07-12).** A naive
+   `pd.to_datetime(df["Date"], errors="coerce")` is correct on ISO `YYYY-MM-DD` but on
+   `DD/MM/YYYY` it coerces every day>12 row to `NaT` and month/day-swaps the rest, corrupting
+   the walk-forward training windows. The bug was **dormant** (the committed CSV was ISO) until
+   a manual spreadsheet re-save — made while adding the Pinnacle opening lines — rewrote the
+   working-tree CSV to `DD/MM/YYYY` and activated it. Production was never affected:
+   `src/csl/models/dc.py` already uses `csl.date_utils.parse_date_only_series` (handles both
+   formats). Fix: (a) the three active scripts (`xi_lookback_grid_test.py`,
+   `zip_zero_inflation_param_test.py`, `poisson_vs_zip_18mo_test.py`) now use
+   `parse_date_only_series`; the re-run reproduces the original correct grid, so those findings
+   STAND (production `xi=0.001`/18mo ranks within noise of the optimum). (b) `chn_merge.py` now
+   **canonicalizes the `Date` column to ISO on write** via `format_date_only_series` (defensive:
+   only overwrites cleanly-parsed rows), so any future manual `DD/MM/YYYY` re-save self-heals on
+   the next pipeline run instead of silently reactivating locale-dependent parsing downstream.
+   The opening-line AH backtest built on this data lives in `backtest/` (see `backtest/backtest.md`).
+
 ## Agent Tips
 - Prefer `./scripts/csl.sh` over direct module execution for local workflow tasks.
 - If a task is only "update the data", use `./scripts/csl.sh update`.
