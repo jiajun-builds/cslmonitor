@@ -1,11 +1,24 @@
+import os
+import sys
+
 import numpy as np
 import pandas as pd
 import penaltyblog as pb
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-df = pd.read_csv('/Users/jordan/Projects/Chinese Super League Prediction/data/raw_data/CHN_Super League.csv')
-df['Date'] = pd.to_datetime(df['Date'])
+# Resolve the league CSV relative to the repo root so the script is portable
+# (the old hardcoded /Users/jordan/Projects/... path no longer exists).
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CSV = os.path.join(REPO_ROOT, "data", "raw_data", "CHN_Super League.csv")
+
+# The CSV dates are DD/MM/YYYY (or ISO); a bare to_datetime() day/month-swaps
+# DMY and drops every day>12 row. Use the production parser instead.
+sys.path.insert(0, os.path.join(REPO_ROOT, "src"))
+from csl.date_utils import parse_date_only_series  # noqa: E402
+
+df = pd.read_csv(CSV)
+df['Date'] = parse_date_only_series(df['Date'])
 df = df.sort_values('Date').set_index('Date', drop=False)
 
 # Map result to numeric
