@@ -120,7 +120,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552552,15,2026-05-31,Tianjin Jinmen Tiger,Dalian Yingbo,1,0,1.26,1.31,Ended
 15552551,15,2026-05-31,Wuhan Three Towns,Yunnan Yukun,1,1,1.47,0.99,Ended
 15552549,16,2026-06-26,Qingdao Hainiu,Yunnan Yukun,4,2,2.15,2.57,Ended
-15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,1,0,2.83,0.64,Ended
+15552561,16,2026-06-27,Beijing Guoan,Wuhan Three Towns,1,0,2.85,0.64,Ended
 15552557,16,2026-06-27,Chongqing Tonglianglong,Tianjin Jinmen Tiger,1,0,0.59,1.22,Ended
 15552555,16,2026-06-27,Henan Songshan Longmen,Shanghai Port,1,2,1.01,1.11,Ended
 15552553,16,2026-06-27,Liaoning Tieren,Shandong Taishan,1,5,0.52,5.09,Ended
@@ -136,7 +136,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552566,17,2026-07-05,Qingdao Hainiu,Chengdu Rongcheng,1,1,1.49,2.15,Ended
 15552567,17,2026-07-05,Shanghai Shenhua,Zhejiang Professional,3,2,1.45,1.57,Ended
 15552568,18,2026-07-10,Shandong Taishan,Yunnan Yukun,4,3,2.22,2.6,Ended
-15552573,18,2026-07-11,Chengdu Rongcheng,Chongqing Tonglianglong,1,1,2.11,0.67,Ended
+15552573,18,2026-07-11,Chengdu Rongcheng,Chongqing Tonglianglong,1,1,2.19,0.64,Ended
 15552572,18,2026-07-11,Shanghai Shenhua,Beijing Guoan,,,,,Postponed
 15552571,18,2026-07-11,Shenzhen Xinpengcheng,Qingdao West Coast,3,0,3.37,0.81,Ended
 15552570,18,2026-07-11,Wuhan Three Towns,Henan Songshan Longmen,,,,,Postponed
@@ -146,10 +146,10 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 16484884,18,2026-07-14,Zhejiang Professional,Qingdao Hainiu,,,,,Not started
 15552576,19,2026-07-17,Beijing Guoan,Liaoning Tieren,,,,,Not started
 15552581,19,2026-07-17,Henan Songshan Longmen,Qingdao Hainiu,,,,,Not started
+15552577,19,2026-07-17,Qingdao West Coast,Chengdu Rongcheng,,,,,Not started
 15552580,19,2026-07-17,Yunnan Yukun,Shanghai Port,,,,,Not started
 15552578,19,2026-07-18,Chongqing Tonglianglong,Zhejiang Professional,,,,,Not started
 15552584,19,2026-07-18,Dalian Yingbo,Shandong Taishan,,,,,Not started
-15552577,19,2026-07-18,Qingdao West Coast,Chengdu Rongcheng,,,,,Not started
 15552579,19,2026-07-18,Shanghai Shenhua,Tianjin Jinmen Tiger,,,,,Not started
 15552583,19,2026-07-18,Wuhan Three Towns,Shenzhen Xinpengcheng,,,,,Not started
 15552585,20,2026-07-25,Liaoning Tieren,Qingdao West Coast,,,,,Not started
