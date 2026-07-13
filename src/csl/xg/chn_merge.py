@@ -22,7 +22,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from csl.date_utils import parse_date_only_series
+from csl.date_utils import format_date_only_series, parse_date_only_series
 from csl.paths import data_output_dir, data_raw_dir
 
 # Same raw_data folder as csl.xg.xg_pipeline OUTPUT_DIR
@@ -206,6 +206,15 @@ def merge_xg_into_league(
         )
 
     out.drop(columns=["_d", "_H", "_A"], inplace=True)
+
+    # Canonicalize Date to ISO YYYY-MM-DD on write so a manual edit that
+    # reintroduces DD/MM/YYYY (e.g. a spreadsheet re-save) self-heals on the next
+    # merge instead of silently reactivating locale-dependent date parsing
+    # downstream. Only overwrite rows that parse cleanly; leave anything
+    # unrecognized untouched rather than blanking it.
+    iso_dates = format_date_only_series(out["Date"])
+    parsed_ok = iso_dates != ""
+    out["Date"] = iso_dates.where(parsed_ok, out["Date"].astype("string"))
 
     if dry_run:
         log.info("Dry run: no file written.")
