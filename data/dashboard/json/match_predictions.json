@@ -2,39 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-12T22:54:24+01:00",
+    "updated_at": "2026-07-13T04:17:02+01:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v2.2"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren",
-      "round": 18,
-      "match_date": "2026-07-12",
-      "kickoff_at": "2026-07-12T12:00:00+01:00",
-      "home_team": "Tianjin Jinmen Tiger",
-      "away_team": "Liaoning Tieren",
-      "home_win_prob": 0.529155,
-      "draw_prob": 0.283075,
-      "away_win_prob": 0.187771,
-      "home_win_fair_odds": 1.8898,
-      "draw_fair_odds": 3.5326,
-      "away_win_fair_odds": 5.3256
-    },
-    {
-      "fixture_id": "CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo",
-      "round": 18,
-      "match_date": "2026-07-12",
-      "kickoff_at": "2026-07-12T12:35:00+01:00",
-      "home_team": "Shanghai Port",
-      "away_team": "Dalian Yingbo",
-      "home_win_prob": 0.60397,
-      "draw_prob": 0.255304,
-      "away_win_prob": 0.140726,
-      "home_win_fair_odds": 1.6557,
-      "draw_fair_odds": 3.9169,
-      "away_win_fair_odds": 7.106
-    },
     {
       "fixture_id": "CSL-2026-18-2026-07-14-zhejiang-professional-qingdao-hainiu",
       "round": 18,

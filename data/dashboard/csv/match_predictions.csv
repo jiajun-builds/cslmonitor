@@ -1,6 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-18-2026-07-12-tianjin-jinmen-tiger-liaoning-tieren,18,2026-07-12,2026-07-12T12:00:00+01:00,Tianjin Jinmen Tiger,Liaoning Tieren,0.529155,0.283075,0.187771,1.8898,3.5326,5.3256
-CSL-2026-18-2026-07-12-shanghai-port-dalian-yingbo,18,2026-07-12,2026-07-12T12:35:00+01:00,Shanghai Port,Dalian Yingbo,0.60397,0.255304,0.140726,1.6557,3.9169,7.106
 CSL-2026-18-2026-07-14-zhejiang-professional-qingdao-hainiu,18,2026-07-14,2026-07-14T12:35:00+01:00,Zhejiang Professional,Qingdao Hainiu,0.544392,0.255326,0.200282,1.8369,3.9166,4.993
 CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren,19,2026-07-17,2026-07-17T12:35:00+01:00,Beijing Guoan,Liaoning Tieren,0.825324,0.122291,0.052385,1.2116,8.1772,19.0894
 CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu,19,2026-07-17,2026-07-17T12:35:00+01:00,Henan Songshan Longmen,Qingdao Hainiu,0.652227,0.220511,0.127263,1.5332,4.5349,7.8577
