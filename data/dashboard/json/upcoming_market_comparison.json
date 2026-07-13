@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-13T20:26:38+01:00"
+    "updated_at": "2026-07-13T22:59:54+01:00"
   },
   "rows": [
     {
@@ -22,8 +22,8 @@
       "open_home_ah_ev": -0.2002084949608099,
       "open_away_ah_ev": 0.1332062823488525,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -42,8 +42,8 @@
       "open_home_ah_ev": 0.2619363762174864,
       "open_away_ah_ev": -0.3620755992643327,
       "open_last_update": "2026-07-11T08:42:52Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     },
     {
       "home_team": "Yunnan Yukun",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": -0.1239681932177236,
       "open_away_ah_ev": 0.0671308091070095,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     },
     {
       "home_team": "Qingdao West Coast",
@@ -71,10 +71,10 @@
       "match_time": "11:00",
       "home_spread": 0.75,
       "away_spread": -0.75,
-      "home_odds": 1.83,
-      "away_odds": 2.01,
-      "home_ah_ev": 0.018559335547142,
-      "away_ah_ev": -0.096125311228259,
+      "home_odds": 1.84,
+      "away_odds": 2,
+      "home_ah_ev": 0.0233447642623953,
+      "away_ah_ev": -0.0999116237064477,
       "open_home_spread": 0.75,
       "open_away_spread": -0.75,
       "open_home_odds": 1.83,
@@ -82,8 +82,8 @@
       "open_home_ah_ev": 0.018559335547142,
       "open_away_ah_ev": -0.096125311228259,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -102,8 +102,8 @@
       "open_home_ah_ev": -0.2667380423903239,
       "open_away_ah_ev": 0.2002575135883451,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -122,8 +122,8 @@
       "open_home_ah_ev": -0.0342916388714499,
       "open_away_ah_ev": -0.0367741587019279,
       "open_last_update": "2026-07-11T12:42:52Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -142,8 +142,8 @@
       "open_home_ah_ev": 0.0951423509439013,
       "open_away_ah_ev": -0.1781842216293705,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-13T19:26:17Z",
-      "fetched_at": "2026-07-13T19:26:36Z"
+      "last_update": "2026-07-13T21:59:13Z",
+      "fetched_at": "2026-07-13T21:59:51Z"
     }
   ]
 }
