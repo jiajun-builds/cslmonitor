@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-14T11:50:04+01:00"
+    "updated_at": "2026-07-14T14:42:38+01:00"
   },
   "rows": [
     {
@@ -46,6 +46,26 @@
       "fetched_at": "2026-07-14T10:50:01Z"
     },
     {
+      "home_team": "Henan Songshan Longmen",
+      "away_team": "Qingdao Hainiu",
+      "match_time": "11:35",
+      "home_spread": null,
+      "away_spread": null,
+      "home_odds": null,
+      "away_odds": null,
+      "home_ah_ev": null,
+      "away_ah_ev": null,
+      "open_home_spread": -1,
+      "open_away_spread": 1,
+      "open_home_odds": 1.88,
+      "open_away_odds": 1.96,
+      "open_home_ah_ev": -0.0597948347043426,
+      "open_away_ah_ev": 0.0022532244697203,
+      "open_last_update": "2026-07-14T13:41:06Z",
+      "last_update": null,
+      "fetched_at": null
+    },
+    {
       "home_team": "Yunnan Yukun",
       "away_team": "Shanghai Port",
       "match_time": "12:00",
@@ -64,6 +84,26 @@
       "open_last_update": "2026-07-12T11:47:09Z",
       "last_update": "2026-07-14T10:49:55Z",
       "fetched_at": "2026-07-14T10:50:01Z"
+    },
+    {
+      "home_team": "Chongqing Tonglianglong",
+      "away_team": "Zhejiang Professional",
+      "match_time": "11:00",
+      "home_spread": null,
+      "away_spread": null,
+      "home_odds": null,
+      "away_odds": null,
+      "home_ah_ev": null,
+      "away_ah_ev": null,
+      "open_home_spread": 0,
+      "open_away_spread": 0,
+      "open_home_odds": 1.98,
+      "open_away_odds": 1.85,
+      "open_home_ah_ev": -0.1318488846612878,
+      "open_away_ah_ev": 0.0759773470439598,
+      "open_last_update": "2026-07-14T13:41:06Z",
+      "last_update": null,
+      "fetched_at": null
     },
     {
       "home_team": "Qingdao West Coast",
