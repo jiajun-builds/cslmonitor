@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-14T14:49:45+01:00"
+    "updated_at": "2026-07-14T17:18:48+01:00"
   },
   "rows": [
     {
@@ -22,8 +22,8 @@
       "open_home_ah_ev": 0.2619363762174864,
       "open_away_ah_ev": -0.3620755992643327,
       "open_last_update": "2026-07-11T08:42:52Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Henan Songshan Longmen",
@@ -31,10 +31,10 @@
       "match_time": "11:35",
       "home_spread": -1,
       "away_spread": 1,
-      "home_odds": 1.88,
-      "away_odds": 1.96,
-      "home_ah_ev": -0.0597948347043426,
-      "away_ah_ev": 0.0022532244697203,
+      "home_odds": 1.86,
+      "away_odds": 1.97,
+      "home_ah_ev": -0.0669017698649674,
+      "away_ah_ev": 0.0059782242874387,
       "open_home_spread": -1,
       "open_away_spread": 1,
       "open_home_odds": 1.88,
@@ -42,8 +42,8 @@
       "open_home_ah_ev": -0.0597948347043426,
       "open_away_ah_ev": 0.0022532244697203,
       "open_last_update": "2026-07-14T13:41:06Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Yunnan Yukun",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": -0.1239681932177236,
       "open_away_ah_ev": 0.0671308091070095,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -71,10 +71,10 @@
       "match_time": "11:00",
       "home_spread": 0,
       "away_spread": 0,
-      "home_odds": 1.98,
-      "away_odds": 1.85,
-      "home_ah_ev": -0.1318488846612878,
-      "away_ah_ev": 0.0759773470439598,
+      "home_odds": 2.06,
+      "away_odds": 1.79,
+      "home_ah_ev": -0.1145582475747561,
+      "away_ah_ev": 0.0553577957056817,
       "open_home_spread": 0,
       "open_away_spread": 0,
       "open_home_odds": 1.98,
@@ -82,8 +82,8 @@
       "open_home_ah_ev": -0.1318488846612878,
       "open_away_ah_ev": 0.0759773470439598,
       "open_last_update": "2026-07-14T13:41:06Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Qingdao West Coast",
@@ -102,8 +102,8 @@
       "open_home_ah_ev": 0.018559335547142,
       "open_away_ah_ev": -0.096125311228259,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -122,8 +122,8 @@
       "open_home_ah_ev": -0.2667380423903239,
       "open_away_ah_ev": 0.2002575135883451,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -142,8 +142,8 @@
       "open_home_ah_ev": -0.0342916388714499,
       "open_away_ah_ev": -0.0367741587019279,
       "open_last_update": "2026-07-11T12:42:52Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -162,8 +162,8 @@
       "open_home_ah_ev": 0.0951423509439013,
       "open_away_ah_ev": -0.1781842216293705,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-14T13:49:33Z",
-      "fetched_at": "2026-07-14T13:49:42Z"
+      "last_update": "2026-07-14T16:18:38Z",
+      "fetched_at": "2026-07-14T16:18:45Z"
     }
   ]
 }
