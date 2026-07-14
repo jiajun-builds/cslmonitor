@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-14T06:34:26+01:00"
+    "updated_at": "2026-07-14T09:10:58+01:00"
   },
   "rows": [
     {
@@ -11,10 +11,10 @@
       "match_time": "11:35",
       "home_spread": -1.25,
       "away_spread": 1.25,
-      "home_odds": 1.93,
-      "away_odds": 1.96,
-      "home_ah_ev": -0.3358441064790737,
-      "away_ah_ev": 0.2929012931414288,
+      "home_odds": 2.01,
+      "away_odds": 1.88,
+      "home_ah_ev": -0.3138224280622962,
+      "away_ah_ev": 0.2455536036954996,
       "open_home_spread": -1,
       "open_away_spread": 1,
       "open_home_odds": 1.94,
@@ -22,8 +22,8 @@
       "open_home_ah_ev": -0.2002084949608099,
       "open_away_ah_ev": 0.1332062823488525,
       "open_last_update": "2026-07-05T12:56:24Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -42,8 +42,8 @@
       "open_home_ah_ev": 0.2619363762174864,
       "open_away_ah_ev": -0.3620755992643327,
       "open_last_update": "2026-07-11T08:42:52Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     },
     {
       "home_team": "Yunnan Yukun",
@@ -62,8 +62,8 @@
       "open_home_ah_ev": -0.1239681932177236,
       "open_away_ah_ev": 0.0671308091070095,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     },
     {
       "home_team": "Qingdao West Coast",
@@ -82,8 +82,8 @@
       "open_home_ah_ev": 0.018559335547142,
       "open_away_ah_ev": -0.096125311228259,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -91,10 +91,10 @@
       "match_time": "11:35",
       "home_spread": -0.25,
       "away_spread": 0.25,
-      "home_odds": 1.87,
-      "away_odds": 1.97,
-      "home_ah_ev": -0.2729162855064266,
-      "away_ah_ev": 0.2165076094200519,
+      "home_odds": 1.91,
+      "away_odds": 1.93,
+      "home_ah_ev": -0.2605597992742212,
+      "away_ah_ev": 0.1948408149777761,
       "open_home_spread": -0.25,
       "open_away_spread": 0.25,
       "open_home_odds": 1.89,
@@ -102,8 +102,8 @@
       "open_home_ah_ev": -0.2667380423903239,
       "open_away_ah_ev": 0.2002575135883451,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -111,10 +111,10 @@
       "match_time": "11:35",
       "home_spread": -1.25,
       "away_spread": 1.25,
-      "home_odds": 1.93,
-      "away_odds": 1.9,
-      "home_ah_ev": -0.1181258954242557,
-      "away_ah_ev": 0.0437746062531094,
+      "home_odds": 1.88,
+      "away_odds": 1.95,
+      "home_ah_ev": -0.1373095456171149,
+      "away_ah_ev": 0.0675216957036812,
       "open_home_spread": -1,
       "open_away_spread": 1,
       "open_home_odds": 1.78,
@@ -122,8 +122,8 @@
       "open_home_ah_ev": -0.0342916388714499,
       "open_away_ah_ev": -0.0367741587019279,
       "open_last_update": "2026-07-11T12:42:52Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -142,8 +142,8 @@
       "open_home_ah_ev": 0.0951423509439013,
       "open_away_ah_ev": -0.1781842216293705,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-14T05:34:19Z",
-      "fetched_at": "2026-07-14T05:34:23Z"
+      "last_update": "2026-07-14T08:10:21Z",
+      "fetched_at": "2026-07-14T08:10:55Z"
     }
   ]
 }
