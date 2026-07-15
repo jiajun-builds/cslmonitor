@@ -2,9 +2,18 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-15T09:17:09+01:00"
+    "updated_at": "2026-07-15T11:17:43+01:00"
   },
   "rows": [
+    {
+      "fixture_id": "CSL-2026-19-2026-07-17-qingdao-west-coast-chengdu-rongcheng",
+      "round": 19,
+      "match_date": "2026-07-17",
+      "match_time": "11:00",
+      "kickoff_at": "2026-07-17T12:00:00+01:00",
+      "home_team": "Qingdao West Coast",
+      "away_team": "Chengdu Rongcheng"
+    },
     {
       "fixture_id": "CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren",
       "round": 19,
@@ -40,15 +49,6 @@
       "kickoff_at": "2026-07-18T12:00:00+01:00",
       "home_team": "Chongqing Tonglianglong",
       "away_team": "Zhejiang Professional"
-    },
-    {
-      "fixture_id": "CSL-2026-19-2026-07-18-qingdao-west-coast-chengdu-rongcheng",
-      "round": 19,
-      "match_date": "2026-07-18",
-      "match_time": "11:00",
-      "kickoff_at": "2026-07-18T12:00:00+01:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Chengdu Rongcheng"
     },
     {
       "fixture_id": "CSL-2026-19-2026-07-18-dalian-yingbo-shandong-taishan",

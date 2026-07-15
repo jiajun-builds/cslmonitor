@@ -2,11 +2,25 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-15T09:17:09+01:00",
+    "updated_at": "2026-07-15T11:17:43+01:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v2.2"
   },
   "rows": [
+    {
+      "fixture_id": "CSL-2026-19-2026-07-17-qingdao-west-coast-chengdu-rongcheng",
+      "round": 19,
+      "match_date": "2026-07-17",
+      "kickoff_at": "2026-07-17T12:00:00+01:00",
+      "home_team": "Qingdao West Coast",
+      "away_team": "Chengdu Rongcheng",
+      "home_win_prob": 0.16928,
+      "draw_prob": 0.309263,
+      "away_win_prob": 0.521457,
+      "home_win_fair_odds": 5.9074,
+      "draw_fair_odds": 3.2335,
+      "away_win_fair_odds": 1.9177
+    },
     {
       "fixture_id": "CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren",
       "round": 19,
@@ -62,20 +76,6 @@
       "home_win_fair_odds": 4.6268,
       "draw_fair_odds": 2.2717,
       "away_win_fair_odds": 2.9099
-    },
-    {
-      "fixture_id": "CSL-2026-19-2026-07-18-qingdao-west-coast-chengdu-rongcheng",
-      "round": 19,
-      "match_date": "2026-07-18",
-      "kickoff_at": "2026-07-18T12:00:00+01:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Chengdu Rongcheng",
-      "home_win_prob": 0.16928,
-      "draw_prob": 0.309263,
-      "away_win_prob": 0.521457,
-      "home_win_fair_odds": 5.9074,
-      "draw_fair_odds": 3.2335,
-      "away_win_fair_odds": 1.9177
     },
     {
       "fixture_id": "CSL-2026-19-2026-07-18-dalian-yingbo-shandong-taishan",
