@@ -526,25 +526,28 @@ less beats predicting better.** See roadmap #8.
     shrink wherever an anchor exists; δ stays as the fallback. Target: draw prob ≈ 0.245
     (λ=0.75) instead of δ's 0.255, per fixture, self-adapting by match type (§11.4).
 
-    **Key design insight — the anchor is the *captured opening* 1X2, not a refreshed Now
-    line.** §12 validated the shrink against Pinnacle's *opening* no-vig draw prob, and the
-    capture pipeline already grabs each fixture's opening line once. So h2h needs to ride
-    along only on (a) capturing ticks and (b) optionally the daily full run — the every-3h
-    Now refresh stays spreads-only and the quota stays inside the free plan.
+    **Design (revised same day, user decision): h2h REPLACES spreads — AH is retired.**
+    The AH betting route is falsified (§9–§10) and the user bets 1X2 going forward, so the
+    fetch switches from `markets=spreads` to `markets=h2h` outright. Cost per /odds call is
+    unchanged (1 market × 1 region = 1 credit) → **zero quota impact**. The anchor for the
+    λ shrink is the *captured opening* 1X2 (exactly what §12 validated); the Now-line 1X2
+    refresh continues on the existing 3h cadence for display/CLV. δ stays as the fallback
+    for fixtures with no captured open. Consequence: the dashboard's AH columns
+    (spread/AH-EV/Move on the spread) lose their data source once the switch lands — the
+    market-comparison panel is redesigned around 1X2 (open/now H-D-A prices, anchored model
+    probs, per-outcome EV). Historical spreads rows in the history CSV are kept untouched.
 
     **Steps (in order):**
-    1. *Recon (needs user, one-off ~2 credits):* one `markets=spreads,h2h` test call to
-       confirm The Odds API exposes Pinnacle h2h for `soccer_china_superleague` and its
-       field shape (3-outcome h2h with a Draw entry).
-    2. *Fetch layer:* widen `fetch_pinnacle_spreads` (or a sibling) to request
-       `spreads,h2h` in one call where enabled; parse home/draw/away prices.
-    3. *Storage:* extend the capture history schema (`snapshot_store.py`) with 1X2 price
-       columns (`home_h2h_odds`/`draw_h2h_odds`/`away_h2h_odds` or a `market` discriminator
-       row) so each fixture's opening 1X2 is persisted alongside its opening spread.
-       Dedup/append semantics unchanged.
-    4. *Capture:* `capture_scheduler` requests both markets on capturing ticks only
-       (cost 2 instead of 1, ~20–40 extra credits/month). Optionally the daily `full` run
-       also fetches h2h once (+30/month) to anchor fixtures whose open capture was missed.
+    1. *Schema first (blocks the user's manual backfill):* extend the history schema with a
+       `draw_odds` column; h2h rows use `home_odds`/`draw_odds`/`away_odds` with
+       `market=h2h` and empty spread columns; `DEDUP_KEY` gains `market`. Old spreads rows
+       stay valid. The user's manual opening-1X2 backfill follows this shape (see assist a).
+    2. *Recon (one-off, 1 credit):* a single `markets=h2h` call to confirm The Odds API
+       exposes Pinnacle 3-outcome h2h (with Draw) for `soccer_china_superleague`.
+    3. *Fetch layer:* switch `fetch_pinnacle_spreads` → h2h (module/CSV rename or a
+       `market` parameter); parse home/draw/away prices; team-name normalization unchanged.
+    4. *Capture:* `capture_scheduler`/`capture_snapshot` capture the opening h2h instead of
+       the opening spread; windows/logic unchanged (opening_calendar is market-agnostic).
     5. *Model/export layer:* keep `DrawCalibratedModel` (δ) as the base. In
        `export_upcoming_market_comparison.attach_market_probabilities`, when a fixture has
        a captured opening 1X2: recompute H/D/A from the *raw* (un-δ'd) grid with the λ
@@ -553,28 +556,32 @@ less beats predicting better.** See roadmap #8.
        columns (never double-apply δ+λ). All-pairs simulations / `match_predictions` stay
        δ-based (no anchor exists there) — a documented, intentional divergence between the
        two surfaces.
-    6. *Validation before deploy:* add a hybrid variant to `backtest_1x2.py` ("anchored
+    6. *Dashboard 1X2 redesign (visible change — present options before editing, per
+       convention):* comparison panel shows Open/Now 1X2 prices + anchored model probs +
+       per-outcome EV; AH columns removed or archived.
+    7. *Validation before deploy:* add a hybrid variant to `backtest_1x2.py` ("anchored
        when open 1X2 exists, else δ") and confirm it ≥ δ-only on draw repair with no metric
        degrading; then one live round observed end-to-end (dry-run capture → real capture →
        comparison shows anchored probs).
-    7. *Ship:* dashboard bump to v2.6 with a tooltip/copy note that market-comparison probs
-       are market-anchored (visible change — present before editing, per convention).
+    8. *Ship:* dashboard bump to v2.6.
 
     **Defaults:** λ = 0.75 (accuracy optimum §12.1; the 0.5–1.0 region is robust).
-    **Quota math:** current ~290–310/500 used; plan adds ~+50–70 → ~360–380 ✓.
+    **Quota math:** unchanged (~290–310/500) — h2h replaces spreads 1:1.
 
     **Where the user must assist:**
-    - (a) Approve the one-off recon spend (step 1) or run it themselves; confirm current
-      month's remaining quota + reset date before enabling (avoid a mid-month bust).
+    - (a) **Manual opening-1X2 backfill of the history CSV — coordinate schema first.**
+      Don't hand-edit before step 1 lands; agree the row shape, then either enter rows in
+      that shape or hand the odds over (fixture, H/D/A opening prices, observed-at time)
+      to be scripted into the CSV. Reuse the fixture's existing `event_id` from its
+      spreads open row; `capture_reason=manual-backfill`.
     - (b) Confirm λ = 0.75 and the hybrid-display semantics of step 5 (comparison anchored,
       predictions δ-based).
-    - (c) Approve the v2.6 version bump + any visible dashboard copy (plan-before-visible-
-      changes convention).
-    - (d) Optionally hand-check the first live captured opening 1X2 against what
-      Pinnacle/Sportmarket actually showed at open (field validation, like the round-17
-      opening-window validation).
-    - (e) Decide whether the daily-full h2h fallback fetch (step 4, +30/month) is worth it,
-      or capture-only is enough.
+    - (c) Approve the dashboard 1X2 redesign (step 6) and the v2.6 bump — layout options
+      will be presented first.
+    - (d) Confirm AH retirement scope: stop fetching spreads entirely (Now line included),
+      keep historical spreads rows read-only.
+    - (e) Optionally hand-check the first live captured opening 1X2 against
+      Pinnacle/Sportmarket at open (field validation, like the round-17 window validation).
 
 
 ## Agent Tips
