@@ -2,25 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-14T23:00:53+01:00",
+    "updated_at": "2026-07-15T03:39:49+01:00",
     "model_name": "Zero-Inflated Poisson with Dixon-Coles Time Decay",
     "model_version": "v2.2"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-18-2026-07-14-zhejiang-professional-qingdao-hainiu",
-      "round": 18,
-      "match_date": "2026-07-14",
-      "kickoff_at": "2026-07-14T12:35:00+01:00",
-      "home_team": "Zhejiang Professional",
-      "away_team": "Qingdao Hainiu",
-      "home_win_prob": 0.541037,
-      "draw_prob": 0.267338,
-      "away_win_prob": 0.191625,
-      "home_win_fair_odds": 1.8483,
-      "draw_fair_odds": 3.7406,
-      "away_win_fair_odds": 5.2185
-    },
     {
       "fixture_id": "CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren",
       "round": 19,
