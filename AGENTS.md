@@ -518,7 +518,63 @@ less beats predicting better.** See roadmap #8.
      0.276 → 0.255), then shipped in `dc.py` as `NegativeBinomialGoalModel` +
      `DrawCalibratedModel` (δ ≈ 0.91 on the current fit). Dashboard bumped to **v2.5**
      with model name "Negative Binomial with Dixon-Coles Time Decay". For *accuracy*,
-     not betting — the betting verdict above stands.
+     not betting — the betting verdict above stands. Upgrade path to the full
+     market-anchored λ: roadmap #10.
+
+10. **Market-anchored λ de-bias in production — UPGRADE PLAN (planned 2026-07-15,
+    user-requested).** Replace the δ-only de-bias with the §12-validated market-anchored
+    shrink wherever an anchor exists; δ stays as the fallback. Target: draw prob ≈ 0.245
+    (λ=0.75) instead of δ's 0.255, per fixture, self-adapting by match type (§11.4).
+
+    **Key design insight — the anchor is the *captured opening* 1X2, not a refreshed Now
+    line.** §12 validated the shrink against Pinnacle's *opening* no-vig draw prob, and the
+    capture pipeline already grabs each fixture's opening line once. So h2h needs to ride
+    along only on (a) capturing ticks and (b) optionally the daily full run — the every-3h
+    Now refresh stays spreads-only and the quota stays inside the free plan.
+
+    **Steps (in order):**
+    1. *Recon (needs user, one-off ~2 credits):* one `markets=spreads,h2h` test call to
+       confirm The Odds API exposes Pinnacle h2h for `soccer_china_superleague` and its
+       field shape (3-outcome h2h with a Draw entry).
+    2. *Fetch layer:* widen `fetch_pinnacle_spreads` (or a sibling) to request
+       `spreads,h2h` in one call where enabled; parse home/draw/away prices.
+    3. *Storage:* extend the capture history schema (`snapshot_store.py`) with 1X2 price
+       columns (`home_h2h_odds`/`draw_h2h_odds`/`away_h2h_odds` or a `market` discriminator
+       row) so each fixture's opening 1X2 is persisted alongside its opening spread.
+       Dedup/append semantics unchanged.
+    4. *Capture:* `capture_scheduler` requests both markets on capturing ticks only
+       (cost 2 instead of 1, ~20–40 extra credits/month). Optionally the daily `full` run
+       also fetches h2h once (+30/month) to anchor fixtures whose open capture was missed.
+    5. *Model/export layer:* keep `DrawCalibratedModel` (δ) as the base. In
+       `export_upcoming_market_comparison.attach_market_probabilities`, when a fixture has
+       a captured opening 1X2: recompute H/D/A from the *raw* (un-δ'd) grid with the λ
+       shrink toward the no-vig opening draw prob — scale the grid diagonal to hit
+       `p'_D = (1−λ)·p_D + λ·m_D`, renormalize — and overwrite the comparison's model-prob
+       columns (never double-apply δ+λ). All-pairs simulations / `match_predictions` stay
+       δ-based (no anchor exists there) — a documented, intentional divergence between the
+       two surfaces.
+    6. *Validation before deploy:* add a hybrid variant to `backtest_1x2.py` ("anchored
+       when open 1X2 exists, else δ") and confirm it ≥ δ-only on draw repair with no metric
+       degrading; then one live round observed end-to-end (dry-run capture → real capture →
+       comparison shows anchored probs).
+    7. *Ship:* dashboard bump to v2.6 with a tooltip/copy note that market-comparison probs
+       are market-anchored (visible change — present before editing, per convention).
+
+    **Defaults:** λ = 0.75 (accuracy optimum §12.1; the 0.5–1.0 region is robust).
+    **Quota math:** current ~290–310/500 used; plan adds ~+50–70 → ~360–380 ✓.
+
+    **Where the user must assist:**
+    - (a) Approve the one-off recon spend (step 1) or run it themselves; confirm current
+      month's remaining quota + reset date before enabling (avoid a mid-month bust).
+    - (b) Confirm λ = 0.75 and the hybrid-display semantics of step 5 (comparison anchored,
+      predictions δ-based).
+    - (c) Approve the v2.6 version bump + any visible dashboard copy (plan-before-visible-
+      changes convention).
+    - (d) Optionally hand-check the first live captured opening 1X2 against what
+      Pinnacle/Sportmarket actually showed at open (field validation, like the round-17
+      opening-window validation).
+    - (e) Decide whether the daily-full h2h fallback fetch (step 4, +30/month) is worth it,
+      or capture-only is enough.
 
 
 ## Agent Tips
