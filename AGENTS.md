@@ -261,16 +261,33 @@ where the model diverges from the market and bet +EV lines at aggregator books.
 - **Biggest gap:** opening/closing lines are not captured automatically, so CLV is measured
   manually today (selection-bias risk) and the edge is unvalidated. Closing that loop is the
   roadmap below.
+- **IMPORTANT UPDATE (2026-07-13, extended 2026-07-15):** the "model finds +EV vs Pinnacle's
+  opening line" half of this thesis has been tested at length. **Asian handicap: falsified
+  outright** (2026-07-13, winner's curse). **1X2: the strategy as specified is dead — 61% of its
+  stake sits on a draw-probability bug — but the direction survives** (2026-07-15; drop the draw
+  and a baseline-adjusted +CLV holds in all three seasons, though it is still short of the vig
+  bar). Read "Betting-edge investigation — conclusions" below and `backtest/backtest.md`
+  §11.3 + §11.7 **before quoting any CLV number** — an "always bet home" coin beats this model on
+  raw CLV, and breakeven needs CLV > 2.61pp. **The draw de-bias was then built and tested
+  (2026-07-15, `backtest.md` §12): it fixes the model (excess CLV doubles) but the strategy still
+  fails the vig bar in 2024/2025 — betting Pinnacle's open is closed.** The one live direction is
+  the *earliest/cheapest-opening book* (roadmap #8): the de-biased model's +1.2–2.5pp excess CLV
+  would clear breakeven at a ≤5%-overround book.
 
 ### Model
-- `src/csl/models/dc.py` is named "Dixon-Coles" but actually fits
-  `ZeroInflatedPoissonGoalsModel` (ZIP) on **xG targets** (`HExpG+`/`AExpG+`), 18-month
-  window, `xi=0.001`, Dixon-Coles time-decay weights.
-- **Finding (diagnostic `model comparison/zip_zero_inflation_param_test.py`):** the fitted
-  zero-inflation parameter sits at its ~1e-6 floor in 100% of refits → ZIP has collapsed to
-  Poisson. The ~0.0003 RPS edge of ZIP over Poisson on the backtest is noise. A future
-  simplification is to swap production ZIP → plain `PoissonGoalsModel` (same accuracy,
-  simpler/faster). Not yet done.
+- `src/csl/models/dc.py` is named "Dixon-Coles" and since **v2.5 (2026-07-15)** fits
+  `NegativeBinomialGoalModel` on **xG targets** (`HExpG+`/`AExpG+`), 18-month window,
+  `xi=0.001`, Dixon-Coles time-decay weights, **wrapped in a draw de-bias**
+  (`DrawCalibratedModel`): a scale δ for the scoreline-grid diagonal is fit on the
+  training window by weighted 1X2 log-likelihood (`fit_draw_delta`) and applied to every
+  predicted grid. Rationale + walk-forward validation: `backtest/backtest.md` §12.4
+  (NegBinom = best RPS/log-loss, §9.4; the de-bias repairs ~half of the structural ~4pp
+  draw over-pricing, out-of-sample draw 0.276 → 0.255 vs actual 0.242; current
+  production fit δ ≈ 0.91).
+- **History:** production previously fit `ZeroInflatedPoissonGoalsModel` (ZIP), whose
+  zero-inflation parameter sat at its ~1e-6 floor in 100% of refits (diagnostic
+  `model comparison/zip_zero_inflation_param_test.py`) — ZIP had collapsed to Poisson,
+  so the swap changed accuracy only via NegBinom's over-dispersion.
 - The model is fit **twice** per full run (STEP 2 model export + STEP 4 market comparison),
   on identical inputs — redundant but cheap (seconds; small single-league data). Left as-is.
   Watch-out: `xi=0.001` is hardcoded in two places (`dc.py`/`DC_CHN.py` and
@@ -291,6 +308,75 @@ where the model diverges from the market and bet +EV lines at aggregator books.
   Field-validated: round-17 predicted windows matched the actual Pinnacle open times.
 - This lets us catch the true opening (and closing) line on the **free** Odds-API plan
   (no historical-odds endpoint) by scheduling narrow captures.
+
+### Betting-edge investigation — conclusions (2026-07-13)
+A full test of whether the model produces a tradeable edge at the opening line.
+**Bottom line: it does not, and calibration/distribution changes do not create one.**
+The only surviving hypothesis is line *timing* (bet the earliest, softest line before
+Pinnacle forms it). Full detail + numbers in `backtest/backtest.md` §9–§10; analysis
+scripts in `backtest/` and `model comparison/distribution_comparison.py`.
+
+- **Opening-line AH backtest (826 bets, 4 seasons):** no EV threshold beats zero; realized
+  ROI −4% to −8% and *worse* the more selective; model overstates its own EV by ~20%/unit at
+  **t=6**, replicated in all four seasons; highest-EV bets are the worst.
+- **The overstatement is winner's curse (selection bias), NOT a distribution defect.**
+  Symmetric home-cover calibration is ~0 (unbiased); the overconfidence appears *only* once
+  you condition on "the side the model likes most". Proven by simulation: an unbiased model +
+  efficient market + "bet the +EV side" reproduces ~+14% overstatement from pure noise. So
+  only a model genuinely *more accurate than the market* removes it — reshaping a distribution
+  cannot.
+- **Calibration doesn't fix it.** Walk-forward temperature scaling (T≈1.5) barely dents the
+  overstatement (+19.3%→+18.4%). 1X2 is well-calibrated (ECE 0.032); handicap-cover is not
+  (ECE 0.086, worst on big lines) because Poisson/ZIP under-disperses the goal-difference
+  (margin) distribution.
+- **No distribution helps the betting.** NegBinom is the most accurate 1X2 predictor (best RPS,
+  ~1.5% better log-loss than ZIP — over-dispersion genuinely helps prediction) but bets
+  *slightly worse*; all six distributions overstate EV +17–23%. **A `ZIP→NegBinom` swap in
+  `dc.py` is justified for accuracy only, not betting edge.** (ZIP == Poisson exactly; still
+  collapsed — see prior finding above.)
+- **Line-magnitude filter doesn't rescue it.** Big lines (>2) catastrophic (−29% ROI); small
+  lines (≤0.5) less bad (−3.6%) but still overstate EV +17% (t=3.66). Only takeaway: avoid
+  big-favourite lines.
+- **CLV (open→close, 2023–24 only — 2025 close lines empty):** overround compresses open 6.1%
+  → close 4.0% (~1pp/side vig headwind); no naive rule gets significant +CLV; model picks
+  +0.69pp (t=1.9) but weakens with EV threshold (noise-like) and is net-negative after vig.
+
+#### 1X2 opening line — strategy dead, direction alive (2026-07-15, `backtest/backtest.md` §11)
+The AH result prompted a switch to Pinnacle **1X2** open+close. The user backfilled 2024–25
+(611 gradeable matches, 2024 R1–2026 R18; 2023 unusable — no training history). Betting the
+highest-EV outcome **loses** (EV>0.10: ROI −4.8%, t=−0.57; 2024 alone −23.8%, t=−1.98; full
+Kelly → 0). But unlike AH the failure is **one fixable defect**, not the whole idea:
+- **THE DRAW BUG (the defect).** Model draw prob pinned at ~0.279 vs market 0.234 ≈ actual
+  0.242 — high by ~4pp in *every* season and *every* match type (structural: independent-Poisson
+  piles mass at goal-diff 0). Lethal interaction with the EV rule: at draw prob 0.28, EV>0.10
+  fires whenever the draw is priced > 1.10/0.28 = **3.93**, and the CSL median opening draw
+  price is **3.79** — so every above-median draw becomes a bet. **61% of all stake sits on the
+  bug, carrying ZERO CLV** (+0.03pp, t=0.22). Worst bucket: draws priced 4.5–6, model says 28%,
+  reality 8% (n=40, ROI −62%). **Drop the draw → CLV triples (+0.66 → +2.15pp), survives the
+  baseline adjustment (+1.73pp, t=2.51), positive in all 3 seasons.** Still not profitable
+  (ROI doesn't replicate: 2024 −5.5% / 2025 −16.9% / 2026 +53.9%).
+- **METHODOLOGY — two rules that must be applied to any future CLV claim:**
+  1. **Always compute the model-free baseline (§11.3).** This market drifts toward the home team
+     every season (+0.91pp overall). **"Always bet home" scores +0.91pp CLV (t=2.84) — better
+     than the model's +0.42pp.** The model bets home 165/away 71 and inherits that drift free.
+     Report **excess CLV** (model − same-outcome/same-season drift), never raw. The 2026-only
+     "signal" that motivated the whole 1X2 thread was largely this artifact.
+  2. **The vig wall (§11.7): EV > 0 ⟺ CLV > p × R.** With p≈0.344 and Pinnacle's **opening
+     overround 7.55%**, breakeven needs **CLV > 2.61pp**. This is why `always home` earns +0.91pp
+     CLV and still returns −4.8%. Everything the model knows is worth ~2–3pp; the vig costs 2.61.
+- **Data quality:** an overround<0 sweep found exactly 1 bad cell in 611 (a `368.00` typo for
+  `3.68`, fixed). Opening overround median 7.56%, closing 4.72% — the odds data is sound.
+- **NegBinom** changes none of this and does **not** fix the draw (0.276 vs ZIP 0.279).
+
+**Reframe / where the edge could still be:** AH is dead outright; 1X2 as-specified is dead but
+its *direction* survives a draw fix (above). Either way the user bets via **Sportmarket** (a
+sharp-book aggregator/brokerage) on *newly-opened* CSL lines, and the strongest remaining play is
+**catching the earliest-opening book before Pinnacle** — the earliest line is softest, and if it
+converges toward Pinnacle's close you capture +CLV *without* model edge and *without* winner's
+curse. Line-timing/microstructure, not prediction. **The vig wall makes this more valuable, not
+less:** everything the model knows is worth ~2–3pp of CLV while Pinnacle's opening vig alone
+costs 2.61pp, so the same +2.15pp CLV loses into a 7.55% open and wins into a 4% book. **Paying
+less beats predicting better.** See roadmap #8.
 
 ## Roadmap / Open Tasks
 1. **Verify the dashboard TZ fix at runtime** — run `python -m csl.dashboard.export_dashboard_csv`
@@ -323,10 +409,20 @@ where the model diverges from the market and bet +EV lines at aggregator books.
    odds-fetch time** separately (`Model … · Odds fetched …`).
 3. **Close the CLV loop:** join the user's bet-tracker fills to the captured closing lines →
    automated, auditable, per-segment CLV. Replaces manual CLV computation.
+   **Update (2026-07-13):** an open→close CLV analysis was run on the manually-entered lines
+   (2023–24 only; 2025 close lines empty) — **no rule beats the close** once the ~1pp/side
+   open-vs-close vig headwind is counted; model picks +0.69pp CLV but net-negative. See the
+   2026-07-13 findings above and `backtest/backtest.md` §9.6. Superseded in priority by #8.
 4. **Validation ladder for the edge** (before trusting it): paired Wilcoxon on per-fixture
    RPS (ZIP vs Poisson), and per-segment calibration / reliability diagrams (by handicap
    line, favourite vs underdog) — bet only in well-calibrated segments.
-5. **Optional simplification:** swap production ZIP → `PoissonGoalsModel` in `dc.py`.
+   **Update (2026-07-13) — DONE, negative.** The reliability diagrams were built
+   (`backtest/calibration_diagnostic.py`) and calibration was attempted (temperature scaling,
+   `backtest/backtest_open_ah_calibrated.py`). Calibration does **not** create an edge: the EV
+   overstatement is winner's curse, not a fixable miscalibration (see the 2026-07-13 findings).
+   Do not re-attempt "calibrate then bet the opening line" — it is a closed dead end.
+5. **Optional simplification: swap production ZIP → `PoissonGoalsModel` — SUPERSEDED.**
+   Production moved ZIP → `NegBinomialGoalModel` + draw de-bias instead (v2.5, roadmap #9).
 6. **Capture-loop hardening — DONE (two gaps found 2026-07-04, field-observed on round 18):**
    - **Monitor lag after capture — FIXED.** `capture-odds.yml` used to write the history CSV
      and stop, so a freshly captured opening line only surfaced at the next 3-hourly
@@ -368,6 +464,62 @@ where the model diverges from the market and bet +EV lines at aggregator books.
    only overwrites cleanly-parsed rows), so any future manual `DD/MM/YYYY` re-save self-heals on
    the next pipeline run instead of silently reactivating locale-dependent parsing downstream.
    The opening-line AH backtest built on this data lives in `backtest/` (see `backtest/backtest.md`).
+
+8. **Earliest-opening-line edge — the strongest live direction (NEW 2026-07-13, promoted
+   2026-07-15).** AH is closed outright; 1X2 as-specified is closed too (though a draw fix may
+   revive it — see #9). The untested, winner's-curse-free hypothesis: the user bets via
+   **Sportmarket** (sharp-book aggregator) on newly-opened lines; if some book opens a CSL line
+   *before* Pinnacle, that earliest line is the softest and may be exploitable before the market
+   sharpens.
+   - **Why this got MORE valuable (the vig wall, `backtest/backtest.md` §11.7):** EV > 0 ⟺
+     CLV > p × R. Everything the model knows is worth ~2–3pp of CLV, but Pinnacle's **7.55%
+     opening overround alone costs 2.61pp** — so the model's best strategy (+2.15pp CLV) *loses*
+     into Pinnacle's open and would *win* into a 4% book. **Paying less beats predicting
+     better.** This is now a stronger lever than any model work.
+   - **Blocked on reconnaissance (user in progress):** identify which book opens CSL lines
+     earlier than Pinnacle, by how much, whether it is exposed by name in The Odds API /
+     Sportmarket, and how its early line compares to Pinnacle's open→close.
+   - **Then:** if The Odds API carries that book, widen `fetch_pinnacle_spreads` beyond the
+     hardcoded `pinnacle`/`spreads` to capture its opening line + timestamp; measure whether
+     the earliest line moves toward Pinnacle's close (→ +CLV, exploitable) using the CLV logic
+     from `backtest/backtest.md` §9.6. If it already ≈ close, this door is closed too.
+   - **Measure it correctly:** any candidate book must be scored with **excess CLV over the
+     model-free baseline** (§11.3 — this market drifts +0.91pp/season toward the home team, so
+     raw CLV lies) and against the **p × R** bar (§11.7). Its overround matters as much as its
+     line.
+   - **Data gaps:** no soft-book odds anywhere (the blocker — every line on file is Pinnacle);
+     close AH only 2023–24. Pinnacle 1X2 open+close is now complete for 2024–26 (2023 has only
+     56 opens and no usable training history) — useful here as the *benchmark* an earlier book's
+     line gets measured against.
+
+9. **Draw de-bias (+ ZIP→NegBinom) — TESTED, bar not cleared (2026-07-15, backtest phase
+   DONE).** The backtest verdict is in `backtest/backtest.md` §12; `backtest/backtest_1x2.py`
+   now carries the full variant grid. Background: the model's draw probability is pinned at
+   ~0.279 vs the market's 0.234 and an actual 0.242 — structural (independent-Poisson mass at
+   goal-diff 0), 61% of the §11 strategy's stake sat on it.
+   - **Mechanism (user-chosen): market-anchored shrink**, per match, no leakage —
+     `p'_D = (1−λ)·p_D + λ·m_D` with `m_D` = no-vig *opening* draw prob, freed mass returned
+     to home/away pro-rata. λ grid {0.25, 0.5, 0.75, 1.0}, not walk-forward-optimised.
+   - **As a model fix it works:** draw prob repaired (0.245 at λ=0.75 vs actual 0.242), stake
+     migrates off the bug (draw picks 63%→0%), **excess CLV roughly doubles** (+0.60 →
+     +1.42pp at thr>0.10, t=3.2; +2.0–2.5pp at thr>0.20), 0.25-Kelly goes from −59% to +20%.
+   - **As a betting strategy it still fails the success bar:** per-season gap (CLV − p×R) is
+     **negative in 2024 and 2025 at every λ** (2024 λ=1: exCLV −0.10pp — no signal there at
+     all); only 2026 clears, the same one-season shape as the §11.1 false signal. ZIP+λ=1 ≈
+     NegBinom+λ=1: the distribution swap contributes ~nothing to CLV, it's all the de-bias.
+   - **Consequences:** (a) do NOT build a 1X2 betting pipeline against Pinnacle's open;
+     (b) strongest quantified case yet for roadmap #8 — the surviving +1.2–2.5pp excess CLV
+     clears the breakeven bar at a ≤5%-overround book (bar ≈ 1.4–1.75pp) while losing into
+     Pinnacle's 7.55% open.
+   - **Production deployment (v2.5, 2026-07-15, user-approved):** the market-anchored λ
+     needs a 1X2 anchor production doesn't have (adding h2h would double /odds quota cost),
+     so the deployed mechanism is the **market-free δ calibration** (`backtest.md` §12.4):
+     fit walk-forward-validated first (no degradation; repairs ~half the bias, draw
+     0.276 → 0.255), then shipped in `dc.py` as `NegativeBinomialGoalModel` +
+     `DrawCalibratedModel` (δ ≈ 0.91 on the current fit). Dashboard bumped to **v2.5**
+     with model name "Negative Binomial with Dixon-Coles Time Decay". For *accuracy*,
+     not betting — the betting verdict above stands.
+
 
 ## Agent Tips
 - Prefer `./scripts/csl.sh` over direct module execution for local workflow tasks.
