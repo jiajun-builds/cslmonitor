@@ -210,9 +210,27 @@ def run() -> None:
     # Model EV vs realized: if predicted EVs sit far above realized ROI, the
     # model's handicap-cover probabilities are overconfident, not just unlucky.
     thr0 = bets[bets["best_ev"] > 0]
+    over = thr0["best_ev"] - thr0["best_pl"]
+    over_se = over.std(ddof=1) / np.sqrt(len(over)) if len(over) > 1 else float("nan")
+    over_t = over.mean() / over_se if over_se else float("nan")
     print(f"\nModel-EV honesty check (thr>0): mean predicted EV "
           f"{thr0['best_ev'].mean():+.4f} vs realized ROI {thr0['best_pl'].mean():+.4f}"
-          f"  -> model overstates its edge by {thr0['best_ev'].mean() - thr0['best_pl'].mean():+.4f}/unit")
+          f"  -> model overstates its edge by {over.mean():+.4f}/unit")
+    print(f"  paired (predicted EV - realized) mean {over.mean():+.4f} "
+          f"+/- {over_se:.4f} (SE)  ->  t = {over_t:+.2f}  "
+          f"(|t| > 2 => the overstatement is real, not variance)")
+
+    # Cross-season replication: does the overstatement hold up season by season,
+    # or is it one anomalous year? Each season is an independent sample.
+    print("\n=== Cross-season replication (+EV bets, thr>0) ===")
+    print(f"{'season':>7} {'n':>5} {'pred_ev':>9} {'realized':>9} {'t(ROI)':>7} {'overstate':>10}")
+    for season in sorted(thr0["Season"].unique()):
+        s = thr0[thr0["Season"] == season]
+        roi = s["best_pl"].mean()
+        se = s["best_pl"].std(ddof=1) / np.sqrt(len(s)) if len(s) > 1 else float("nan")
+        t = roi / se if se else float("nan")
+        print(f"{int(season):>7} {len(s):>5} {s['best_ev'].mean():>+9.3f} "
+              f"{roi:>+9.3f} {t:>+7.2f} {s['best_ev'].mean() - roi:>+10.3f}")
 
     # ---- EV calibration: does higher predicted EV -> higher realized ROI? -----
     print("\n=== EV calibration (all +EV bets, thr>0, bucketed by model EV) ===")
