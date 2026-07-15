@@ -1,18 +1,17 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-18-2026-07-14-zhejiang-professional-qingdao-hainiu,18,2026-07-14,2026-07-14T12:35:00+01:00,Zhejiang Professional,Qingdao Hainiu,0.547854,0.254361,0.197785,1.8253,3.9314,5.056
-CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren,19,2026-07-17,2026-07-17T12:35:00+01:00,Beijing Guoan,Liaoning Tieren,0.827527,0.120859,0.051614,1.2084,8.2741,19.3746
-CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu,19,2026-07-17,2026-07-17T12:35:00+01:00,Henan Songshan Longmen,Qingdao Hainiu,0.656455,0.218511,0.125034,1.5233,4.5764,7.9978
-CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port,19,2026-07-17,2026-07-17T13:00:00+01:00,Yunnan Yukun,Shanghai Port,0.323081,0.280275,0.396643,3.0952,3.5679,2.5212
-CSL-2026-19-2026-07-18-chongqing-tonglianglong-zhejiang-professional,19,2026-07-18,2026-07-18T12:00:00+01:00,Chongqing Tonglianglong,Zhejiang Professional,0.232625,0.438087,0.329288,4.2988,2.2827,3.0369
-CSL-2026-19-2026-07-18-qingdao-west-coast-chengdu-rongcheng,19,2026-07-18,2026-07-18T12:00:00+01:00,Qingdao West Coast,Chengdu Rongcheng,0.167595,0.313662,0.518743,5.9668,3.1881,1.9277
-CSL-2026-19-2026-07-18-dalian-yingbo-shandong-taishan,19,2026-07-18,2026-07-18T12:35:00+01:00,Dalian Yingbo,Shandong Taishan,0.337309,0.305223,0.357468,2.9646,3.2763,2.7975
-CSL-2026-19-2026-07-18-shanghai-shenhua-tianjin-jinmen-tiger,19,2026-07-18,2026-07-18T12:35:00+01:00,Shanghai Shenhua,Tianjin Jinmen Tiger,0.677451,0.220539,0.10201,1.4761,4.5343,9.803
-CSL-2026-19-2026-07-18-wuhan-three-towns-shenzhen-xinpengcheng,19,2026-07-18,2026-07-18T13:00:00+01:00,Wuhan Three Towns,Shenzhen Xinpengcheng,0.538247,0.275018,0.186735,1.8579,3.6361,5.3552
-CSL-2026-20-2026-07-25-qingdao-hainiu-tianjin-jinmen-tiger,20,2026-07-25,2026-07-25T10:30:00+01:00,Qingdao Hainiu,Tianjin Jinmen Tiger,0.452082,0.314455,0.233463,2.212,3.1801,4.2833
-CSL-2026-20-2026-07-25-liaoning-tieren-qingdao-west-coast,20,2026-07-25,2026-07-25T12:35:00+01:00,Liaoning Tieren,Qingdao West Coast,0.430206,0.300011,0.269783,2.3245,3.3332,3.7067
-CSL-2026-20-2026-07-25-shanghai-port-shanghai-shenhua,20,2026-07-25,2026-07-25T12:35:00+01:00,Shanghai Port,Shanghai Shenhua,0.457707,0.254923,0.28737,2.1848,3.9228,3.4798
-CSL-2026-20-2026-07-25-wuhan-three-towns-chongqing-tonglianglong,20,2026-07-25,2026-07-25T13:00:00+01:00,Wuhan Three Towns,Chongqing Tonglianglong,0.478537,0.376733,0.144731,2.0897,2.6544,6.9094
-CSL-2026-20-2026-07-26-yunnan-yukun-shenzhen-xinpengcheng,20,2026-07-26,2026-07-26T12:00:00+01:00,Yunnan Yukun,Shenzhen Xinpengcheng,0.566149,0.269528,0.164323,1.7663,3.7102,6.0856
-CSL-2026-20-2026-07-26-chengdu-rongcheng-beijing-guoan,20,2026-07-26,2026-07-26T12:35:00+01:00,Chengdu Rongcheng,Beijing Guoan,0.53986,0.280194,0.179946,1.8523,3.569,5.5572
-CSL-2026-20-2026-07-26-shandong-taishan-henan-songshan-longmen,20,2026-07-26,2026-07-26T12:35:00+01:00,Shandong Taishan,Henan Songshan Longmen,0.501566,0.264884,0.233551,1.9938,3.7752,4.2817
-CSL-2026-20-2026-07-26-zhejiang-professional-dalian-yingbo,20,2026-07-26,2026-07-26T13:00:00+01:00,Zhejiang Professional,Dalian Yingbo,0.468641,0.318908,0.212451,2.1338,3.1357,4.707
+CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren,19,2026-07-17,2026-07-17T12:35:00+01:00,Beijing Guoan,Liaoning Tieren,0.832393,0.11201,0.055597,1.2014,8.9278,17.9866
+CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu,19,2026-07-17,2026-07-17T12:35:00+01:00,Henan Songshan Longmen,Qingdao Hainiu,0.641278,0.219241,0.139481,1.5594,4.5612,7.1694
+CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port,19,2026-07-17,2026-07-17T13:00:00+01:00,Yunnan Yukun,Shanghai Port,0.334012,0.255071,0.410917,2.9939,3.9205,2.4336
+CSL-2026-19-2026-07-18-chongqing-tonglianglong-zhejiang-professional,19,2026-07-18,2026-07-18T12:00:00+01:00,Chongqing Tonglianglong,Zhejiang Professional,0.225317,0.416646,0.358037,4.4382,2.4001,2.793
+CSL-2026-19-2026-07-18-qingdao-west-coast-chengdu-rongcheng,19,2026-07-18,2026-07-18T12:00:00+01:00,Qingdao West Coast,Chengdu Rongcheng,0.174353,0.289112,0.536535,5.7355,3.4589,1.8638
+CSL-2026-19-2026-07-18-dalian-yingbo-shandong-taishan,19,2026-07-18,2026-07-18T12:35:00+01:00,Dalian Yingbo,Shandong Taishan,0.317697,0.279021,0.403282,3.1477,3.584,2.4797
+CSL-2026-19-2026-07-18-shanghai-shenhua-tianjin-jinmen-tiger,19,2026-07-18,2026-07-18T12:35:00+01:00,Shanghai Shenhua,Tianjin Jinmen Tiger,0.680629,0.213571,0.1058,1.4692,4.6823,9.4518
+CSL-2026-19-2026-07-18-wuhan-three-towns-shenzhen-xinpengcheng,19,2026-07-18,2026-07-18T13:00:00+01:00,Wuhan Three Towns,Shenzhen Xinpengcheng,0.532699,0.261286,0.206015,1.8772,3.8272,4.854
+CSL-2026-20-2026-07-25-qingdao-hainiu-tianjin-jinmen-tiger,20,2026-07-25,2026-07-25T10:30:00+01:00,Qingdao Hainiu,Tianjin Jinmen Tiger,0.441405,0.314081,0.244514,2.2655,3.1839,4.0897
+CSL-2026-20-2026-07-25-liaoning-tieren-qingdao-west-coast,20,2026-07-25,2026-07-25T12:35:00+01:00,Liaoning Tieren,Qingdao West Coast,0.41408,0.282392,0.303528,2.415,3.5412,3.2946
+CSL-2026-20-2026-07-25-shanghai-port-shanghai-shenhua,20,2026-07-25,2026-07-25T12:35:00+01:00,Shanghai Port,Shanghai Shenhua,0.438768,0.239088,0.322144,2.2791,4.1826,3.1042
+CSL-2026-20-2026-07-25-wuhan-three-towns-chongqing-tonglianglong,20,2026-07-25,2026-07-25T13:00:00+01:00,Wuhan Three Towns,Chongqing Tonglianglong,0.486427,0.353675,0.159898,2.0558,2.8275,6.254
+CSL-2026-20-2026-07-26-yunnan-yukun-shenzhen-xinpengcheng,20,2026-07-26,2026-07-26T12:00:00+01:00,Yunnan Yukun,Shenzhen Xinpengcheng,0.567919,0.255906,0.176175,1.7608,3.9077,5.6762
+CSL-2026-20-2026-07-26-chengdu-rongcheng-beijing-guoan,20,2026-07-26,2026-07-26T12:35:00+01:00,Chengdu Rongcheng,Beijing Guoan,0.560796,0.252502,0.186702,1.7832,3.9604,5.3561
+CSL-2026-20-2026-07-26-shandong-taishan-henan-songshan-longmen,20,2026-07-26,2026-07-26T12:35:00+01:00,Shandong Taishan,Henan Songshan Longmen,0.524885,0.242766,0.232349,1.9052,4.1192,4.3039
+CSL-2026-20-2026-07-26-zhejiang-professional-dalian-yingbo,20,2026-07-26,2026-07-26T13:00:00+01:00,Zhejiang Professional,Dalian Yingbo,0.499958,0.293327,0.206715,2.0002,3.4092,4.8376
