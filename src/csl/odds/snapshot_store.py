@@ -13,10 +13,12 @@ three capture-metadata columns:
     target_round    the round this capture targets (may be "")
     capture_reason  free-text audit label (e.g. the open-window fixture it anchored)
 
-Dedup key ``(event_id, last_update, snapshot_type)``: ``last_update`` is Pinnacle's
-own "line last moved" timestamp, so a repeated poll of an unmoved line is skipped
+Dedup key ``(event_id, bookmaker, last_update, snapshot_type)``: ``last_update`` is the
+book's own "line last moved" timestamp, so a repeated poll of an unmoved line is skipped
 rather than appended. (``fetched_at`` — when *we* polled — is deliberately NOT part
-of the key; it changes every poll and would defeat dedup.)
+of the key; it changes every poll and would defeat dedup.) ``bookmaker`` joined the key
+in roadmap #8: the capture path now stores every book's price at the open window, and two
+books can share a ``last_update`` second.
 
 Usage:
     from csl.odds.snapshot_store import append_snapshots, HISTORY_CSV
@@ -43,7 +45,7 @@ SNAPSHOT_META_COLUMNS = ["snapshot_type", "target_round", "capture_reason"]
 HISTORY_COLUMNS = list(OUTPUT_COLUMNS) + SNAPSHOT_META_COLUMNS
 
 # Columns whose combination uniquely identifies a captured line state.
-DEDUP_KEY = ["event_id", "last_update", "snapshot_type"]
+DEDUP_KEY = ["event_id", "bookmaker", "last_update", "snapshot_type"]
 
 VALID_SNAPSHOT_TYPES = frozenset({"open", "close", "ad_hoc"})
 

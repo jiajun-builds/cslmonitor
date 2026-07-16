@@ -34,6 +34,8 @@ import requests
 
 from csl.odds.capture_snapshot import DEFAULT_MIN_REMAINING, read_quota
 from csl.odds.fetch_pinnacle_spreads import (
+    BOOKMAKER,
+    CAPTURE_BOOKMAKERS,
     DEFAULT_REGIONS,
     extract_rows,
     fetch_odds_response,
@@ -59,6 +61,15 @@ from csl.odds.snapshot_store import DEDUP_KEY, HISTORY_CSV, append_snapshots, lo
 # from being mislabeled `open`. The calendar/display still uses the true 1h prediction.
 DEFAULT_CAPTURE_WINDOW_HOURS = 6.0
 
+# The book whose opening line defines "captured" (roadmap #8). Since that roadmap
+# item the tick STORES every book in CAPTURE_BOOKMAKERS (same 1-credit cost), but the
+# fire/pending decision stays keyed on Pinnacle alone. Keying it on "any book" would
+# let an early-opening book satisfy the window and stop the ticks before Pinnacle
+# posts, losing the opening line the λ de-bias anchors on (see
+# export_upcoming_market_comparison). Other books' rows are recon payload: a book
+# that ALREADY has a price when Pinnacle opens is one that opened earlier.
+REFERENCE_BOOKMAKER = BOOKMAKER
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(message)s",
@@ -73,11 +84,15 @@ def _norm(name: str) -> str:
 
 
 def already_captured_open(history_path: str) -> set[tuple[str, str]]:
-    """Set of (home, away) normalized keys that already have an ``open`` row."""
+    """Set of (home, away) normalized keys with a REFERENCE_BOOKMAKER ``open`` row.
+
+    Deliberately ignores other books' open rows: a fixture stays pending until
+    Pinnacle's own opening line is stored (see REFERENCE_BOOKMAKER).
+    """
     hist = load_history(history_path)
     if hist.empty:
         return set()
-    opens = hist[hist["snapshot_type"] == "open"]
+    opens = hist[(hist["snapshot_type"] == "open") & (hist["bookmaker"] == REFERENCE_BOOKMAKER)]
     return {(_norm(h), _norm(a)) for h, a in zip(opens["home_team"], opens["away_team"])}
 
 
@@ -145,13 +160,17 @@ def tick(
 
     mapping = load_team_mapping()
     fetched_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    response = fetch_odds_response(api_key, regions)  # 1 paid request
+    # CAPTURE_BOOKMAKERS instead of Pinnacle alone: still 1 credit (<=10 books = 1
+    # region), and it reaches the eu/uk-only candidate books.
+    response = fetch_odds_response(  # 1 paid request
+        api_key, regions, bookmakers=",".join(CAPTURE_BOOKMAKERS)
+    )
     events = response.json()
     if not isinstance(events, list):
         raise ValueError(f"Expected list response from The Odds API, got: {type(events)}")
     log.info("Fetched %d events from The Odds API", len(events))
 
-    rows = extract_rows(events, mapping, regions=regions, fetched_at=fetched_at)
+    rows = extract_rows(events, mapping, regions=regions, fetched_at=fetched_at, bookmaker_keys=None)
     frame = rows_to_frame(rows)
 
     # Keep ONLY the fixtures currently in their own open window; discard the rest.
@@ -161,6 +180,20 @@ def tick(
     if frame.empty:
         log.info("None of the in-window fixtures were present in the odds response; nothing appended.")
         return 0
+
+    books = sorted(frame["bookmaker"].unique())
+    has_ref = REFERENCE_BOOKMAKER in books
+    log.info(
+        "In-window rows: %d across %d book(s): %s | %s present: %s",
+        len(frame), len(books), ", ".join(books), REFERENCE_BOOKMAKER, has_ref,
+    )
+    if not has_ref:
+        # Other books' rows are still worth storing (they prove those books opened
+        # first), and the fixture stays pending so a later tick grabs Pinnacle's open.
+        log.info(
+            "%s has not posted these fixtures yet; storing the other books' rows and "
+            "leaving the fixture(s) pending.", REFERENCE_BOOKMAKER,
+        )
 
     _, appended = append_snapshots(
         frame,
