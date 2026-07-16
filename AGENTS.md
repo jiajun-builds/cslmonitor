@@ -503,6 +503,14 @@ less beats predicting better.** See roadmap #8.
      close AH only 2023–24. Pinnacle 1X2 open+close is now complete for 2024–26 (2023 has only
      56 opens and no usable training history) — useful here as the *benchmark* an earlier book's
      line gets measured against.
+   - **Update (2026-07-16) — unblocked by a quota fact + user go-ahead (see #11):** The Odds
+     API bills `markets × regions` per /odds call; the `bookmakers` filter is FREE. So one h2h
+     call *without* the `bookmakers=pinnacle` filter enumerates every US-region book's CSL 1X2
+     for 1 credit (`regions=us,eu,uk` = 3 credits for a wider sweep). **First concrete action:
+     run this survey call** and report per book: overround, draw availability, `last_update`
+     cadence, and (over a few open windows) who posts a line before Pinnacle. That answers the
+     reconnaissance this item has been blocked on. Score any candidate per the two rules above
+     (excess CLV vs §11.3 baseline; p×R bar §11.7).
 
 9. **Draw de-bias (+ ZIP→NegBinom) — TESTED, bar not cleared (2026-07-15, backtest phase
    DONE).** The backtest verdict is in `backtest/backtest.md` §12; `backtest/backtest_1x2.py`
@@ -587,6 +595,33 @@ less beats predicting better.** See roadmap #8.
     - The betting verdict is unchanged: this is an accuracy upgrade; do NOT bet Pinnacle's
       1X2 open (§12 gap negative 2024/2025). The surviving +1.2–2.5pp excess CLV is the
       case for roadmap #8 (cheaper book).
+
+11. **Model & strategy status after #9/#10 + next direction — DECIDED (2026-07-16,
+    user-confirmed).** The one-stop snapshot for future sessions; numbers are from
+    `backtest/backtest.md` §12 (walk-forward, 611 fixtures 2024–26) unless noted.
+    - **Model (v2.6):** NegBinom on xG + DC decay (xi=0.001, 18mo), δ=0.908 market-free
+      calibration everywhere, λ=0.75 market-anchored shrink on the comparison/EV surface.
+      Accuracy: best of six distributions — RPS 0.1971 / log-loss 0.9755 (~1.5% better than
+      the retired ZIP, which had collapsed to Poisson).
+    - **What the de-bias bought (before → δ → λ=0.75):** OOS draw prob 0.276 → 0.255 →
+      **0.245** vs actual 0.242 (bias eliminated); draw share of picks 63% → 45% → 27%
+      (stake off the bug); excess CLV thr>0.10 +0.60 → +0.93 → **+1.39–1.42pp (t=3.2)**,
+      thr>0.20 up to +2.5pp; 0.25-Kelly three-season end 40.8 (−59%) → **120.1 (+20%)**,
+      max drawdown 86% → 50%. The distribution swap itself contributes ~0 CLV — all edge
+      movement is the de-bias.
+    - **What it did NOT change — the vig wall:** per-season gap (CLV − p×R) is still
+      negative in 2024 (−1.78pp) and 2025 (−1.22pp) at every λ; only 2026 clears (+0.91pp).
+      Replicable signal ~1.2–1.4pp vs a ~2.2–2.5pp Pinnacle-open bar. **Betting Pinnacle's
+      1X2 open stays CLOSED.** The signal clears a ≤5%-overround book (bar ≈ 1.4–1.75pp).
+    - **Model work → maintenance only** (§12.3: "cheaper prices, not further model work"):
+      watch the δ refit drift (current 0.908; per-round history 0.82–1.00) and the anchored
+      draw prob vs actual as 2026 accumulates. No further model changes planned.
+    - **Next step (user decision 2026-07-16): the #8 bookmaker survey ONLY.** Run the
+      1-credit no-bookmaker-filter h2h survey described in #8's update and identify the
+      cheapest/earliest CSL book. Explicitly NOT chosen (proposed and deferred): the #3
+      close-capture piggyback (persisting the last pre-kickoff 3h Now snapshot as
+      `snapshot_type=close` for a live excess-CLV tracker, zero quota) — do not build it
+      without a fresh user go-ahead.
 
 
 ## Agent Tips
