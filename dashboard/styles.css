@@ -788,14 +788,14 @@ th,
 .market-comparison-table td:nth-child(9) { width: 10%; }  /* Move */
 
 /* Keep every header on a single line so column labels align uniformly; the
-   tight letter-spacing lets "Current Odds" fit without wrapping. */
+   tight letter-spacing lets "Open Odds" / "Now Odds" fit without wrapping. */
 .market-comparison-table th {
   white-space: nowrap;
   vertical-align: bottom;
   letter-spacing: 0.04em;
 }
 
-/* Faint divider marking the Open | Current group boundary (Line column of each). */
+/* Faint divider marking the Open | Now group boundary (odds column of each). */
 .market-comparison__group-start {
   border-left: 1px solid hsl(var(--term-border) / 0.5);
 }
@@ -804,7 +804,7 @@ th,
   color: hsl(var(--term-dim));
 }
 
-/* Open Line cells are hoverable for the opening-snapshot tooltip. */
+/* Odds cells are hoverable for the snapshot tooltip (full H/D/A triplet). */
 .market-comparison__line-cell {
   cursor: help;
 }
@@ -857,12 +857,12 @@ th,
 
 .market-comparison__time,
 .market-comparison__match,
-.market-comparison-table td[rowspan="2"] {
+.market-comparison-table td[rowspan] {
   vertical-align: middle;
 }
 
 .market-comparison__time,
-.market-comparison-table td[rowspan="2"] {
+.market-comparison-table td[rowspan] {
   vertical-align: top;
 }
 
@@ -874,7 +874,14 @@ th,
   text-overflow: ellipsis;
 }
 
-.market-comparison__row--home td {
+/* The Draw row sits between the two team rows; dim its label so the eye
+   still reads each 3-row block as one match. */
+.market-comparison__match--draw {
+  color: hsl(var(--term-dim));
+}
+
+.market-comparison__row--home td,
+.market-comparison__row--draw td {
   border-bottom-color: hsl(var(--term-border) / 0.35);
 }
 

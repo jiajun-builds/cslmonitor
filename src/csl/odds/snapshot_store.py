@@ -1,12 +1,13 @@
-"""Append-only history store for captured Pinnacle spread snapshots.
+"""Append-only history store for captured Pinnacle 1X2 (moneyline) snapshots.
 
-Phase 1 of the scheduled odds-capture pipeline (AGENTS.md roadmap #2). The
-single-shot fetch in ``fetch_pinnacle_spreads`` overwrites one "current" snapshot;
-this module instead *appends* timestamped rows to a history CSV so we retain the
-full line-movement trail (opening line, later snapshots, eventually close).
+Phase 1 of the scheduled odds-capture pipeline (AGENTS.md roadmap #2; switched
+from spreads to 1X2 in roadmap #10). The single-shot fetch in
+``fetch_pinnacle_spreads`` overwrites one "current" snapshot; this module instead
+*appends* timestamped rows to a history CSV so we retain the full price-movement
+trail (opening prices, later snapshots, eventually close).
 
-Schema = the 15 columns from ``fetch_pinnacle_spreads.OUTPUT_COLUMNS`` plus three
-capture-metadata columns:
+Schema = the base columns from ``fetch_pinnacle_spreads.OUTPUT_COLUMNS`` plus
+three capture-metadata columns:
 
     snapshot_type   "open" | "close" | "ad_hoc"  — why this capture fired
     target_round    the round this capture targets (may be "")

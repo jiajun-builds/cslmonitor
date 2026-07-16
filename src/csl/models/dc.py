@@ -105,6 +105,15 @@ class DrawCalibratedModel:
             grid, pred.home_goal_expectation, pred.away_goal_expectation
         )
 
+    def predict_raw(self, home_team: str, away_team: str) -> FootballProbabilityGrid:
+        """Prediction WITHOUT the δ draw calibration.
+
+        The market-anchored de-bias (backtest.md §12, roadmap #10) must start
+        from the un-calibrated grid — anchoring on top of δ would shrink the
+        draw twice. Anchorless consumers should keep using ``predict``.
+        """
+        return self._clf.predict(home_team, away_team)
+
 
 def fit_dixon_coles_model_from_csv(input_csv_path, xi=0.001):
     """

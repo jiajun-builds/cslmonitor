@@ -1,5 +1,11 @@
 """
-Fetch Chinese Super League Pinnacle spreads from The Odds API and export CSV.
+Fetch Chinese Super League Pinnacle 1X2 (moneyline) odds from The Odds API.
+
+Roadmap #10: the Asian-handicap route was falsified in backtest (winner's curse,
+backtest.md §9), so this fetch requests the ``h2h`` market — home/draw/away prices
+— instead of ``spreads``. The stored ``market`` label is "moneyline". Module and
+output filenames keep their historical "spreads" names so workflows and downstream
+paths stay stable.
 
 This fetch is restricted to pre-match upcoming fixtures only. Live matches are
 excluded by requesting odds for the league sport key and applying
@@ -31,7 +37,10 @@ from csl.paths import data_output_dir, data_raw_dir
 THE_ODDS_API_BASE_URL = "https://api.the-odds-api.com/v4"
 ODDS_SPORT_KEY = "soccer_china_superleague"
 BOOKMAKER = "pinnacle"
-MARKET = "spreads"
+# The Odds API market key for 1X2 prices; stored rows use MARKET_LABEL instead
+# so the history CSV reads naturally ("moneyline") regardless of API naming.
+MARKET = "h2h"
+MARKET_LABEL = "moneyline"
 DEFAULT_REGIONS = "us"
 API_KEY_ENV = "THE_ODDS_API_KEY"
 
@@ -45,9 +54,8 @@ OUTPUT_COLUMNS = [
     "api_away_team",
     "home_team",
     "away_team",
-    "home_spread",
-    "away_spread",
     "home_odds",
+    "draw_odds",
     "away_odds",
     "bookmaker",
     "market",
@@ -135,7 +143,7 @@ def get_api_key() -> str:
 
 
 def fetch_odds_response(api_key: str, regions: str) -> requests.Response:
-    """Request pre-match Pinnacle spreads and return the raw HTTP response.
+    """Request pre-match Pinnacle 1X2 odds and return the raw HTTP response.
 
     Kept separate from ``fetch_odds_payload`` so callers that need the quota
     headers (``x-requests-remaining`` etc.) can read them off the response.
@@ -239,6 +247,7 @@ def extract_rows(
             continue
 
         home_outcome = None
+        draw_outcome = None
         away_outcome = None
         for outcome in outcomes:
             if not isinstance(outcome, dict):
@@ -248,17 +257,18 @@ def extract_rows(
                 home_outcome = outcome
             elif name == api_away_team:
                 away_outcome = outcome
+            elif name and name.casefold() == "draw":
+                draw_outcome = outcome
 
-        if home_outcome is None or away_outcome is None:
-            log.warning("Skipping event %s: missing home/away outcomes in spreads market", event.get("id"))
+        if home_outcome is None or draw_outcome is None or away_outcome is None:
+            log.warning("Skipping event %s: missing home/draw/away outcomes in h2h market", event.get("id"))
             continue
 
-        home_spread = _coerce_float(home_outcome.get("point"))
-        away_spread = _coerce_float(away_outcome.get("point"))
         home_odds = _coerce_float(home_outcome.get("price"))
+        draw_odds = _coerce_float(draw_outcome.get("price"))
         away_odds = _coerce_float(away_outcome.get("price"))
-        if home_spread is None or away_spread is None or home_odds is None or away_odds is None:
-            log.warning("Skipping event %s: incomplete spread or price fields", event.get("id"))
+        if home_odds is None or draw_odds is None or away_odds is None:
+            log.warning("Skipping event %s: incomplete h2h price fields", event.get("id"))
             continue
 
         rows.append(
@@ -269,12 +279,11 @@ def extract_rows(
                 "api_away_team": api_away_team,
                 "home_team": home_team,
                 "away_team": away_team,
-                "home_spread": home_spread,
-                "away_spread": away_spread,
                 "home_odds": home_odds,
+                "draw_odds": draw_odds,
                 "away_odds": away_odds,
                 "bookmaker": bookmaker.get("key", BOOKMAKER),
-                "market": market.get("key", MARKET),
+                "market": MARKET_LABEL,
                 "regions": regions,
                 "last_update": market.get("last_update") or bookmaker.get("last_update"),
                 "fetched_at": fetched_at,
@@ -312,13 +321,13 @@ def run(*, out_path: str, regions: str) -> pd.DataFrame:
     frame.to_csv(out_path, index=False, encoding="utf-8")
     log.info("Wrote %s (%d rows)", out_path, len(frame))
     if frame.empty:
-        log.info("API fetch succeeded but returned zero valid Pinnacle spreads rows.")
+        log.info("API fetch succeeded but returned zero valid Pinnacle 1X2 rows.")
     return frame
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch CSL Pinnacle spreads from The Odds API and export CSV"
+        description="Fetch CSL Pinnacle 1X2 (moneyline) odds from The Odds API and export CSV"
     )
     parser.add_argument(
         "--out",

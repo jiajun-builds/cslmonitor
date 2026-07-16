@@ -120,7 +120,7 @@ def capture(
     rows = extract_rows(events, mapping, regions=regions, fetched_at=fetched_at)
     frame = rows_to_frame(rows)
     if frame.empty:
-        log.info("No valid Pinnacle spread rows in response; nothing appended.")
+        log.info("No valid Pinnacle 1X2 rows in response; nothing appended.")
         return 0
 
     _, appended = append_snapshots(
