@@ -1,6 +1,6 @@
 """
 Export upcoming CSL fixtures with de-biased model 1X2 probabilities and
-Pinnacle moneyline odds (opening capture vs current "Now" line), plus model EV
+Pinnacle h2h (1X2) odds (opening capture vs current "Now" line), plus model EV
 for every outcome at both prices.
 
 Draw de-bias is hybrid (AGENTS.md roadmap #10, validated in backtest.md §12):
@@ -427,7 +427,7 @@ def run(
 def main() -> None:
     paths = ExportPaths()
     parser = argparse.ArgumentParser(
-        description="Export upcoming CSL fixtures with de-biased model 1X2 probabilities and Pinnacle moneyline comparison"
+        description="Export upcoming CSL fixtures with de-biased model 1X2 probabilities and Pinnacle h2h comparison"
     )
     parser.add_argument("--upcoming", default=paths.upcoming_csv, help="Path to upcoming_fixtures.csv")
     parser.add_argument("--pinnacle", default=paths.pinnacle_csv, help="Path to CHN_pinnacle_spreads.csv")
