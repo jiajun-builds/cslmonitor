@@ -559,14 +559,31 @@ less beats predicting better.** See roadmap #8.
      ticks before Pinnacle's anchor line is stored. This settles caveat 2 for free: after a
      round or two the history holds each candidate's **true opening** overround, and a book
      already showing a price when Pinnacle opens is a book that opened earlier.
-   - **Next (needs the user):** pick which candidate to backfill historically. The free API plan
-     has **no historical endpoint** (historical odds = paid tier, ~10 credits/snapshot), so past
-     opening lines must come from an external archive (OddsPortal-style, which records per-book
-     opening odds) — a manual job, hence one book at a time. Recommended order: **1xBet** (real
-     book, Sportmarket-reachable, 4.76%), then Betfair Exchange if the commission math is worth
-     modelling. Score whatever is sourced with the two rules above (excess CLV vs §11.3
-     baseline; p×R bar §11.7) — and prefer waiting for 1–2 rounds of captured opens first, since
-     that is the honest opening overround the bar must be computed from.
+   - **Historical backfill = 1xBet, done by hand (no API historical endpoint on the free plan).**
+     The user manually backfilled 1xBet opening **and** Pinnacle closing 1X2 into
+     `CHN_Super League.csv` (`onexbet_open_*` / `onexbet_close_*`) for **2024, 2025 and 2026** (240 +
+     238 + 140 rows). All vetted for entry errors with a **logarithmic overround check** (`ln(Σ1/oᵢ)`;
+     post-correction median 4.75–4.76%, sd 0.11–0.12, no impossible values — lines are sound). 2023
+     still empty (an oddsportal scrape of 2025 was reverse-engineered but rejected as not
+     robust/accurate, and 1xBet is geo-hidden there — see [[onexbet-historical-source-attempts]]).
+   - **BACKTEST RESULT — first cross-season +EV cell in the project (2026-07-16, extended to 3
+     seasons 2026-07-17; `backtest.md` §13.1, `backtest/backtest_1xbet.py`).** Betting the model's EV
+     on 1xBet's **opening** 1X2, CLV graded vs Pinnacle's **close**; n=611 over 2024+2025+2026. 1xBet
+     opening overround 4.87% → vig bar ~1.71pp. **At thr>0.20 the gap (CLV − bar) is positive in ALL
+     THREE seasons independently** for every model variant (production δ no-draw: 2024 gap +2.79 /
+     exCLV +4.32 t=3.0; 2025 gap +2.53 / exCLV +4.19 t=2.7; 2026 gap +1.07 / exCLV +2.46 t=1.8;
+     pooled +2.28 / +3.82 t=4.4) — the §11.1 single-season caveat is fully discharged. Caveats that
+     keep it a lead, not a green light: (a) per-bet ROI is high-variance and **2025 realized −24% ROI
+     on that very cell** despite its +2.53 gap / +4.19pp exCLV — the clean proof to read exCLV/gap,
+     not ROI; (b) **thr must be 0.20** — at thr>0.10 the 2026 gap flips negative; (c) raw vs δ vs λ
+     are the **same edge** — raw scores highest only because its un-repaired draw-deflated H/A probs
+     act as an implicit tighter EV filter (raw@0.20 ≈ δ@0.25; converge exactly at thr>0.50). Real
+     knob = selectivity (EV threshold), not model; use δ (production) and raise the threshold. Unlike
+     §9's AH, here tighter = monotonically better exCLV (a healthy, non-winner's-curse signature).
+   - **Next (needs the user):** add **2023** 1xBet opens (and optionally Betfair, if the commission
+     math is modelled) to tighten; score with the two rules above (excess CLV vs §11.3 baseline; p×R
+     bar §11.7). Before any real staking, confirm the edge survives as *realized* ROI across seasons
+     (2025's −24% is the warning), and prefer captured live opens for the honest opening overround.
 
 9. **Draw de-bias (+ ZIP→NegBinom) — TESTED, bar not cleared (2026-07-15, backtest phase
    DONE).** The backtest verdict is in `backtest/backtest.md` §12; `backtest/backtest_1x2.py`

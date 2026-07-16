@@ -20,6 +20,8 @@ Files in this folder:
 | `backtest_1x2_zip_bets.csv` / `backtest_1x2_negbinom_bets.csv` | Per-bet detail from §11 (λ=0). |
 | `backtest_1x2_negbinom_lam{25,50,75,100}_bets.csv` / `backtest_1x2_zip_lam100_bets.csv` | Per-bet detail from the §12 de-bias variants. |
 | `backtest_1x2_negbinom_delta_bets.csv` | Per-bet detail from the §12.4 market-free δ calibration (the deployed mechanism). |
+| `backtest_1xbet.py` | Bets 1xBet's **opening** 1X2, grades CLV vs Pinnacle's **close** — the roadmap #8 cheaper-book test (§13.1). |
+| `anchor_test.py` | Is Pinnacle or 1xBet the better de-bias anchor? (§13.2). |
 | `backtest.md` | This document. |
 
 > **§9–§12 are the current handoff.** §1–§8 are the original opening-line AH
@@ -33,6 +35,14 @@ Files in this folder:
 > bar in 2024 and 2025 at every shrink strength. Betting Pinnacle's open stays
 > closed; the surviving signal (~+1.2–2.5pp excess CLV) would clear the bar at a
 > ≤5%-overround book, which is roadmap #8's case, quantified.
+> **§13 (2026-07-16, extended 2026-07-17) is that case's data**: betting 1xBet's
+> cheaper opening line (4.87% overround) the gap turns positive at thr>0.20 — the vig
+> wall is finally cleared — and with 2024 **and 2025** now backfilled (n=611,
+> 2024+2025+2026) it clears in **all three seasons independently**, discharging the
+> §11.1 single-season caveat for good. The catch that makes the point: **2025 realized
+> −24% ROI on a set whose excess CLV was +4.2pp (t=2.7) and gap +2.5** — the closing
+> line says those bets had value, the season's dice said otherwise. Read excess CLV /
+> gap, not ROI. **§13.3 is a scoreboard of every strategy ever tested here, defined.**
 >
 > **If you read only two things, read §11.3 and §11.7.** §11.3: never quote a CLV
 > number without the model-free baseline (an "always bet home" coin beats this model
@@ -636,3 +646,134 @@ each training window — no leakage), then deployed.
   `export_upcoming_market_comparison`). The de-bias also thins the diagonal of the
   AH settlement grid, which is directionally correct (§9.1: the margin distribution
   was under-dispersed).
+
+## 13. Cheaper book (1xBet) + strategy scoreboard (2026-07-16, extended 2026-07-17)
+
+Roadmap #8's thesis — *pay less rather than predict better* (§11.7) — gets its data.
+The user hand-backfilled 1xBet's opening **and** Pinnacle's closing 1X2 for **2024,
+2025 and 2026** into `CHN_Super League.csv` (`onexbet_open_*`, `pinnacle_close_*`; 2023
+still empty). All three were vetted for data-entry errors with a **logarithmic overround
+check** — `ln(Σ 1/oᵢ)`, which after correction sits at median 4.75–4.76% with sd 0.11–
+0.12 and no impossible values, so the lines are sound. `backtest/backtest_1xbet.py` bets
+the model's EV on **1xBet's opening** line and grades CLV against **Pinnacle's closing**
+line (the sharp fair-value reference).
+
+### 13.1 1xBet opening line — vig wall cleared in ALL THREE seasons (2024 + 2025 + 2026)
+
+n=611 fixtures across **three full seasons** (2024: 240, 2025: 238, 2026: 133 gradeable).
+The first cut of this section was 2026-only (a lead); 2024 made it two seasons; **2025
+now makes it three, and the gap still clears in every season on its own** — the §11.1
+one-good-season caveat is fully discharged.
+
+- **1xBet's opening overround is 4.87%** (vs Pinnacle's 7.55% open). The §11.7 vig wall
+  drops from **2.61pp to ~1.71pp** — the whole point of a cheaper book.
+- Model-free baseline (§11.3) on the 1xBet-open→Pinnacle-close basis: `always home`
+  **+0.62pp** (t=1.94). Small, so the model's edge below stands clearly *above* baseline
+  (which is what excess CLV isolates).
+- **The gap (CLV − bar) is positive at thr>0.20 for every variant, in all three seasons
+  independently.** Production (δ) and the λ=0.75 anchor, split by season:
+
+  | model · rule | season | n | ROI | excess CLV (t) | **gap** |
+  | --- | --- | ---: | ---: | ---: | ---: |
+  | NegBinom + δ · no-draw | 2024 | 46 | +28.7% | +4.32 (t=3.0) | **+2.79** ✅ |
+  | | 2025 | 36 | **−24.0%** | +4.19 (t=2.7) | **+2.53** ✅ |
+  | | 2026 | 27 | +43.6% | +2.46 (t=1.8) | **+1.07** ✅ |
+  | | *pooled* | *109* | *+15.0%* | *+3.82 (t=4.4)* | *+2.28* |
+  | NegBinom + λ=0.75 · with-draw | 2024 | 46 | +27.1% | +3.42 (t=2.9) | **+2.11** ✅ |
+  | | 2025 | 42 | **−18.4%** | +4.29 (t=3.6) | **+2.81** ✅ |
+  | | 2026 | 26 | +66.7% | +2.48 (t=1.7) | **+1.18** ✅ |
+  | | *pooled* | *114* | *+19.4%* | *+3.52 (t=4.8)* | *+2.16* |
+  | NegBinom raw · no-draw | 2024 | 38 | +41.1% | +5.82 (t=4.0) | **+4.36** ✅ |
+  | | 2025 | 29 | **−15.5%** | +5.11 (t=2.9) | **+3.47** ✅ |
+  | | 2026 | 21 | +42.0% | +3.02 (t=1.8) | **+1.72** ✅ |
+
+- **The 2025 season is the whole methodological lesson in one row.** 2025 realized
+  **negative ROI** (δ no-draw −24.0%, λ −18.4%, raw −15.5%) while posting the *strongest*
+  excess CLV of the three seasons (+4.2 to +5.1pp, t=2.7–3.6) and a large positive gap
+  (+2.5 to +3.5). The closing line is unambiguous that those bets had value; that season's
+  results simply did not pay out. Per-season ROI t-stats sit at ≈1 (and go negative);
+  excess-CLV t-stats are 2.7–4.0 in *every* season. **Judge the strategy by the low-
+  variance signal (excess CLV / gap), never by one season's ROI** — the §11.1 / §11.7
+  lesson, now demonstrated cleanly in the direction that matters (a +value set can lose
+  money short-run).
+
+- **thr must be 0.20, not 0.10.** At thr>0.10 the model's edge is still real (exCLV
+  significant, gap positive in 2024 and 2025) but it **flips negative in 2026** (δ −0.43,
+  raw −0.44). Only the tighter thr>0.20 cell clears the wall in all three seasons —
+  selectivity is load-bearing. (§13.2's finding that raw scores highest is the same
+  effect: raw's un-repaired draw-deflated home/away probs act as an implicit tighter
+  filter — raw@0.20 ≈ δ@0.25, converging exactly at thr>0.50. The knob is the EV
+  threshold, not the model; use production δ and raise the threshold to be more selective.)
+
+- **Draw vs no-draw** (the user's ask): with the **raw** model, no-draw beats with-draw
+  on money (it stops raw dumping ~half its stake on over-priced draws). With the
+  **de-biased** model the two converge — the de-bias already stops the model betting
+  draws. **De-bias ≈ an automatic, smarter "no-draw":** it drops the junk draws but keeps
+  the few genuinely +EV ones and returns freed mass to home/away.
+
+### 13.2 Which opening line is the better anchor — Pinnacle or 1xBet?
+
+`backtest/anchor_test.py`, now n=611 (2024+2025+2026, the seasons with both books'
+opens), only the anchor book varies. **It barely matters.** The two books' no-vig opening
+*draw* probs are nearly identical (per-fixture mean |diff| small), so the λ-anchored
+models are statistically indistinguishable (log-loss 0.9603 @ Pinnacle vs 0.9599 @ 1xBet
+— a 0.0004 gap = noise; both beat raw 0.9737 and δ 0.9730). The reason: **the λ de-bias
+transplants only the draw and keeps the model's own home/away split**, so Pinnacle's
+sharper H/A pricing (market-only log-loss 0.9522 vs 1xBet 0.9592) never enters the model.
+Practical
+split: **anchor on Pinnacle (or either — no accuracy cost), bet on 1xBet (the cheaper
+price).**
+
+### 13.3 Strategy scoreboard — everything tested, and what runs now
+
+**Vocabulary** (every strategy is a choice on these axes):
+
+- **Market** — *AH* = Asian handicap (spreads, home/away vs a goal line); *1X2* =
+  home/draw/away moneyline.
+- **Price / book** — the line we actually bet at: *Pinnacle open*, or *1xBet open*
+  (cheaper). CLV is always graded against a **closing** line (Pinnacle close).
+- **Selection rule** — how the bet is chosen from the model:
+  - *max-EV* — back the single outcome whose model EV = `p·odds − 1` is highest, if it
+    clears the EV threshold. Draws eligible.
+  - *no-draw* — max-EV over {home, away} only; the draw is never backed.
+  - *+ de-bias (λ / δ)* — first correct the model's structural draw over-pricing
+    (market-anchored λ, or market-free δ), then apply max-EV. This mostly removes draw
+    bets on its own (§13.1).
+- **Metrics** — *ROI* = realized return per unit at the bet price (the ground truth).
+  *CLV* = no-vig probability drift from the bet line to the closing line, in pp.
+  *excess CLV* = CLV minus the §11.3 model-free same-outcome baseline drift (a coin that
+  always bets home already earns +CLV — this strips that out). *bar* = `p × R`, the
+  §11.7 breakeven CLV set by the book's overround. *gap* = CLV − bar; **gap > 0 ⟺ the
+  bet is +EV net of vig.** ROI t-stats are the money truth; a positive gap without a
+  significant multi-season ROI is a *lead*, not an edge.
+
+**Scoreboard** (headline cell per strategy; "single-season" = one year carries it,
+§11.1):
+
+| # | Strategy (market · price · rule) | § | Sample | ROI | excess CLV | gap vs vig wall | Verdict |
+| --- | --- | --- | --- | ---: | ---: | ---: | --- |
+| 0 | *baseline* — always-home, 1X2 · Pinn open | 11.3 | 3 seasons | −4.8% | — (this **is** the baseline, +0.91pp raw CLV) | −1.70 | The control every claim is measured against |
+| 1 | **AH · Pinn open · max-EV** | 5–9 | 826 bets, 2023–26 | −4.2% → −8.3% | — | — | **DEAD** — winner's curse; EV overstated +20%/unit (t=6); tighter filter = worse |
+| 2 | AH · Pinn open · small-line only | 9.5 | 2023–26 | −3.6% | — | — | **DEAD** — still overstates EV +17% (t=3.7) |
+| 3 | **1X2 · Pinn open · max-EV (with draw)** | 11.2 | 376 bets, thr>0.10 | −4.8% | ~0 (61% of stake on draws, 0 CLV) | −1.55 | **DEAD** — the draw-probability bug |
+| 4 | 1X2 · Pinn open · no-draw | 11.6 | 138 bets, thr>0.10 | +10.0% (t=0.79, ns) | +1.73pp (t=2.5) | −0.80 | **Direction alive, not profitable** — ROI is one season; below the vig wall except n=51 |
+| 5 | 1X2 · Pinn open · **+ λ=0.75 de-bias** | 12 | 611 fixtures | — | +1.42pp (thr>0.10) | neg in 2024 & 2025 | **Model fixed, betting CLOSED** — draw repaired (0.245), exCLV doubled, but gap<0 two of three seasons |
+| 6 | 1X2 · Pinn open · **+ δ (market-free)** | 12.4 | 611 fixtures | — | +0.93pp (t=2.7) | neg 2024/25 | **DEPLOYED (v2.5/2.6) for ACCURACY**, not betting — needs no market anchor |
+| 7 | **1X2 · 1xBet open · + de-bias** | 13.1 | 611, **2024+2025+2026** | +15% (δ, thr>0.20) | +3.82pp (t=4.4) | **+2.28 ✅ (all 3 seasons)** | **Cross-season positive** — gap clears the vig wall in 2024, 2025 *and* 2026 independently at thr>0.20; only cell in this doc to do so. 2025 lost −24% ROI on +2.5 gap / +4.2pp exCLV → read exCLV/gap, not ROI. Add 2023 to widen further |
+
+**What runs now (2026-07-17).** Nothing is bet live. The production model (v2.6:
+NegBinom on xG + Dixon-Coles decay, market-free **δ** everywhere, market-anchored
+**λ=0.75** on the dashboard's EV-comparison surface where a Pinnacle open was captured)
+is deployed **for forecast accuracy** — it repairs the structural draw over-pricing
+(rows 5–6) — **not** as a betting signal. Betting Pinnacle's open stays closed (§12.3).
+The one open, positive result is **row 7**: 1xBet's cheaper opening line clears the vig
+wall at thr>0.20 in **all three backfilled seasons independently** (2024/2025/2026 gap
++2.79 / +2.53 / +1.07, excess CLV significant each season) — it has now passed the §11.1
+promotion test that every earlier "signal" here failed, on three seasons rather than one.
+It is still **not** a green light to bet real money: per-bet ROI stays high-variance
+(2025 realized −24% on this very cell), only the selective thr>0.20 cell clears
+(thr>0.10 flips negative in 2026), and it is graded against Pinnacle's close, not against
+realized settlement at a real 1xBet account. The live task remains roadmap #8: add 2023
+(and optionally Betfair) to tighten, holding the two guardrails — **excess CLV over the
+§11.3 baseline**, measured against the **§11.7 `p × R` bar** — and, before any real
+staking, confirm the edge survives as *realized* ROI over more than one season.
