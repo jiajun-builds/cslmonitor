@@ -2,19 +2,19 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-16T11:23:37+01:00"
+    "updated_at": "2026-07-16T12:03:00+01:00"
   },
   "rows": [
     {
       "home_team": "Qingdao West Coast",
       "away_team": "Chengdu Rongcheng",
       "match_time": "11:00",
-      "home_odds": 4.19,
-      "draw_odds": 3.96,
-      "away_odds": 1.76,
-      "home_ev": -0.2547699333902996,
-      "draw_ev": 0.0501718706770495,
-      "away_ev": -0.0197752534512064,
+      "home_odds": 4.22,
+      "draw_odds": 3.99,
+      "away_odds": 1.75,
+      "home_ev": -0.2494341572570561,
+      "draw_ev": 0.0581277181821788,
+      "away_ev": -0.0253447122384156,
       "open_home_odds": 3.98,
       "open_draw_odds": 3.72,
       "open_away_odds": 1.82,
@@ -22,8 +22,8 @@
       "open_draw_ev": -0.0134749093639836,
       "open_away_ev": 0.0136414992720479,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -42,19 +42,19 @@
       "open_draw_ev": -0.1485514375893351,
       "open_away_ev": -0.6561573808201155,
       "open_last_update": "2026-07-11T08:42:52Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Henan Songshan Longmen",
       "away_team": "Qingdao Hainiu",
       "match_time": "11:35",
       "home_odds": 1.38,
-      "draw_odds": 5.01,
-      "away_odds": 7.1,
+      "draw_odds": 5.04,
+      "away_odds": 7.19,
       "home_ev": -0.1245714347155384,
-      "draw_ev": 0.1430964455215098,
-      "away_ev": -0.0239735700994166,
+      "draw_ev": 0.1499413344168483,
+      "away_ev": -0.0116014040865922,
       "open_home_odds": 1.55,
       "open_draw_odds": 4.13,
       "open_away_odds": 5.36,
@@ -62,8 +62,8 @@
       "open_draw_ev": -0.0576869620750826,
       "open_away_ev": -0.2631687796806863,
       "open_last_update": "2026-07-14T13:41:06Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Yunnan Yukun",
@@ -82,8 +82,8 @@
       "open_draw_ev": -0.0404185496594471,
       "open_away_ev": 0.1857495225883041,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -102,8 +102,8 @@
       "open_draw_ev": 0.0624614784110846,
       "open_away_ev": 0.1430023440314585,
       "open_last_update": "2026-07-14T13:41:06Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -122,8 +122,8 @@
       "open_draw_ev": -0.023900332956378,
       "open_away_ev": 0.2547945400608253,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -142,8 +142,8 @@
       "open_draw_ev": -0.0437689809954453,
       "open_away_ev": -0.3931279487456625,
       "open_last_update": "2026-07-11T12:42:52Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -162,8 +162,8 @@
       "open_draw_ev": -0.0530987083570119,
       "open_away_ev": -0.3306061925199945,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-16T10:23:24Z",
-      "fetched_at": "2026-07-16T10:23:34Z"
+      "last_update": "2026-07-16T11:02:42Z",
+      "fetched_at": "2026-07-16T11:02:56Z"
     }
   ]
 }
