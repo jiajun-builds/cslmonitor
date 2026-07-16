@@ -42,6 +42,18 @@ BOOKMAKER = "pinnacle"
 MARKET = "h2h"
 MARKET_LABEL = "moneyline"
 DEFAULT_REGIONS = "us"
+
+# Books stored at every open-window capture (roadmap #8 recon). Pinnacle is the
+# reference/anchor; the rest are the survey's sub-5%-overround candidates —
+# the only prices cheap enough for the model's ~1.2-1.4pp excess CLV to clear the
+# p x R bar (backtest.md §11.7/§12).
+#
+# Cost: ZERO extra. The Odds API bills `markets x regions` and counts each 10
+# bookmakers as one region, and `bookmakers` takes precedence over `regions` —
+# measured 2026-07-16: this 5-book list = 1 credit, same as the Pinnacle-only call,
+# and it reaches eu/uk-only books that `regions=us` alone would miss. Keep the list
+# at <= 10 entries or the cost doubles.
+CAPTURE_BOOKMAKERS = (BOOKMAKER, "onexbet", "betfair_ex_eu", "betfair_ex_uk", "matchbook")
 API_KEY_ENV = "THE_ODDS_API_KEY"
 
 DEFAULT_OUTPUT_CSV = os.path.join(data_raw_dir(), "CHN_pinnacle_spreads.csv")
@@ -142,11 +154,19 @@ def get_api_key() -> str:
     return api_key
 
 
-def fetch_odds_response(api_key: str, regions: str) -> requests.Response:
-    """Request pre-match Pinnacle 1X2 odds and return the raw HTTP response.
+def fetch_odds_response(
+    api_key: str, regions: str, *, bookmakers: str | None = BOOKMAKER
+) -> requests.Response:
+    """Request pre-match 1X2 odds and return the raw HTTP response.
 
     Kept separate from ``fetch_odds_payload`` so callers that need the quota
     headers (``x-requests-remaining`` etc.) can read them off the response.
+
+    ``bookmakers=None`` drops the bookmaker filter so every book in ``regions``
+    comes back. **This does not cost extra quota**: The Odds API bills
+    `markets × regions` per /odds call and the ``bookmakers`` filter is free —
+    which is what lets the capture path collect the whole book slate for the
+    price of the Pinnacle-only call it already made (roadmap #8).
     """
     url = f"{THE_ODDS_API_BASE_URL}/sports/{ODDS_SPORT_KEY}/odds"
     commence_time_from = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -155,31 +175,34 @@ def fetch_odds_response(api_key: str, regions: str) -> requests.Response:
         "regions": regions,
         "markets": MARKET,
         "oddsFormat": "decimal",
-        "bookmakers": BOOKMAKER,
         "commenceTimeFrom": commence_time_from,
     }
+    if bookmakers:
+        params["bookmakers"] = bookmakers
     response = requests.get(url, params=params, timeout=30)
     response.raise_for_status()
-    log.info("Requested %s odds with commenceTimeFrom=%s", ODDS_SPORT_KEY, commence_time_from)
+    log.info(
+        "Requested %s odds (regions=%s, bookmakers=%s) with commenceTimeFrom=%s",
+        ODDS_SPORT_KEY, regions, bookmakers or "<all>", commence_time_from,
+    )
     return response
 
 
-def fetch_odds_payload(api_key: str, regions: str) -> list[dict[str, Any]]:
-    response = fetch_odds_response(api_key, regions)
+def fetch_odds_payload(
+    api_key: str, regions: str, *, bookmakers: str | None = BOOKMAKER
+) -> list[dict[str, Any]]:
+    response = fetch_odds_response(api_key, regions, bookmakers=bookmakers)
     data = response.json()
     if not isinstance(data, list):
         raise ValueError(f"Expected list response from The Odds API, got: {type(data)}")
     return data
 
 
-def _find_bookmaker(event: dict[str, Any]) -> dict[str, Any] | None:
+def _event_bookmakers(event: dict[str, Any]) -> list[dict[str, Any]]:
     bookmakers = event.get("bookmakers")
     if not isinstance(bookmakers, list):
-        return None
-    for bookmaker in bookmakers:
-        if isinstance(bookmaker, dict) and bookmaker.get("key") == BOOKMAKER:
-            return bookmaker
-    return None
+        return []
+    return [b for b in bookmakers if isinstance(b, dict) and b.get("key")]
 
 
 def _find_market(bookmaker: dict[str, Any]) -> dict[str, Any] | None:
@@ -201,13 +224,60 @@ def _coerce_float(value: Any) -> float | None:
         return None
 
 
+def _book_prices(
+    bookmaker: dict[str, Any], api_home_team: str, api_away_team: str
+) -> tuple[float, float, float] | None:
+    """(home, draw, away) decimal prices from one book's h2h market, or None.
+
+    None means this book has no usable 3-outcome h2h for the event — a normal,
+    per-book condition once the whole slate is parsed (some books post no draw),
+    so callers skip rather than warn.
+    """
+    market = _find_market(bookmaker)
+    if market is None:
+        return None
+    outcomes = market.get("outcomes")
+    if not isinstance(outcomes, list):
+        return None
+
+    home_outcome = draw_outcome = away_outcome = None
+    for outcome in outcomes:
+        if not isinstance(outcome, dict):
+            continue
+        name = _clean_name(outcome.get("name"))
+        if name == api_home_team:
+            home_outcome = outcome
+        elif name == api_away_team:
+            away_outcome = outcome
+        elif name and name.casefold() == "draw":
+            draw_outcome = outcome
+    if home_outcome is None or draw_outcome is None or away_outcome is None:
+        return None
+
+    prices = (
+        _coerce_float(home_outcome.get("price")),
+        _coerce_float(draw_outcome.get("price")),
+        _coerce_float(away_outcome.get("price")),
+    )
+    if any(p is None for p in prices):
+        return None
+    return prices  # type: ignore[return-value]
+
+
 def extract_rows(
     events: list[dict[str, Any]],
     mapping: TeamMapping,
     *,
     regions: str,
     fetched_at: str,
+    bookmaker_keys: set[str] | None = frozenset({BOOKMAKER}),
 ) -> list[dict[str, Any]]:
+    """One row per (event, bookmaker) with a usable h2h market.
+
+    ``bookmaker_keys=None`` keeps every book in the payload (the roadmap-#8
+    survey/capture path); the default keeps Pinnacle only, which is what the
+    single-snapshot Now-line fetch and the dashboard comparison expect.
+    """
     rows: list[dict[str, Any]] = []
     unmapped_names: set[str] = set()
 
@@ -231,64 +301,44 @@ def extract_rows(
         if home_team is None or away_team is None:
             continue
 
-        bookmaker = _find_bookmaker(event)
-        if bookmaker is None:
-            log.warning("Skipping event %s: bookmaker %r not found", event.get("id"), BOOKMAKER)
+        books = _event_bookmakers(event)
+        if bookmaker_keys is not None:
+            books = [b for b in books if b.get("key") in bookmaker_keys]
+        if not books:
+            log.warning(
+                "Skipping event %s: no requested bookmaker present (wanted %s)",
+                event.get("id"), sorted(bookmaker_keys) if bookmaker_keys else "<all>",
+            )
             continue
 
-        market = _find_market(bookmaker)
-        if market is None:
-            log.warning("Skipping event %s: market %r not found", event.get("id"), MARKET)
-            continue
-
-        outcomes = market.get("outcomes")
-        if not isinstance(outcomes, list):
-            log.warning("Skipping event %s: outcomes missing or malformed", event.get("id"))
-            continue
-
-        home_outcome = None
-        draw_outcome = None
-        away_outcome = None
-        for outcome in outcomes:
-            if not isinstance(outcome, dict):
+        event_rows = 0
+        for bookmaker in books:
+            prices = _book_prices(bookmaker, api_home_team, api_away_team)
+            if prices is None:
                 continue
-            name = _clean_name(outcome.get("name"))
-            if name == api_home_team:
-                home_outcome = outcome
-            elif name == api_away_team:
-                away_outcome = outcome
-            elif name and name.casefold() == "draw":
-                draw_outcome = outcome
-
-        if home_outcome is None or draw_outcome is None or away_outcome is None:
-            log.warning("Skipping event %s: missing home/draw/away outcomes in h2h market", event.get("id"))
-            continue
-
-        home_odds = _coerce_float(home_outcome.get("price"))
-        draw_odds = _coerce_float(draw_outcome.get("price"))
-        away_odds = _coerce_float(away_outcome.get("price"))
-        if home_odds is None or draw_odds is None or away_odds is None:
-            log.warning("Skipping event %s: incomplete h2h price fields", event.get("id"))
-            continue
-
-        rows.append(
-            {
-                "event_id": event.get("id"),
-                "commence_time": event.get("commence_time"),
-                "api_home_team": api_home_team,
-                "api_away_team": api_away_team,
-                "home_team": home_team,
-                "away_team": away_team,
-                "home_odds": home_odds,
-                "draw_odds": draw_odds,
-                "away_odds": away_odds,
-                "bookmaker": bookmaker.get("key", BOOKMAKER),
-                "market": MARKET_LABEL,
-                "regions": regions,
-                "last_update": market.get("last_update") or bookmaker.get("last_update"),
-                "fetched_at": fetched_at,
-            }
-        )
+            home_odds, draw_odds, away_odds = prices
+            market = _find_market(bookmaker)
+            rows.append(
+                {
+                    "event_id": event.get("id"),
+                    "commence_time": event.get("commence_time"),
+                    "api_home_team": api_home_team,
+                    "api_away_team": api_away_team,
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "home_odds": home_odds,
+                    "draw_odds": draw_odds,
+                    "away_odds": away_odds,
+                    "bookmaker": bookmaker.get("key"),
+                    "market": MARKET_LABEL,
+                    "regions": regions,
+                    "last_update": (market or {}).get("last_update") or bookmaker.get("last_update"),
+                    "fetched_at": fetched_at,
+                }
+            )
+            event_rows += 1
+        if event_rows == 0:
+            log.warning("Skipping event %s: no book had a usable 3-outcome h2h market", event.get("id"))
 
     if unmapped_names:
         names = ", ".join(sorted(unmapped_names))

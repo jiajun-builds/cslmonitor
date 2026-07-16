@@ -202,7 +202,10 @@ Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window,
   `CHN_model_meta.json` sidecar via `paths.model_meta_json()`)
 - dashboard JSON export: `src/csl/dashboard/export_dashboard_json.py`
 - Pinnacle fetch (single "current" snapshot; **1X2/moneyline since roadmap #10** — module
-  keeps its legacy "spreads" name): `src/csl/odds/fetch_pinnacle_spreads.py`
+  keeps its legacy "spreads" name; `CAPTURE_BOOKMAKERS` lists the books the capture path
+  stores): `src/csl/odds/fetch_pinnacle_spreads.py`
+- bookmaker survey (roadmap #8 recon — who quotes CSL 1X2 and at what overround; costs 1
+  credit per region): `src/csl/odds/survey_bookmakers.py` (`python -m csl.odds.survey_bookmakers --dry-run`)
 - market comparison export (now + captured-open 1X2, hybrid λ/δ de-biased probs, per-outcome
   EV): `src/csl/odds/export_upcoming_market_comparison.py`
 - Pinnacle opening-time calendar: `src/csl/odds/opening_calendar.py` (`python -m csl.odds.opening_calendar`; `build_open_windows()` returns tz-aware windows for the scheduler)
@@ -503,14 +506,47 @@ less beats predicting better.** See roadmap #8.
      close AH only 2023–24. Pinnacle 1X2 open+close is now complete for 2024–26 (2023 has only
      56 opens and no usable training history) — useful here as the *benchmark* an earlier book's
      line gets measured against.
-   - **Update (2026-07-16) — unblocked by a quota fact + user go-ahead (see #11):** The Odds
-     API bills `markets × regions` per /odds call; the `bookmakers` filter is FREE. So one h2h
-     call *without* the `bookmakers=pinnacle` filter enumerates every US-region book's CSL 1X2
-     for 1 credit (`regions=us,eu,uk` = 3 credits for a wider sweep). **First concrete action:
-     run this survey call** and report per book: overround, draw availability, `last_update`
-     cadence, and (over a few open windows) who posts a line before Pinnacle. That answers the
-     reconnaissance this item has been blocked on. Score any candidate per the two rules above
-     (excess CLV vs §11.3 baseline; p×R bar §11.7).
+   - **SURVEY DONE (2026-07-16, `src/csl/odds/survey_bookmakers.py`, 3 credits).** One h2h call,
+     `regions=us,eu,uk`, no bookmakers filter: **40 books** quote CSL 1X2 across 8 fixtures.
+     Cheapest first (mean overround, Now line):
+
+     | book | overround | events | note |
+     | --- | ---: | ---: | --- |
+     | `matchbook` | **2.43%** | 4/8 | exchange — commission not in the price |
+     | `betfair_ex_eu` / `betfair_ex_uk` | **3.95%** | 8/8 | exchange — commission not in the price |
+     | `onexbet` (1xBet) | **4.76%** | 8/8 | **the only cheap *traditional* book** |
+     | `gtbets` | 5.64% | 7/8 | |
+     | `coolbet` | 5.96% | 8/8 | |
+     | **`pinnacle`** (reference) | **6.57%** | 8/8 | vs 7.55% at *open* (§11.7) |
+     | the other 33 | 6.7–16.0% | — | William Hill 9.5%, Paddy Power 9.9%, Winamax FR 16.0% |
+
+     **Reading it — three caveats that decide what this means:**
+     1. **Exchanges price differently.** Matchbook/Betfair's 2.4–4.0% excludes commission on net
+        winnings (~2% Matchbook, 2–5% Betfair), so the p×R bar does not apply to them unmodified —
+        their true cost depends on strike rate, not just the quoted overround.
+     2. **This is a Now line, not an open.** Pinnacle sits at 6.57% here vs its 7.55% opening
+        (§11.7) — books widen at open and tighten toward kickoff. So the candidates' *opening*
+        overrounds are **wider than the table**; 1xBet's 4.76% Now might be ~6% at open, which
+        would put it back above the bar. **Do not treat these numbers as opening overrounds.**
+     3. Matchbook covers only 4/8 fixtures (liquidity).
+   - **Forward capture of the candidates — DONE, zero quota (2026-07-16).** `capture_scheduler`
+     now stores `fetch_pinnacle_spreads.CAPTURE_BOOKMAKERS` = pinnacle + the four sub-5%
+     candidates at every open window. **Measured, not assumed:** The Odds API bills
+     `markets × regions`, counts each 10 bookmakers as 1 region, and `bookmakers` takes
+     precedence over `regions` — so `regions=us` + this 5-book list costs the **same 1 credit**
+     as the old Pinnacle-only call *and* reaches the eu/uk-only books. Fire/pending stays keyed
+     on Pinnacle alone (`REFERENCE_BOOKMAKER`), so an early-opening rival can never stop the
+     ticks before Pinnacle's anchor line is stored. This settles caveat 2 for free: after a
+     round or two the history holds each candidate's **true opening** overround, and a book
+     already showing a price when Pinnacle opens is a book that opened earlier.
+   - **Next (needs the user):** pick which candidate to backfill historically. The free API plan
+     has **no historical endpoint** (historical odds = paid tier, ~10 credits/snapshot), so past
+     opening lines must come from an external archive (OddsPortal-style, which records per-book
+     opening odds) — a manual job, hence one book at a time. Recommended order: **1xBet** (real
+     book, Sportmarket-reachable, 4.76%), then Betfair Exchange if the commission math is worth
+     modelling. Score whatever is sourced with the two rules above (excess CLV vs §11.3
+     baseline; p×R bar §11.7) — and prefer waiting for 1–2 rounds of captured opens first, since
+     that is the honest opening overround the bar must be computed from.
 
 9. **Draw de-bias (+ ZIP→NegBinom) — TESTED, bar not cleared (2026-07-15, backtest phase
    DONE).** The backtest verdict is in `backtest/backtest.md` §12; `backtest/backtest_1x2.py`
@@ -616,12 +652,14 @@ less beats predicting better.** See roadmap #8.
     - **Model work → maintenance only** (§12.3: "cheaper prices, not further model work"):
       watch the δ refit drift (current 0.908; per-round history 0.82–1.00) and the anchored
       draw prob vs actual as 2026 accumulates. No further model changes planned.
-    - **Next step (user decision 2026-07-16): the #8 bookmaker survey ONLY.** Run the
-      1-credit no-bookmaker-filter h2h survey described in #8's update and identify the
-      cheapest/earliest CSL book. Explicitly NOT chosen (proposed and deferred): the #3
-      close-capture piggyback (persisting the last pre-kickoff 3h Now snapshot as
-      `snapshot_type=close` for a live excess-CLV tracker, zero quota) — do not build it
-      without a fresh user go-ahead.
+    - **Next step (user decision 2026-07-16): the #8 bookmaker survey ONLY** — DONE the same
+      day, see #8 for the 40-book table and its three caveats. Headline: 1xBet 4.76% is the
+      only cheap traditional book, the two exchanges are cheaper but carry commission, and
+      **all of it is Now-line data — opening overrounds are wider and are now being captured
+      for free**. Awaiting the user's pick of which book to backfill historically.
+      Explicitly NOT chosen (proposed and deferred): the #3 close-capture piggyback
+      (persisting the last pre-kickoff 3h Now snapshot as `snapshot_type=close` for a live
+      excess-CLV tracker, zero quota) — do not build it without a fresh user go-ahead.
 
 
 ## Agent Tips

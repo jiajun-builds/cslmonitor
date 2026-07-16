@@ -38,6 +38,7 @@ import numpy as np
 import pandas as pd
 
 from csl.models.dc import fit_dixon_coles_model_from_csv
+from csl.odds.fetch_pinnacle_spreads import BOOKMAKER as ANCHOR_BOOKMAKER
 from csl.odds.snapshot_store import HISTORY_CSV, load_history
 from csl.paths import data_dashboard_csv_dir, data_output_dir, data_raw_dir
 
@@ -192,17 +193,23 @@ OPEN_SNAPSHOT_COLUMNS = [
 ]
 
 
-def load_open_snapshots(path: str) -> pd.DataFrame:
+def load_open_snapshots(path: str, bookmaker: str = ANCHOR_BOOKMAKER) -> pd.DataFrame:
     """One opening-price row per fixture from the capture history (may be empty).
 
-    Reads the append-only capture history, keeps ``snapshot_type == "open"`` rows,
-    and — since a line can in principle be captured more than once — takes the
-    earliest ``fetched_at`` per fixture as the true opening prices. Returns a frame
-    keyed by (home_team, away_team) with ``open_*`` 1X2 odds columns, or an empty
+    Reads the append-only capture history, keeps ``snapshot_type == "open"`` rows
+    **for ``bookmaker`` only** — since roadmap #8 the history also carries other
+    books' prices at the same window (recon data), and the λ anchor must be the
+    single reference book's line, not whichever book happened to be fetched first.
+    Since a line can in principle be captured more than once, takes the earliest
+    ``fetched_at`` per fixture as the true opening prices. Returns a frame keyed by
+    (home_team, away_team) with ``open_*`` 1X2 odds columns, or an empty
     (correctly-columned) frame when no opens have been captured yet.
     """
     hist = load_history(path)
-    opens = hist[hist["snapshot_type"] == "open"] if not hist.empty else hist
+    if not hist.empty:
+        opens = hist[(hist["snapshot_type"] == "open") & (hist["bookmaker"] == bookmaker)]
+    else:
+        opens = hist
     if opens.empty:
         return pd.DataFrame(columns=OPEN_SNAPSHOT_COLUMNS)
 
