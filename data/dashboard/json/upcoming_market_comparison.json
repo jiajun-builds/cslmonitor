@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-16T17:20:03+01:00"
+    "updated_at": "2026-07-16T20:16:00+01:00"
   },
   "rows": [
     {
@@ -22,19 +22,19 @@
       "open_draw_ev": -0.0134749093637199,
       "open_away_ev": 0.0136414992712396,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Beijing Guoan",
       "away_team": "Liaoning Tieren",
       "match_time": "11:35",
-      "home_odds": 1.43,
-      "draw_odds": 4.97,
-      "away_odds": 6.57,
-      "home_ev": 0.1170740816618025,
-      "draw_ev": -0.1686248811037967,
-      "away_ev": -0.6613124425766339,
+      "home_odds": 1.42,
+      "draw_odds": 5.01,
+      "away_odds": 6.78,
+      "home_ev": 0.1092623747970347,
+      "draw_ev": -0.1619337332655979,
+      "away_ev": -0.6504868128873025,
       "open_home_odds": 1.37,
       "open_draw_odds": 5.09,
       "open_away_odds": 6.67,
@@ -42,19 +42,19 @@
       "open_draw_ev": -0.1485514375892002,
       "open_away_ev": -0.6561573808198093,
       "open_last_update": "2026-07-11T08:42:52Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Henan Songshan Longmen",
       "away_team": "Qingdao Hainiu",
       "match_time": "11:35",
-      "home_odds": 1.33,
-      "draw_odds": 5.53,
-      "away_odds": 8.59,
-      "home_ev": -0.1562898609939376,
-      "draw_ev": 0.261741186373934,
-      "away_ev": 0.1808545116684714,
+      "home_odds": 1.34,
+      "draw_odds": 5.4,
+      "away_odds": 8.24,
+      "home_ev": -0.1499461757382529,
+      "draw_ev": 0.2320800011608037,
+      "away_ev": 0.1327405327297095,
       "open_home_odds": 1.55,
       "open_draw_odds": 4.13,
       "open_away_odds": 5.36,
@@ -62,19 +62,19 @@
       "open_draw_ev": -0.0576869620751632,
       "open_away_ev": -0.2631687796806744,
       "open_last_update": "2026-07-14T13:41:06Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Yunnan Yukun",
       "away_team": "Shanghai Port",
       "match_time": "12:00",
-      "home_odds": 2.54,
-      "draw_odds": 4.07,
-      "away_odds": 2.47,
-      "home_ev": -0.1519945539548398,
-      "draw_ev": 0.0470500007736041,
-      "away_ev": 0.0099314899300795,
+      "home_odds": 2.59,
+      "draw_odds": 4.09,
+      "away_odds": 2.42,
+      "home_ev": -0.1353015333633996,
+      "draw_ev": 0.0521952096226141,
+      "away_ev": -0.0105124673559545,
       "open_home_odds": 2.21,
       "open_draw_odds": 3.73,
       "open_away_odds": 2.9,
@@ -82,8 +82,8 @@
       "open_draw_ev": -0.0404185496595718,
       "open_away_ev": 0.1857495225899719,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -102,8 +102,8 @@
       "open_draw_ev": 0.0624614784112718,
       "open_away_ev": 0.1430023440311763,
       "open_last_update": "2026-07-14T13:41:06Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -122,8 +122,8 @@
       "open_draw_ev": -0.0239003329565526,
       "open_away_ev": 0.2547945400617708,
       "open_last_update": "2026-07-12T11:47:09Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -142,19 +142,19 @@
       "open_draw_ev": -0.0437689809955166,
       "open_away_ev": -0.3931279487460156,
       "open_last_update": "2026-07-11T12:42:52Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     },
     {
       "home_team": "Wuhan Three Towns",
       "away_team": "Shenzhen Xinpengcheng",
       "match_time": "12:00",
-      "home_odds": 2.11,
-      "draw_odds": 3.59,
-      "away_odds": 3.29,
-      "home_ev": 0.1095117866969535,
-      "draw_ev": -0.0259668661895384,
-      "away_ev": -0.3326346586034449,
+      "home_odds": 2.27,
+      "draw_odds": 3.54,
+      "away_odds": 3.02,
+      "home_ev": 0.1936453818967225,
+      "draw_ev": -0.0395327872732496,
+      "away_ev": -0.3874032428517944,
       "open_home_odds": 2.09,
       "open_draw_odds": 3.49,
       "open_away_odds": 3.3,
@@ -162,8 +162,8 @@
       "open_draw_ev": -0.0530987083569607,
       "open_away_ev": -0.3306061925201727,
       "open_last_update": "2026-07-11T13:49:00Z",
-      "last_update": "2026-07-16T16:19:55Z",
-      "fetched_at": "2026-07-16T16:20:00Z"
+      "last_update": "2026-07-16T19:15:33Z",
+      "fetched_at": "2026-07-16T19:15:57Z"
     }
   ]
 }
