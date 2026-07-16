@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-16T02:43:00+01:00"
+    "updated_at": "2026-07-16T03:47:11+01:00"
   },
   "rows": [
     {
@@ -120,7 +120,7 @@
       "team": "Qingdao Hainiu",
       "attack_rating": 1.016965415349412,
       "defense_rating": -1.1115362364906072,
-      "overall_rating": 2.1285016518400193,
+      "overall_rating": 2.1285016518400197,
       "attack_rank": 10,
       "defense_rank": 14,
       "form": "L,D,W,L,L"
@@ -140,7 +140,7 @@
       "team": "Liaoning Tieren",
       "attack_rating": 1.0438318404484268,
       "defense_rating": -0.8900032561080783,
-      "overall_rating": 1.9338350965565052,
+      "overall_rating": 1.9338350965565048,
       "attack_rank": 8,
       "defense_rank": 17,
       "form": "W,L,D,W,W"
