@@ -201,8 +201,10 @@ Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window,
   = export time AND `model_updated_at` = last model-fit time, read from the
   `CHN_model_meta.json` sidecar via `paths.model_meta_json()`)
 - dashboard JSON export: `src/csl/dashboard/export_dashboard_json.py`
-- Pinnacle fetch (single "current" snapshot): `src/csl/odds/fetch_pinnacle_spreads.py`
-- market comparison export (now + captured-open, with per-side EV): `src/csl/odds/export_upcoming_market_comparison.py`
+- Pinnacle fetch (single "current" snapshot; **1X2/moneyline since roadmap #10** — module
+  keeps its legacy "spreads" name): `src/csl/odds/fetch_pinnacle_spreads.py`
+- market comparison export (now + captured-open 1X2, hybrid λ/δ de-biased probs, per-outcome
+  EV): `src/csl/odds/export_upcoming_market_comparison.py`
 - Pinnacle opening-time calendar: `src/csl/odds/opening_calendar.py` (`python -m csl.odds.opening_calendar`; `build_open_windows()` returns tz-aware windows for the scheduler)
 - odds-capture history store (append-only): `src/csl/odds/snapshot_store.py`
 - single-shot snapshot capture: `src/csl/odds/capture_snapshot.py` (`python -m csl.odds.capture_snapshot`)
@@ -216,9 +218,11 @@ Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window,
 - fresh fixture/schedule pull: `data/raw_data/chinese_super_league_data.csv`
 - upcoming fixtures for dashboard/export: `data/raw_data/chn_upcoming_fixtures.csv`
 - xG data: `data/raw_data/xg_data.csv`
-- Pinnacle spreads (single current snapshot, overwritten each run): `data/raw_data/CHN_pinnacle_spreads.csv`
-- Pinnacle spreads capture history (append-only, tracked in git so the GitHub capture
-  workflow can persist it): `data/raw_data/CHN_pinnacle_spreads_history.csv`
+- Pinnacle 1X2 odds (single current snapshot, overwritten each run; legacy "spreads"
+  filename): `data/raw_data/CHN_pinnacle_spreads.csv`
+- Pinnacle 1X2 capture history (append-only, tracked in git so the GitHub capture
+  workflow can persist it; `market=moneyline` since roadmap #10, old spreads rows replaced
+  by the user's manual opening-1X2 backfill): `data/raw_data/CHN_pinnacle_spreads_history.csv`
 - backups: `data/raw_data/backups/`
 
 ### Model / Processed Outputs
@@ -284,6 +288,14 @@ where the model diverges from the market and bet +EV lines at aggregator books.
   (NegBinom = best RPS/log-loss, §9.4; the de-bias repairs ~half of the structural ~4pp
   draw over-pricing, out-of-sample draw 0.276 → 0.255 vs actual 0.242; current
   production fit δ ≈ 0.91).
+- Since **v2.6 (2026-07-16, roadmap #10)** the de-bias is **hybrid**: the market-comparison
+  surface uses the §12-validated **market-anchored shrink** (λ = 0.75 toward the no-vig
+  *captured opening* draw prob, applied to the raw un-δ'd grid via
+  `DrawCalibratedModel.predict_raw` — never stacked on δ) for fixtures with a captured
+  open, falling back to δ otherwise; the all-pairs `match_predictions` surface stays
+  δ-based (no anchor can exist there). Same fixture may therefore show slightly different
+  draw probs on the two surfaces (~1pp) — intentional, user-confirmed. The
+  `debias_method` column in the comparison CSVs records which path produced each row.
 - **History:** production previously fit `ZeroInflatedPoissonGoalsModel` (ZIP), whose
   zero-inflation parameter sat at its ~1e-6 floor in 100% of refits (diagnostic
   `model comparison/zip_zero_inflation_param_test.py`) — ZIP had collapsed to Poisson,
@@ -521,67 +533,60 @@ less beats predicting better.** See roadmap #8.
      not betting — the betting verdict above stands. Upgrade path to the full
      market-anchored λ: roadmap #10.
 
-10. **Market-anchored λ de-bias in production — UPGRADE PLAN (planned 2026-07-15,
-    user-requested).** Replace the δ-only de-bias with the §12-validated market-anchored
-    shrink wherever an anchor exists; δ stays as the fallback. Target: draw prob ≈ 0.245
+10. **Market-anchored λ de-bias in production — IMPLEMENTED (v2.6, 2026-07-16).**
+    Replaces the δ-only de-bias with the §12-validated market-anchored shrink wherever an
+    anchor exists; δ stays as the fallback. Draw prob on the comparison surface ≈ 0.245–0.25
     (λ=0.75) instead of δ's 0.255, per fixture, self-adapting by match type (§11.4).
 
-    **Design (revised same day, user decision): h2h REPLACES spreads — AH is retired.**
-    The AH betting route is falsified (§9–§10) and the user bets 1X2 going forward, so the
-    fetch switches from `markets=spreads` to `markets=h2h` outright. Cost per /odds call is
-    unchanged (1 market × 1 region = 1 credit) → **zero quota impact**. The anchor for the
-    λ shrink is the *captured opening* 1X2 (exactly what §12 validated); the Now-line 1X2
-    refresh continues on the existing 3h cadence for display/CLV. δ stays as the fallback
-    for fixtures with no captured open. Consequence: the dashboard's AH columns
-    (spread/AH-EV/Move on the spread) lose their data source once the switch lands — the
-    market-comparison panel is redesigned around 1X2 (open/now H-D-A prices, anchored model
-    probs, per-outcome EV). Historical spreads rows in the history CSV are kept untouched.
+    **Design: h2h REPLACES spreads — AH is retired.** The AH betting route is falsified
+    (§9–§10) and the user bets 1X2 going forward. `fetch_pinnacle_spreads` now requests
+    `markets=h2h` (parses home/draw/away prices; module and CSV filenames keep their legacy
+    "spreads" names). Cost per /odds call unchanged (1 market × 1 region = 1 credit) →
+    **zero quota impact** (~290–310/500). The λ anchor is the *captured opening* 1X2
+    (exactly what §12 validated); the Now-line refresh continues on the 3h cadence.
 
-    **Steps (in order):**
-    1. *Schema first (blocks the user's manual backfill):* extend the history schema with a
-       `draw_odds` column; h2h rows use `home_odds`/`draw_odds`/`away_odds` with
-       `market=h2h` and empty spread columns; `DEDUP_KEY` gains `market`. Old spreads rows
-       stay valid. The user's manual opening-1X2 backfill follows this shape (see assist a).
-    2. *Recon (one-off, 1 credit):* a single `markets=h2h` call to confirm The Odds API
-       exposes Pinnacle 3-outcome h2h (with Draw) for `soccer_china_superleague`.
-    3. *Fetch layer:* switch `fetch_pinnacle_spreads` → h2h (module/CSV rename or a
-       `market` parameter); parse home/draw/away prices; team-name normalization unchanged.
-    4. *Capture:* `capture_scheduler`/`capture_snapshot` capture the opening h2h instead of
-       the opening spread; windows/logic unchanged (opening_calendar is market-agnostic).
-    5. *Model/export layer:* keep `DrawCalibratedModel` (δ) as the base. In
-       `export_upcoming_market_comparison.attach_market_probabilities`, when a fixture has
-       a captured opening 1X2: recompute H/D/A from the *raw* (un-δ'd) grid with the λ
-       shrink toward the no-vig opening draw prob — scale the grid diagonal to hit
-       `p'_D = (1−λ)·p_D + λ·m_D`, renormalize — and overwrite the comparison's model-prob
-       columns (never double-apply δ+λ). All-pairs simulations / `match_predictions` stay
-       δ-based (no anchor exists there) — a documented, intentional divergence between the
-       two surfaces.
-    6. *Dashboard 1X2 redesign (visible change — present options before editing, per
-       convention):* comparison panel shows Open/Now 1X2 prices + anchored model probs +
-       per-outcome EV; AH columns removed or archived.
-    7. *Validation before deploy:* add a hybrid variant to `backtest_1x2.py` ("anchored
-       when open 1X2 exists, else δ") and confirm it ≥ δ-only on draw repair with no metric
-       degrading; then one live round observed end-to-end (dry-run capture → real capture →
-       comparison shows anchored probs).
-    8. *Ship:* dashboard bump to v2.6.
+    **User decisions that shaped the final schema (2026-07-16):**
+    - The user hand-backfilled 23 opening-1X2 rows (rounds 18–19) directly into
+      `CHN_pinnacle_spreads_history.csv` with a **17-column schema of their own**: spread
+      columns REMOVED (not left empty), `draw_odds` inserted between `home_odds` and
+      `away_odds`, and **`market=moneyline`** (not the API's "h2h" key). The code adopts
+      this as canonical: `OUTPUT_COLUMNS` matches it and the fetch writes
+      `MARKET_LABEL="moneyline"` while requesting `markets=h2h`. `DEDUP_KEY` unchanged
+      (no `market` component needed — the file is single-market again).
+    - Historical spreads rows were REPLACED by the backfill, not preserved (supersedes the
+      earlier "kept untouched" plan). The old AH history survives in git history and in the
+      backtest section of `CHN_Super League.csv` (open/close AH columns) — nothing analytic
+      was lost.
+    - Confirmed: λ = 0.75; hybrid semantics (comparison anchored / predictions δ — see
+      "Model" section above); 3-rows-per-match (H/D/A) dashboard layout; full spreads stop
+      (Now line included).
 
-    **Defaults:** λ = 0.75 (accuracy optimum §12.1; the 0.5–1.0 region is robust).
-    **Quota math:** unchanged (~290–310/500) — h2h replaces spreads 1:1.
+    **What shipped (branch `docs/roadmap-10-market-anchored-debias`):**
+    - Fetch/capture: h2h parsing in `fetch_pinnacle_spreads.extract_rows` (Draw outcome
+      required), `snapshot_store`/`capture_snapshot`/`capture_scheduler` unchanged in logic
+      (schema derives from `OUTPUT_COLUMNS`). `CHN_pinnacle_spreads.csv` reset to a
+      new-schema header — repopulated by the first post-merge 3h refresh.
+    - Export: `export_upcoming_market_comparison` rewritten — 1X2 columns, hybrid λ/δ
+      probs (`DrawCalibratedModel.predict_raw` added to `dc.py` so λ starts from the
+      un-δ'd grid), per-outcome open/now EV, `debias_method` audit column; the simulations
+      CSV is no longer an input (probs come straight from the model fit).
+    - Dashboard: comparison panel = 3 rows per match (home/Draw/away) × Open Odds/EV, Now
+      Odds/EV, odds-direction Move arrows; tooltip shows the full H/D/A snapshot triplet;
+      Best Bet metric now includes the draw. JSON whitelist updated. Version v2.6.
+    - **Validation:** λ math + EV consistency + schema round-trip + dedup re-checked
+      locally against the user's backfilled CSV (8 round-19 fixtures, all
+      `market_anchor`, anchored draw mean 0.249). A separate backtest "hybrid" variant is
+      unnecessary: every backtest row has an opening 1X2, so hybrid ≡ the λ=0.75 variant
+      already validated in §12 (δ fallback validated separately in §12.4).
 
-    **Where the user must assist:**
-    - (a) **Manual opening-1X2 backfill of the history CSV — coordinate schema first.**
-      Don't hand-edit before step 1 lands; agree the row shape, then either enter rows in
-      that shape or hand the odds over (fixture, H/D/A opening prices, observed-at time)
-      to be scripted into the CSV. Reuse the fixture's existing `event_id` from its
-      spreads open row; `capture_reason=manual-backfill`.
-    - (b) Confirm λ = 0.75 and the hybrid-display semantics of step 5 (comparison anchored,
-      predictions δ-based).
-    - (c) Approve the dashboard 1X2 redesign (step 6) and the v2.6 bump — layout options
-      will be presented first.
-    - (d) Confirm AH retirement scope: stop fetching spreads entirely (Now line included),
-      keep historical spreads rows read-only.
-    - (e) Optionally hand-check the first live captured opening 1X2 against
-      Pinnacle/Sportmarket at open (field validation, like the round-17 window validation).
+    **Still open:**
+    - First live end-to-end observation: next 3h refresh repopulates the Now line (doubles
+      as the h2h recon call); next open-window capture (round 20, expected from ~2026-07-17)
+      writes the first automated `moneyline` open row. Optional user field-check of that
+      first capture against Pinnacle at open (assist item e).
+    - The betting verdict is unchanged: this is an accuracy upgrade; do NOT bet Pinnacle's
+      1X2 open (§12 gap negative 2024/2025). The surviving +1.2–2.5pp excess CLV is the
+      case for roadmap #8 (cheaper book).
 
 
 ## Agent Tips

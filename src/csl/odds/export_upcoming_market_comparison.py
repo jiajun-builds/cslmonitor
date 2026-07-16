@@ -1,6 +1,21 @@
 """
-Export upcoming CSL fixtures with model 1X2, Pinnacle spreads/odds, and
-model settlement probabilities for the exact market handicap line.
+Export upcoming CSL fixtures with de-biased model 1X2 probabilities and
+Pinnacle moneyline odds (opening capture vs current "Now" line), plus model EV
+for every outcome at both prices.
+
+Draw de-bias is hybrid (AGENTS.md roadmap #10, validated in backtest.md §12):
+
+  * Fixture WITH a captured opening 1X2 -> market-anchored shrink at
+    ``DEBIAS_LAMBDA``: starting from the RAW (un-δ'd) model grid,
+    ``p'_D = (1-λ)·p_D + λ·m_D`` where ``m_D`` is the no-vig opening draw
+    probability; the freed mass is returned to H/A pro-rata. Anchoring on the
+    raw grid (``predict_raw``) avoids stacking λ on top of the δ calibration.
+  * Fixture WITHOUT a captured open -> δ-calibrated model (``predict``), the
+    same market-free calibration used by the all-pairs prediction surface.
+
+The ``debias_method`` column records which path produced each row's
+probabilities ("market_anchor" or "delta"); EV columns are consistent with the
+row's probabilities: ``EV_k = p'_k * odds_k - 1``.
 
 Usage (仓库根目录，PYTHONPATH=src):
     python -m csl.odds.export_upcoming_market_comparison
@@ -19,9 +34,9 @@ import sys
 from dataclasses import dataclass
 from typing import Iterable
 
+import numpy as np
 import pandas as pd
 
-from csl.dashboard.export_dashboard_csv import _normalize_probabilities
 from csl.models.dc import fit_dixon_coles_model_from_csv
 from csl.odds.snapshot_store import HISTORY_CSV, load_history
 from csl.paths import data_dashboard_csv_dir, data_output_dir, data_raw_dir
@@ -35,15 +50,20 @@ log = logging.getLogger(__name__)
 
 MODEL_XI = 0.001
 
-# Opening-line columns joined from the capture history (snapshot_type=open). These
-# are blank for fixtures whose open line has not been captured yet.
+# Market-anchored draw shrink weight. backtest.md §12: λ=0.75 lands the
+# walk-forward draw mean on the actual rate (0.245 vs 0.242) and doubles excess
+# CLV at thr>0.10; the result holds over the surrounding λ region, not a point.
+DEBIAS_LAMBDA = 0.75
+
+# Opening-price columns joined from the capture history (snapshot_type=open).
+# Blank for fixtures whose open has not been captured yet.
 OPEN_COLUMNS = [
-    "open_home_spread",
-    "open_away_spread",
     "open_home_odds",
+    "open_draw_odds",
     "open_away_odds",
-    "open_home_ah_ev",
-    "open_away_ah_ev",
+    "open_home_ev",
+    "open_draw_ev",
+    "open_away_ev",
     "open_last_update",
 ]
 
@@ -58,23 +78,18 @@ FULL_COLUMNS = [
     "home_win_prob",
     "draw_prob",
     "away_win_prob",
-    "home_spread",
-    "away_spread",
+    "debias_method",
     "home_odds",
+    "draw_odds",
     "away_odds",
     "bookmaker",
     "market",
     "regions",
     "last_update",
     "fetched_at",
-    "home_ah_win_prob",
-    "home_ah_push_prob",
-    "home_ah_lose_prob",
-    "home_ah_ev",
-    "away_ah_win_prob",
-    "away_ah_push_prob",
-    "away_ah_lose_prob",
-    "away_ah_ev",
+    "home_ev",
+    "draw_ev",
+    "away_ev",
     *OPEN_COLUMNS,
 ]
 
@@ -87,20 +102,15 @@ DASHBOARD_COLUMNS = [
     "home_win_prob",
     "draw_prob",
     "away_win_prob",
-    "home_spread",
-    "away_spread",
+    "debias_method",
     "home_odds",
+    "draw_odds",
     "away_odds",
     "last_update",
     "fetched_at",
-    "home_ah_win_prob",
-    "home_ah_push_prob",
-    "home_ah_lose_prob",
-    "home_ah_ev",
-    "away_ah_win_prob",
-    "away_ah_push_prob",
-    "away_ah_lose_prob",
-    "away_ah_ev",
+    "home_ev",
+    "draw_ev",
+    "away_ev",
     *OPEN_COLUMNS,
 ]
 
@@ -108,7 +118,6 @@ DASHBOARD_COLUMNS = [
 @dataclass(frozen=True)
 class ExportPaths:
     upcoming_csv: str = os.path.join(data_dashboard_csv_dir(), "upcoming_fixtures.csv")
-    simulations_csv: str = os.path.join(data_output_dir(), "CHN_team_stats_match_simulations.csv")
     pinnacle_csv: str = os.path.join(data_raw_dir(), "CHN_pinnacle_spreads.csv")
     matches_csv: str = os.path.join(data_raw_dir(), "CHN_Super League.csv")
     history_csv: str = HISTORY_CSV
@@ -141,35 +150,6 @@ def load_upcoming(path: str) -> pd.DataFrame:
     return df
 
 
-def load_simulations(path: str) -> pd.DataFrame:
-    df = _read_csv_required(
-        path,
-        ["Home Team", "Away Team", "Home Win Probability", "Draw Probability", "Away Win Probability"],
-        "CHN_team_stats_match_simulations.csv",
-    ).rename(
-        columns={
-            "Home Team": "home_team",
-            "Away Team": "away_team",
-            "Home Win Probability": "home_win_prob",
-            "Draw Probability": "draw_prob",
-            "Away Win Probability": "away_win_prob",
-        }
-    ).copy()
-    df["home_team"] = df["home_team"].astype(str).str.strip()
-    df["away_team"] = df["away_team"].astype(str).str.strip()
-    df = df[["home_team", "away_team", "home_win_prob", "draw_prob", "away_win_prob"]]
-
-    dupes = df.duplicated(subset=["home_team", "away_team"], keep=False)
-    if dupes.any():
-        duplicated_pairs = df.loc[dupes, ["home_team", "away_team"]].drop_duplicates().to_dict("records")
-        raise ValueError(f"Simulation table has duplicate home/away pairs: {duplicated_pairs}")
-
-    df[["home_win_prob", "draw_prob", "away_win_prob"]] = df[
-        ["home_win_prob", "draw_prob", "away_win_prob"]
-    ].apply(pd.to_numeric, errors="coerce")
-    return _normalize_probabilities(df)
-
-
 def load_pinnacle(path: str) -> pd.DataFrame:
     df = _read_csv_required(
         path,
@@ -178,9 +158,8 @@ def load_pinnacle(path: str) -> pd.DataFrame:
             "commence_time",
             "home_team",
             "away_team",
-            "home_spread",
-            "away_spread",
             "home_odds",
+            "draw_odds",
             "away_odds",
             "bookmaker",
             "market",
@@ -192,7 +171,7 @@ def load_pinnacle(path: str) -> pd.DataFrame:
     ).copy()
     df["home_team"] = df["home_team"].astype(str).str.strip()
     df["away_team"] = df["away_team"].astype(str).str.strip()
-    numeric_cols = ["home_spread", "away_spread", "home_odds", "away_odds"]
+    numeric_cols = ["home_odds", "draw_odds", "away_odds"]
     df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors="coerce")
 
     dupes = df.duplicated(subset=["home_team", "away_team"], keep=False)
@@ -206,22 +185,21 @@ def load_pinnacle(path: str) -> pd.DataFrame:
 OPEN_SNAPSHOT_COLUMNS = [
     "home_team",
     "away_team",
-    "open_home_spread",
-    "open_away_spread",
     "open_home_odds",
+    "open_draw_odds",
     "open_away_odds",
     "open_last_update",
 ]
 
 
 def load_open_snapshots(path: str) -> pd.DataFrame:
-    """One opening-line row per fixture from the capture history (may be empty).
+    """One opening-price row per fixture from the capture history (may be empty).
 
     Reads the append-only capture history, keeps ``snapshot_type == "open"`` rows,
     and — since a line can in principle be captured more than once — takes the
-    earliest ``fetched_at`` per fixture as the true opening line. Returns a frame
-    keyed by (home_team, away_team) with ``open_*`` spread/odds columns, or an
-    empty (correctly-columned) frame when no opens have been captured yet.
+    earliest ``fetched_at`` per fixture as the true opening prices. Returns a frame
+    keyed by (home_team, away_team) with ``open_*`` 1X2 odds columns, or an empty
+    (correctly-columned) frame when no opens have been captured yet.
     """
     hist = load_history(path)
     opens = hist[hist["snapshot_type"] == "open"] if not hist.empty else hist
@@ -231,7 +209,7 @@ def load_open_snapshots(path: str) -> pd.DataFrame:
     opens = opens.copy()
     opens["home_team"] = opens["home_team"].astype(str).str.strip()
     opens["away_team"] = opens["away_team"].astype(str).str.strip()
-    for col in ("home_spread", "away_spread", "home_odds", "away_odds"):
+    for col in ("home_odds", "draw_odds", "away_odds"):
         opens[col] = pd.to_numeric(opens[col], errors="coerce")
 
     opens = opens.sort_values("fetched_at").drop_duplicates(
@@ -239,9 +217,8 @@ def load_open_snapshots(path: str) -> pd.DataFrame:
     )
     opens = opens.rename(
         columns={
-            "home_spread": "open_home_spread",
-            "away_spread": "open_away_spread",
             "home_odds": "open_home_odds",
+            "draw_odds": "open_draw_odds",
             "away_odds": "open_away_odds",
             "last_update": "open_last_update",
         }
@@ -251,21 +228,12 @@ def load_open_snapshots(path: str) -> pd.DataFrame:
 
 def build_base_frame(
     upcoming: pd.DataFrame,
-    simulations: pd.DataFrame,
     pinnacle: pd.DataFrame,
     opens: pd.DataFrame,
     *,
     now: pd.Timestamp | None = None,
 ) -> pd.DataFrame:
-    merged = upcoming.merge(simulations, on=["home_team", "away_team"], how="left", validate="one_to_one")
-    missing_sim = merged.loc[
-        merged[["home_win_prob", "draw_prob", "away_win_prob"]].isna().any(axis=1),
-        ["fixture_id", "home_team", "away_team"],
-    ].to_dict("records")
-    if missing_sim:
-        raise ValueError(f"Missing simulation probabilities for upcoming fixtures: {missing_sim}")
-
-    merged = merged.merge(
+    merged = upcoming.merge(
         pinnacle,
         on=["home_team", "away_team"],
         how="left",
@@ -284,111 +252,113 @@ def build_base_frame(
     kickoff = pd.to_datetime(merged["kickoff_at"], utc=True, errors="coerce")
     is_upcoming = kickoff.isna() | (kickoff >= now)
     has_now = merged["event_id"].notna()
-    has_open = merged["open_home_spread"].notna()
+    has_open = merged["open_home_odds"].notna()
     keep = has_now | (has_open & is_upcoming)
     return merged[keep].copy()
 
 
-def _ah_ev(pred, side: str, spread: float, odds: float) -> float:
-    """Model expected value of one unit staked on an Asian-handicap side.
+def _grid_1x2(pred) -> tuple[float, float, float]:
+    """Aggregate a scoreline grid to normalized (home, draw, away) probabilities."""
+    grid = np.asarray(pred.grid, dtype=float)
+    n = grid.shape[0]
+    diff = np.subtract.outer(np.arange(n), np.arange(n))
+    v = np.array([grid[diff > 0].sum(), grid[diff == 0].sum(), grid[diff < 0].sum()])
+    v = v / v.sum()
+    return float(v[0]), float(v[1]), float(v[2])
 
-    EV = P(win) * (odds - 1) - P(lose); a half-win/half-lose quarter line is
-    already reflected in the win/lose split returned by ``asian_handicap_probs``.
+
+def anchored_probs(
+    raw: tuple[float, float, float],
+    open_odds: tuple[float, float, float],
+    lam: float,
+) -> tuple[float, float, float]:
+    """Market-anchored draw shrink (backtest.md §12) on raw model probabilities.
+
+    ``m_D`` is the no-vig draw probability implied by the opening 1X2 prices;
+    the draw moves λ of the way to it and the freed mass goes back to H/A
+    pro-rata, preserving their relative strength.
     """
-    probs = pred.asian_handicap_probs(side, float(spread))
-    return float(probs["win"]) * (float(odds) - 1.0) - float(probs["lose"])
+    p_h, p_d, p_a = raw
+    inv = np.array([1.0 / o for o in open_odds])
+    m_d = float(inv[1] / inv.sum())
+    p_d_new = (1.0 - lam) * p_d + lam * m_d
+    scale = (1.0 - p_d_new) / (1.0 - p_d)
+    return p_h * scale, p_d_new, p_a * scale
 
 
-def attach_market_probabilities(frame: pd.DataFrame, matches_csv: str, xi: float) -> pd.DataFrame:
+def attach_model_probabilities(
+    frame: pd.DataFrame, matches_csv: str, xi: float, lam: float = DEBIAS_LAMBDA
+) -> pd.DataFrame:
     clf = fit_dixon_coles_model_from_csv(matches_csv, xi=xi)
     out = frame.copy()
 
-    has_open = "open_home_spread" in out.columns
-
-    home_win_probs: list[float] = []
-    home_push_probs: list[float] = []
-    home_lose_probs: list[float] = []
-    away_win_probs: list[float] = []
-    away_push_probs: list[float] = []
-    away_lose_probs: list[float] = []
-    open_home_evs: list[float] = []
-    open_away_evs: list[float] = []
-
     nan = float("nan")
+    probs_h: list[float] = []
+    probs_d: list[float] = []
+    probs_a: list[float] = []
+    methods: list[str] = []
+
     for row in out.itertuples(index=False):
-        pred = clf.predict(row.home_team, row.away_team)
+        open_odds = (row.open_home_odds, row.open_draw_odds, row.open_away_odds)
+        try:
+            if all(pd.notna(o) and float(o) > 1.0 for o in open_odds):
+                raw = _grid_1x2(clf.predict_raw(row.home_team, row.away_team))
+                p = anchored_probs(raw, tuple(float(o) for o in open_odds), lam)
+                method = "market_anchor"
+            else:
+                p = _grid_1x2(clf.predict(row.home_team, row.away_team))
+                method = "delta"
+        except Exception as exc:
+            raise ValueError(
+                f"Model prediction failed for {row.home_team} vs {row.away_team}: {exc}"
+            ) from exc
+        probs_h.append(p[0])
+        probs_d.append(p[1])
+        probs_a.append(p[2])
+        methods.append(method)
 
-        # Now-side settlement probs only exist where a current Now line does; an
-        # open-only fixture has no Now handicap yet, so leave these NaN (rendered "--").
-        if pd.notna(row.home_spread) and pd.notna(row.away_spread):
-            home_probs = pred.asian_handicap_probs("home", float(row.home_spread))
-            away_probs = pred.asian_handicap_probs("away", float(row.away_spread))
-            home_win_probs.append(float(home_probs["win"]))
-            home_push_probs.append(float(home_probs["push"]))
-            home_lose_probs.append(float(home_probs["lose"]))
-            away_win_probs.append(float(away_probs["win"]))
-            away_push_probs.append(float(away_probs["push"]))
-            away_lose_probs.append(float(away_probs["lose"]))
-        else:
-            home_win_probs.append(nan)
-            home_push_probs.append(nan)
-            home_lose_probs.append(nan)
-            away_win_probs.append(nan)
-            away_push_probs.append(nan)
-            away_lose_probs.append(nan)
+    out["home_win_prob"] = probs_h
+    out["draw_prob"] = probs_d
+    out["away_win_prob"] = probs_a
+    out["debias_method"] = methods
 
-        # Open EV at the captured opening line, reusing the same fitted model.
-        # Left as NaN for fixtures whose open line hasn't been captured.
-        if has_open:
-            oh_spread = getattr(row, "open_home_spread", None)
-            oh_odds = getattr(row, "open_home_odds", None)
-            oa_spread = getattr(row, "open_away_spread", None)
-            oa_odds = getattr(row, "open_away_odds", None)
-            open_home_evs.append(
-                _ah_ev(pred, "home", oh_spread, oh_odds)
-                if pd.notna(oh_spread) and pd.notna(oh_odds) else float("nan")
-            )
-            open_away_evs.append(
-                _ah_ev(pred, "away", oa_spread, oa_odds)
-                if pd.notna(oa_spread) and pd.notna(oa_odds) else float("nan")
-            )
+    # EV per outcome, consistent with the row's (de-biased) probabilities.
+    for side, prob_col in (("home", "home_win_prob"), ("draw", "draw_prob"), ("away", "away_win_prob")):
+        now_odds = pd.to_numeric(out[f"{side}_odds"], errors="coerce")
+        open_odds_col = pd.to_numeric(out[f"open_{side}_odds"], errors="coerce")
+        out[f"{side}_ev"] = np.where(now_odds.notna(), out[prob_col] * now_odds - 1.0, nan)
+        out[f"open_{side}_ev"] = np.where(open_odds_col.notna(), out[prob_col] * open_odds_col - 1.0, nan)
 
-    out["home_ah_win_prob"] = home_win_probs
-    out["home_ah_push_prob"] = home_push_probs
-    out["home_ah_lose_prob"] = home_lose_probs
-    out["away_ah_win_prob"] = away_win_probs
-    out["away_ah_push_prob"] = away_push_probs
-    out["away_ah_lose_prob"] = away_lose_probs
-    out["home_ah_ev"] = (
-        out["home_ah_win_prob"] * (out["home_odds"] - 1.0)
-        - out["home_ah_lose_prob"]
-    )
-    out["away_ah_ev"] = (
-        out["away_ah_win_prob"] * (out["away_odds"] - 1.0)
-        - out["away_ah_lose_prob"]
-    )
-    if has_open:
-        out["open_home_ah_ev"] = open_home_evs
-        out["open_away_ah_ev"] = open_away_evs
     return out
 
 
-def validate_market_probabilities(frame: pd.DataFrame) -> None:
-    # Now-side settlement probs/EV only exist for fixtures with a current Now line;
-    # open-only rows legitimately carry NaN there, so restrict these checks to Now rows.
-    now = frame[frame["event_id"].notna()]
-    for prefix in ("home_ah", "away_ah"):
-        cols = [f"{prefix}_win_prob", f"{prefix}_push_prob", f"{prefix}_lose_prob"]
-        if now[cols].isna().any(axis=1).any():
-            bad = now.loc[now[cols].isna().any(axis=1), ["fixture_id", "home_team", "away_team"]].to_dict("records")
-            raise ValueError(f"Missing {prefix} settlement probabilities: {bad}")
-        total = now[cols].sum(axis=1)
-        if not ((total - 1.0).abs() <= 1e-6).all():
-            bad = now.loc[(total - 1.0).abs() > 1e-6, ["fixture_id", "home_team", "away_team"]].to_dict("records")
-            raise ValueError(f"{prefix} settlement probabilities do not sum to 1: {bad}")
-    for col in ("home_ah_ev", "away_ah_ev"):
-        if now[col].isna().any():
-            bad = now.loc[now[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
+def validate_model_probabilities(frame: pd.DataFrame) -> None:
+    prob_cols = ["home_win_prob", "draw_prob", "away_win_prob"]
+    if frame[prob_cols].isna().any(axis=1).any():
+        bad = frame.loc[frame[prob_cols].isna().any(axis=1), ["fixture_id", "home_team", "away_team"]].to_dict("records")
+        raise ValueError(f"Missing model 1X2 probabilities: {bad}")
+    total = frame[prob_cols].sum(axis=1)
+    if not ((total - 1.0).abs() <= 1e-6).all():
+        bad = frame.loc[(total - 1.0).abs() > 1e-6, ["fixture_id", "home_team", "away_team"]].to_dict("records")
+        raise ValueError(f"Model 1X2 probabilities do not sum to 1: {bad}")
+    if ((frame[prob_cols] <= 0) | (frame[prob_cols] >= 1)).any(axis=1).any():
+        bad = frame.loc[
+            ((frame[prob_cols] <= 0) | (frame[prob_cols] >= 1)).any(axis=1),
+            ["fixture_id", "home_team", "away_team"],
+        ].to_dict("records")
+        raise ValueError(f"Model 1X2 probabilities out of (0, 1): {bad}")
+
+    # Now-side EVs must exist exactly where a current Now line does; open-side
+    # EVs exactly where an opening capture does.
+    now_rows = frame[frame["event_id"].notna()]
+    for col in ("home_ev", "draw_ev", "away_ev"):
+        if now_rows[col].isna().any():
+            bad = now_rows.loc[now_rows[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
+            raise ValueError(f"Missing EV values in {col}: {bad}")
+    open_rows = frame[frame["open_home_odds"].notna()]
+    for col in ("open_home_ev", "open_draw_ev", "open_away_ev"):
+        if open_rows[col].isna().any():
+            bad = open_rows.loc[open_rows[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
             raise ValueError(f"Missing EV values in {col}: {bad}")
 
 
@@ -401,23 +371,22 @@ def write_csv(df: pd.DataFrame, path: str) -> None:
 def run(
     *,
     upcoming_csv: str,
-    simulations_csv: str,
     pinnacle_csv: str,
     matches_csv: str,
     history_csv: str,
     full_out_csv: str,
     dashboard_out_csv: str,
     xi: float,
+    lam: float = DEBIAS_LAMBDA,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     upcoming = load_upcoming(upcoming_csv)
-    simulations = load_simulations(simulations_csv)
     pinnacle = load_pinnacle(pinnacle_csv)
 
     opens = load_open_snapshots(history_csv)
-    base = build_base_frame(upcoming, simulations, pinnacle, opens)
+    base = build_base_frame(upcoming, pinnacle, opens)
     n_now = int(base["event_id"].notna().sum())
-    n_open = int(base["open_home_spread"].notna().sum())
-    n_open_only = int((base["event_id"].isna() & base["open_home_spread"].notna()).sum())
+    n_open = int(base["open_home_odds"].notna().sum())
+    n_open_only = int((base["event_id"].isna() & base["open_home_odds"].notna()).sum())
     log.info(
         "Comparison fixtures: %d of %d upcoming (%d with Now line, %d with open line, %d open-only)",
         len(base), len(upcoming), n_now, n_open, n_open_only,
@@ -431,8 +400,14 @@ def run(
         write_csv(dashboard_df, dashboard_out_csv)
         return full_df, dashboard_df
 
-    enriched = attach_market_probabilities(base, matches_csv, xi)
-    validate_market_probabilities(enriched)
+    enriched = attach_model_probabilities(base, matches_csv, xi, lam)
+    validate_model_probabilities(enriched)
+    log.info(
+        "De-bias split: %d market_anchor (λ=%.2f), %d delta fallback",
+        int((enriched["debias_method"] == "market_anchor").sum()),
+        lam,
+        int((enriched["debias_method"] == "delta").sum()),
+    )
 
     full_df = enriched[FULL_COLUMNS].copy()
     dashboard_df = enriched[DASHBOARD_COLUMNS].copy()
@@ -445,10 +420,9 @@ def run(
 def main() -> None:
     paths = ExportPaths()
     parser = argparse.ArgumentParser(
-        description="Export upcoming CSL fixtures with model probabilities and Pinnacle market comparison"
+        description="Export upcoming CSL fixtures with de-biased model 1X2 probabilities and Pinnacle moneyline comparison"
     )
     parser.add_argument("--upcoming", default=paths.upcoming_csv, help="Path to upcoming_fixtures.csv")
-    parser.add_argument("--simulations", default=paths.simulations_csv, help="Path to CHN_team_stats_match_simulations.csv")
     parser.add_argument("--pinnacle", default=paths.pinnacle_csv, help="Path to CHN_pinnacle_spreads.csv")
     parser.add_argument("--matches", default=paths.matches_csv, help="Path to CHN_Super League.csv")
     parser.add_argument("--history", default=paths.history_csv, help="Path to CHN_pinnacle_spreads_history.csv")
@@ -459,18 +433,20 @@ def main() -> None:
         help="Path to dashboard comparison CSV output",
     )
     parser.add_argument("--xi", type=float, default=MODEL_XI, help="Dixon-Coles time-decay factor")
+    parser.add_argument("--lam", type=float, default=DEBIAS_LAMBDA,
+                        help="Market-anchored draw shrink weight λ (default: 0.75, backtest.md §12)")
     args = parser.parse_args()
 
     try:
         run(
             upcoming_csv=args.upcoming,
-            simulations_csv=args.simulations,
             pinnacle_csv=args.pinnacle,
             matches_csv=args.matches,
             history_csv=args.history,
             full_out_csv=args.out,
             dashboard_out_csv=args.dashboard_out,
             xi=args.xi,
+            lam=args.lam,
         )
     except Exception as exc:  # pragma: no cover - top-level CLI guard
         log.error("%s", exc)
