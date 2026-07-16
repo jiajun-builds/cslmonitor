@@ -1,4 +1,4 @@
-"""Append-only history store for captured Pinnacle 1X2 (moneyline) snapshots.
+"""Append-only history store for captured Pinnacle 1X2 (h2h) snapshots.
 
 Phase 1 of the scheduled odds-capture pipeline (AGENTS.md roadmap #2; switched
 from spreads to 1X2 in roadmap #10). The single-shot fetch in

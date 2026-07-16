@@ -1,11 +1,11 @@
 """
-Fetch Chinese Super League Pinnacle 1X2 (moneyline) odds from The Odds API.
+Fetch Chinese Super League Pinnacle 1X2 (h2h) odds from The Odds API.
 
 Roadmap #10: the Asian-handicap route was falsified in backtest (winner's curse,
 backtest.md §9), so this fetch requests the ``h2h`` market — home/draw/away prices
-— instead of ``spreads``. The stored ``market`` label is "moneyline". Module and
-output filenames keep their historical "spreads" names so workflows and downstream
-paths stay stable.
+— instead of ``spreads``. The stored ``market`` label is "h2h" (aligned with the API
+market key). Module and output filenames keep their historical "spreads" names so
+workflows and downstream paths stay stable.
 
 This fetch is restricted to pre-match upcoming fixtures only. Live matches are
 excluded by requesting odds for the league sport key and applying
@@ -37,10 +37,11 @@ from csl.paths import data_output_dir, data_raw_dir
 THE_ODDS_API_BASE_URL = "https://api.the-odds-api.com/v4"
 ODDS_SPORT_KEY = "soccer_china_superleague"
 BOOKMAKER = "pinnacle"
-# The Odds API market key for 1X2 prices; stored rows use MARKET_LABEL instead
-# so the history CSV reads naturally ("moneyline") regardless of API naming.
+# The Odds API market key for 1X2 prices. Stored rows use the same "h2h" label so
+# the history CSV's ``market`` column aligns with the API's market key (roadmap #10
+# follow-up: switched from the earlier "moneyline" label per user request).
 MARKET = "h2h"
-MARKET_LABEL = "moneyline"
+MARKET_LABEL = "h2h"
 DEFAULT_REGIONS = "us"
 
 # Books stored at every open-window capture (roadmap #8 recon). Pinnacle is the
@@ -377,7 +378,7 @@ def run(*, out_path: str, regions: str) -> pd.DataFrame:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Fetch CSL Pinnacle 1X2 (moneyline) odds from The Odds API and export CSV"
+        description="Fetch CSL Pinnacle 1X2 (h2h) odds from The Odds API and export CSV"
     )
     parser.add_argument(
         "--out",
