@@ -55,11 +55,19 @@ from csl.odds.snapshot_store import DEDUP_KEY, HISTORY_CSV, append_snapshots, lo
 # lists fixtures in waves, so a fixture's feed entry (or Pinnacle's posted line) can
 # appear only AFTER the validated 1h open window has closed; with a 1h capture bound
 # such a fixture is never seen inside its window and its opening line is lost forever
-# (observed on round 18: Shanghai Port vs Dalian Yingbo). Widening only the lower..upper
-# *capture* bound to [anchor, anchor + this] lets a still-uncaptured fixture be grabbed
-# on first feed availability after its window, while the bound keeps a long-open line
-# from being mislabeled `open`. The calendar/display still uses the true 1h prediction.
-DEFAULT_CAPTURE_WINDOW_HOURS = 6.0
+# (observed on round 18: Shanghai Port vs Dalian Yingbo). Widening the *capture* bound
+# to [anchor, min(anchor + this, kickoff)] lets a still-uncaptured fixture be grabbed
+# on first feed availability after its window, at 10-min freshness.
+#
+# 6h → 12h (2026-07-16): 6h still missed opens that posted later (user-reported). 12h
+# is essentially free in the normal case — a fixture is captured ~1h after its anchor
+# and drops out immediately, so the wider bound only keeps polling for genuinely-late
+# opens, which is the point. A late open costs ~1 credit per 10-min tick until it
+# posts, so the bound stays finite rather than running to kickoff; anything later than
+# 12h (or missed while the 10-min workflow was cron-throttled, or a fixture with no
+# schedulable anchor) is caught quota-free by the 3h Now-refresh fallback
+# (csl.odds.backfill_open). opening_calendar caps open_to at kickoff either way.
+DEFAULT_CAPTURE_WINDOW_HOURS = 12.0
 
 # The book whose opening line defines "captured" (roadmap #8). Since that roadmap
 # item the tick STORES every book in CAPTURE_BOOKMAKERS (same 1-credit cost), but the

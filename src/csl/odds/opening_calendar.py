@@ -192,6 +192,12 @@ def build_open_windows(
             else:
                 anchor = max(home_prev[0], away_prev[0])
 
+            # Cap the window at kickoff: an "open" captured after kickoff is not an
+            # opening line (the fixture also drops out of the pre-match feed then), and
+            # leaving open_to past kickoff would make a never-captured fixture stay
+            # "pending" after kickoff and burn a credit on every tick for nothing.
+            open_to = min(anchor + window, kickoff) if anchor else None
+
             windows.append(
                 OpenWindow(
                     round=round_str,
@@ -202,7 +208,7 @@ def build_open_windows(
                     away_prev=away_prev,
                     anchor=anchor,
                     open_from=anchor,
-                    open_to=(anchor + window) if anchor else None,
+                    open_to=open_to,
                     note=note,
                 )
             )

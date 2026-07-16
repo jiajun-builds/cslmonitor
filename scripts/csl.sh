@@ -72,12 +72,20 @@ run_dashboard() {
 run_odds() {
   csl_require_env THE_ODDS_API_KEY || return 1
   "$PYTHON" -m csl.odds.fetch_pinnacle_spreads
+  # Zero-quota safety net: record a fallback opening line for any fixture that has a
+  # Now line but no captured open and whose 10-min capture window has closed. Reuses
+  # the Now-line CSV just fetched above (no extra /odds request).
+  "$PYTHON" -m csl.odds.backfill_open
   "$PYTHON" -m csl.odds.export_upcoming_market_comparison
 }
 
 run_odds_fetch() {
   csl_require_env THE_ODDS_API_KEY || return 1
   "$PYTHON" -m csl.odds.fetch_pinnacle_spreads
+}
+
+run_backfill_open() {
+  "$PYTHON" -m csl.odds.backfill_open
 }
 
 run_market_comparison() {
@@ -125,6 +133,7 @@ EOF
   run_timed_phase "STEP 1/6" "Data Update" "./scripts/run_csl_update.sh" run_update
   run_timed_phase "STEP 2/6" "Model Export" "./scripts/csl-model.sh" run_model
   run_timed_phase "STEP 3/6" "Odds Fetch" "python -m csl.odds.fetch_pinnacle_spreads" run_odds_fetch
+  run_timed_phase "STEP 3b/6" "Fallback Open Backfill" "python -m csl.odds.backfill_open" run_backfill_open
   run_timed_phase "STEP 4/6" "Market Comparison Export" "python -m csl.odds.export_upcoming_market_comparison" run_market_comparison
   run_timed_phase "STEP 5/6" "Dashboard Export" "python -m csl.dashboard.export_dashboard_csv && python -m csl.dashboard.export_dashboard_json" run_dashboard
   run_timed_phase "STEP 6/6" "Publish Site" "./scripts/build_dashboard_site.sh" run_site_build

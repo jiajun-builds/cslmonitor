@@ -212,6 +212,7 @@ Scenario matrix (behaviour reflects the gated `publish` job + 6h capture window,
 - odds-capture history store (append-only): `src/csl/odds/snapshot_store.py`
 - single-shot snapshot capture: `src/csl/odds/capture_snapshot.py` (`python -m csl.odds.capture_snapshot`)
 - scheduler tick (captures opening lines in-window): `src/csl/odds/capture_scheduler.py` (`python -m csl.odds.capture_scheduler`)
+- fallback open backfill (zero-quota safety net in the 3h refresh — records a missed open from the current Now line): `src/csl/odds/backfill_open.py` (`python -m csl.odds.backfill_open --dry-run`)
 - canonical path helpers: `src/csl/paths.py`
 
 ## Important Data Paths
@@ -463,6 +464,25 @@ less beats predicting better.** See roadmap #8.
      once the feed drops them. Now-side probs/EV are left NaN for open-only rows and
      `validate_market_probabilities` skips them; `getBestBet` in `app.js` treats a null Now EV
      as NaN so an open-only fixture is never chosen as the best bet.
+   - **Open published outside the capture window — FIXED (2026-07-16, user-reported double
+     fix).** Even at 6h the capture window still missed opens that Pinnacle posted later
+     (or that the 10-min GitHub cron skipped, or fixtures with no schedulable anchor), which
+     surfaced as "dashboard shows current odds but no opening odds." Two layers now:
+     (a) *Widened + kickoff-capped window* — `DEFAULT_CAPTURE_WINDOW_HOURS` 6h → 12h, and
+     `opening_calendar.build_open_windows` caps `open_to = min(anchor+window, kickoff)` so a
+     never-captured fixture stops being "pending" at kickoff instead of burning a credit per
+     tick afterward. Widening is ~free normally (a fixture is captured ~1h after anchor and
+     drops out; the wider bound only keeps polling genuinely-late opens).
+     (b) *Zero-quota safety net* — `csl.odds.backfill_open`, run inside the every-3h Now-line
+     refresh (`scripts/csl.sh odds`/`all`, reusing the fetch already made), records the
+     current Pinnacle line as a fallback `open` for any fixture with a Now line but no
+     captured open **whose capture window has already closed** (or that has no anchor). The
+     window-closed guard lets the 10-min capture keep first crack at a fresher open; only real
+     misses are backfilled (`capture_reason="now-refresh fallback (open window missed)"`).
+     This makes "Now line without an open" impossible: anything the 10-min path misses is
+     caught at 3h granularity for free. Consequence: the odds-mode refresh now *can* append to
+     the history CSV (append-only + dedup, rebases cleanly against `capture-odds.yml`), so
+     `csl-refresh.yml` stages the history CSV in odds mode — it is no longer capture-only.
 
 7. **Date-parse bug in `model comparison/` scripts — FIXED (2026-07-12).** A naive
    `pd.to_datetime(df["Date"], errors="coerce")` is correct on ISO `YYYY-MM-DD` but on

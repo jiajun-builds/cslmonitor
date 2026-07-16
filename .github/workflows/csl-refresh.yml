@@ -7,8 +7,11 @@ name: CSL Refresh
 # share the cached conda env and one commit/push path. Pages redeploys after either
 # mode via deploy-pages.yml's workflow_run chain (keyed on this workflow's name).
 #
-# The odds mode does NOT touch the append-only history CSV — capture-odds.yml stays
-# the sole writer of opening lines. See AGENTS.md roadmap #2/#3.
+# The odds mode's Now-line fetch also runs a zero-quota fallback open backfill
+# (csl.odds.backfill_open): any fixture with a Now line but no captured open whose
+# 10-min capture window has closed gets its current line stored as a fallback open.
+# So the odds mode CAN append to the history CSV (append-only, dedup-guarded) — it is
+# no longer strictly capture-odds.yml-only. See AGENTS.md roadmap #2/#3/#6.
 
 on:
   workflow_dispatch:
@@ -121,9 +124,11 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$MODE" = "odds" ]; then
-            # Stage only the intraday odds outputs; never the append-only history CSV
-            # (capture-odds.yml owns that file).
+            # Stage the intraday odds outputs, plus the history CSV — the odds mode now
+            # runs the zero-quota fallback open backfill, which may append opening-line
+            # rows (append-only + dedup, so it rebases cleanly against capture-odds.yml).
             git add data/raw_data/CHN_pinnacle_spreads.csv \
+                    data/raw_data/CHN_pinnacle_spreads_history.csv \
                     data/output_data/CHN_upcoming_market_comparison.csv \
                     data/dashboard
             MSG="chore(odds): 3h Now-line refresh"
