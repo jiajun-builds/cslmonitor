@@ -22,6 +22,9 @@ Files in this folder:
 | `backtest_1x2_negbinom_delta_bets.csv` | Per-bet detail from the §12.4 market-free δ calibration (the deployed mechanism). |
 | `backtest_1xbet.py` | Bets 1xBet's **opening** 1X2, grades CLV vs Pinnacle's **close** — the roadmap #8 cheaper-book test (§13.1). |
 | `anchor_test.py` | Is Pinnacle or 1xBet the better de-bias anchor? (§13.2). |
+| `plot_bankroll.py` | 0.25-Kelly bankroll chart for the recommended config (§13.4). |
+| `bankroll_recommended.png` | Output of the above — bankroll $100 → $445, 3 seasons. |
+| `staking_compare.py` / `staking_compare.png` | Kelly vs flat vs compound-fixed-fraction staking (§13.5). |
 | `backtest.md` | This document. |
 
 > **§9–§12 are the current handoff.** §1–§8 are the original opening-line AH
@@ -777,3 +780,153 @@ realized settlement at a real 1xBet account. The live task remains roadmap #8: a
 (and optionally Betfair) to tighten, holding the two guardrails — **excess CLV over the
 §11.3 baseline**, measured against the **§11.7 `p × R` bar** — and, before any real
 staking, confirm the edge survives as *realized* ROI over more than one season.
+
+### 13.4 Deep-dive: the strategy grid, the odds cap, and the recommended config (2026-07-17)
+
+§13.1–13.3 established row 7 as the one live result. This section drills into *which
+cell* of it to actually bet, by sweeping the full grid (6 model variants × with/no-draw
+× EV thr ∈ {0.10…0.40}) on the cached walk-forward predictions and stress-testing the
+survivors with a per-season bootstrap and an odds slice. Three findings.
+
+**(a) thr>0.20 is the usable floor, not the peak — gap rises monotonically with
+selectivity.** For λ=0.75 (with-draw), pooled gap and the *worst* single season:
+
+| EV thr | n | pooled gap | min-season gap | bootstrap P(gap>0 all 3 seasons) |
+| ---: | ---: | ---: | ---: | ---: |
+| >0.10 | 235 | +0.91 | **−0.68** (2026 flips) | — |
+| >0.20 | 114 | +2.16 | +1.18 | 75% |
+| >0.25 | 77 | +2.67 | +0.53 | 56% (a noise dip — 2026 thins) |
+| >0.30 | 59 | +4.14 | +3.36 | **92%** |
+
+thr>0.30 is cleaner per-season but n=59 (2026 only 10 bets), too thin to lean on; thr>0.20
+is the balance of "still cross-season-significant" and "enough bets to trust." The 0.25
+dip confirms the boundary itself is noisy — **do not treat 0.20 as a fitted magic
+number**; it is a region.
+
+**(b) An odds≤7 cap is a free improvement.** At λ=0.75 · thr>0.20, 14 of the 114 picks sit
+at odds ≥ 7. That long-shot tail is the worst slice in the whole book (win 7%, ROI −37%,
+exCLV +1.35, gap +0.75 — the least edge). Dropping it (n=114→100):
+
+| | n | exCLV (t) | gap | 2024 / 2025 / 2026 gap | 2025 flat ROI |
+| --- | ---: | ---: | ---: | --- | ---: |
+| no cap | 114 | +3.52 (4.8) | +2.16 | +2.11 / +2.81 / +1.18 | −18.4% |
+| **odds≤7** | 100 | **+3.83 (4.7)** | **+2.35** | +2.43 / +3.09 / +1.18 | **−9.8%** |
+
+Every season's gap improves and 2025's realized loss nearly halves — the cap strips
+variance, not edge. The signal lives in the odds 1.5–7 mainstream, not the tail.
+
+**(c) with-draw ≈ no-draw once de-biased.** Under λ=0.75 · thr>0.20 the two rules differ by
+**2 bets** out of 114 (both are genuine +EV draws that survive the de-bias, CLV +1.9 and
++6.8pp). And 72 of raw·no-draw's 88 picks are the identical fixture+pick as λ=0.75's — one
+edge, three filters (§13.1). So the draw axis is no longer a real choice: **keep draws
+eligible and let the de-biased model decide** (or use no-draw — indistinguishable here).
+
+**Recommended live config (if/when betting):** 1xBet open · NegBinom + **λ=0.75** (or
+production **δ**) · max-EV, draws eligible · **EV > 0.20** · **pick-odds ≤ 7** · **≤0.25-
+Kelly**. On this walk-forward that is n=100, exCLV +3.83pp (t=4.7), gap +2.35pp, positive
+in every season; a $100 bankroll compounds to **$445** at 0.25-Kelly with a −28% max
+drawdown (`backtest/bankroll_recommended.png`, from `backtest/plot_bankroll.py`).
+
+![0.25-Kelly bankroll, recommended config](bankroll_recommended.png)
+
+**The 2025 caveat, restated because it is the point.** 2025 realized **−9.8% flat per-bet
+ROI** (the odds cap lifts it from row 7's −24%) on the set with the *strongest* excess CLV
+of the three seasons (+4.6pp, t≈3) — the Kelly path only ends 2025 up (+18% compounded)
+because of bet ordering, which is luck, not edge. Per-bet ROI t-stats stay ≈1 and go
+negative; excess-CLV / gap t-stats are 2.7–4.7 every season. **Judge and size by exCLV /
+gap, never by a season's ROI or a bankroll curve** — the curve is one lucky ordering of a
+high-variance process, and the grid on real settlement (not Pinnacle's close) is still
+unmeasured. The chart is a variance illustration, not a promise.
+
+### 13.5 Staking-scheme comparison — Kelly vs flat vs compound fixed-fraction (2026-07-17)
+
+Same 100 bets, same edge, `$100` start; only the staking rule varies. "Week" = one CSL
+matchday `(Season, Round)`; 100 bets span 56 weeks. maxDD is peak-to-trough on the
+after-bet equity curve (`backtest/staking_compare.py`).
+
+| Scheme | rule | final | multiple | max drawdown |
+| --- | --- | ---: | ---: | ---: |
+| **M1 fractional Kelly** | stake = 0.25·Kelly·bankroll, per bet | **$445** | ×4.45 | **28%** |
+| M3 compound fixed-fraction | 5% of bankroll, rebalanced each week | $297 | ×2.97 | **42%** |
+| M2 flat unit | $5 fixed (5% of the *initial* bank), never recompounded | $236 | ×2.36 | 27% |
+| — 0.50-Kelly (aggression ref) | stake = 0.50·Kelly·bankroll, per bet | $1184 | ×11.8 | ~51% |
+
+![Staking schemes compared](staking_compare.png)
+
+Three points:
+
+- **0.5-Kelly doubles the money and doubles the pain.** $445 → $1184, but max drawdown
+  28% → ~51% (both drawdown figures move ±2pp with within-day bet ordering). Half-Kelly is
+  growth-optimal in theory; on a 100-bet sample graded against a *proxy* close it is a way
+  to get wiped by variance you can't yet trust. Not recommended over 0.25 here.
+- **M1 (Kelly) dominates M2/M3 on risk-adjusted terms.** It ends highest *and* its drawdown
+  (28%) is no worse than flat betting's (27%), because Kelly sizes **down** on low-edge /
+  long-odds bets that the fixed 5% over-bets. M3's flat 5% fraction ignores edge size, so it
+  over-bets the marginal bets and rides a **deeper 42% drawdown to a lower $297** — betting
+  above the Kelly-optimal fraction is the classic "more risk, less growth" trap.
+- **M2 (flat $5) is the floor-risk option.** Because the stake never grows with the bank, it
+  compounds linearly, ends lowest ($236), but its late drawdowns are trivial in percentage
+  terms — the ride is the smoothest. It is the right choice only if you value a bounded
+  dollar stake over growth (e.g. while validating live execution).
+
+All three ride the same 2025 dip (bets ~55–75) — the drawdowns are the same losing streak
+scaled by aggression, not three different risks. The staking rule sets the *risk/growth
+trade-off*; it does **not** change the edge, and none of it substitutes for confirming that
+edge as realized ROI (§13.4). Recommended: **0.25-Kelly** (or M2 flat $5 during a live
+trial), never above half-Kelly, on the §13.4 bet config.
+
+### 13.6 Which book anchors the draw de-bias? Pinnacle vs 1xBet — pre-registered (2026-07-17)
+
+Production (dashboard v2.7) bets the 1xBet open but anchors the λ=0.75 draw shrink on
+**Pinnacle's** open, not 1xBet's — "de-bias against the sharp reference, bet the cheap
+line." §13.1–13.4 validated only the 1xBet-self-anchor. This section runs the missing
+cell as a **pre-registered** experiment (`backtest_1xbet.py`, variant
+`pinnacle_anchor`, `compare_anchors`): both variants differ *only* in the anchor book —
+same bet price (1xBet open), same CLV reference (Pinnacle close), same n. Coverage is
+100% (every bettable 1xBet-open fixture also has a Pinnacle open), so the two run on the
+identical batch with no sample confound.
+
+**Head-to-head, λ=0.75, with-draw, thr>0.20 (n=611 fixtures):**
+
+| anchor | bets | draws | exCLV (t) | gap | 2024 / 2025 / 2026 gap | boot P(all +) |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| 1xBet-open | 114 | 2 | +3.52 (4.83) | +2.16 | +2.11 / +2.81 / +1.18 | 0.77 |
+| **Pinnacle-open** | 125 | 9 | **+3.35 (4.83)** | **+2.02** | +2.40 / +2.48 / +0.68 | 0.68 |
+
+**Pre-registered acceptance criteria (all PASS → adopt Pinnacle anchor):**
+
+- **A. Main bar** — exCLV t ≥ 2.0 and gap>0 every season. Pinnacle: t=**4.83**, per-season
+  gap **+2.40 / +2.48 / +0.68** (all positive). **PASS.**
+- **B. Non-inferior to 1xBet anchor** — Pinnacle gap ≥ 1xBet gap − 0.5pp. +2.02 ≥
+  2.16 − 0.5 = 1.66. **PASS** (the two are statistically the same gap).
+- **C. Extra draws aren't noise** — on the disagreement subset (n=77, ≈all draws) the
+  Pinnacle pick's exCLV must be ≥ 0: **+0.04pp** (the 1xBet anchor's alternative pick
+  there is **−1.42pp**). Sharper, bet-level: the 9 draws Pinnacle actually bets carry
+  exCLV **+1.70pp** (t=1.25) / gap **+0.74pp**. **PASS.**
+- **D. Beats model-free** — exCLV is CLV over the §11.3 baseline by construction;
+  +3.35pp (t=4.83) > 0. **PASS.**
+- **E. Coverage** — Pinnacle-open availability ≥ 1xBet-open. 100% = 100%. **PASS.**
+
+**Why the two are near-identical, confirmed by the pick agreement:** the anchors agree on
+**100% of H/A picks (384/384)** — H/A is ~98% of bets and *all* of the edge, and it is
+byte-identical between anchors. The only difference is the draw: the Pinnacle anchor,
+comparing a sharp reference draw against 1xBet's price (an honest cross-book comparison),
+releases **9 draw bets vs 2** (168 vs 209 draws at the argmax level). Those extra draws
+are collectively **neutral-to-mildly-positive** (bet-level exCLV +1.70pp, wide CI) — not a
+new edge, but not noise either, matching §13.4's "with-draw ≈ no-draw" exactly. This is the
+mechanism prediction confirmed: swapping the anchor moves nothing on H/A and only lets a
+few honestly-de-biased draws through.
+
+**Honest caveat:** the Pinnacle anchor's edge concentrates its weakest season in 2026
+(gap +0.68, boot 0.68 vs the 1xBet anchor's +1.18 / 0.77) — the extra draws dilute the
+thin (30-bet) 2026 season slightly. It still clears criterion A (all seasons +), but the
+2026 margin is slim. If one wanted to drop the unvalidated draws entirely, the Pinnacle
+anchor **no-draw** is the cleanest cut (pooled gap +2.11, per-season +2.50 / +2.52 / +0.82,
+exCLV t=4.71) — indistinguishable from with-draw, per criterion C.
+
+**Verdict:** adopt the **Pinnacle-open anchor** (A·B·C·D·E all pass) — the config already
+shipped in v2.7. The choice is vindicated on quality grounds (sharper reference, one
+coherent probability across the prediction surface, honest cross-book draw comparison, and
+equal data coverage) while being *measurably* non-inferior on the betting bar. The odds≤7
+cap (§13.4b) is orthogonal — it applies identically to both anchors — and stays in the
+production config.

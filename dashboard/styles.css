@@ -773,19 +773,26 @@ th,
 .signal-table th:nth-child(2),
 .signal-table td:nth-child(2) { width: 33%; }   /* Outcome */
 .signal-table th:nth-child(3),
-.signal-table td:nth-child(3) { width: 12%; }   /* Prob */
+.signal-table td:nth-child(3) { width: 13%; }   /* Prob */
 .signal-table th:nth-child(4),
 .signal-table td:nth-child(4) { width: 13%; }   /* 1xBet Open */
 .signal-table th:nth-child(5),
-.signal-table td:nth-child(5) { width: 12%; }   /* EV */
+.signal-table td:nth-child(5) { width: 13%; }   /* EV */
 .signal-table th:nth-child(6),
-.signal-table td:nth-child(6) { width: 23%; }   /* Signal */
+.signal-table td:nth-child(6) { width: 21%; }   /* Signal */
 
 /* Keep every header on a single line so column labels align uniformly. */
 .signal-table th {
   white-space: nowrap;
   vertical-align: bottom;
   letter-spacing: 0.04em;
+}
+
+/* Numeric headers must right-align to sit over their right-aligned data — the
+   base `.terminal-table th` left-align (higher specificity) otherwise wins and
+   the Prob / 1xBet Open / EV labels drift left of their columns. */
+.signal-table th.numeric {
+  text-align: right;
 }
 
 .signal-table__action-col {
@@ -810,32 +817,17 @@ th,
   color: hsl(var(--term-dim));
 }
 
-.signal-outcome__mark {
-  color: hsl(var(--term-green-strong));
-  margin-right: 6px;
-  font-weight: 700;
-}
+/* The winning-signal row carries no row-level colour or weight change — the
+   BET badge in the Signal column is the sole marker, so signal rows keep the
+   exact height and rhythm of every other outcome row. */
 
-/* The winning-signal row: a green wash + left rail so it reads at a glance.
-   Non-signal outcomes carry no colour (per design — only bets are flagged). */
-.signal-row--bet td {
-  background: hsl(var(--term-green) / 0.10);
-}
-
-.signal-row--bet td:first-child {
-  box-shadow: inset 3px 0 0 hsl(var(--term-green-strong));
-}
-
-.signal-row--bet .signal-outcome {
-  color: hsl(var(--term-green-strong));
-  font-weight: 600;
-}
-
+/* BET badge + Link sit inline on one line (no wrap) so the action cell never
+   grows taller than a plain outcome row. */
 .signal-table__action {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 12px;
+  flex-wrap: nowrap;
 }
 
 .signal-badge {

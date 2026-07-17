@@ -24,9 +24,12 @@ Two strategies compared (the user's ask):
   * WITH draw  — pick = argmax EV over {home, draw, away}
   * NO draw    — pick = argmax EV over {home, away} only (draw never backed)
 
-Three model variants: raw NegBinom, δ-calibrated (market-free, production), and
-λ=0.75 market-anchored on the 1xBet opening no-vig draw (no leakage — the open is
-known at bet time). The de-bias is validated in backtest.md §12.
+Four model variants: raw NegBinom, δ-calibrated (market-free), λ=0.75 anchored on
+the 1xBet opening no-vig draw, and λ=0.75 anchored on the PINNACLE opening no-vig
+draw (the config shipped to production / dashboard v2.7 — bet the cheap 1xBet line,
+de-bias against the sharp Pinnacle reference). No leakage: both opens are known at
+bet time. The de-bias mechanism is validated in backtest.md §12; the anchor-choice
+head-to-head (compare_anchors) is the pre-registered experiment behind §13.6.
 
 Reproduce (repo root): PYTHONPATH=src python backtest/backtest_1xbet.py
 """
@@ -57,22 +60,32 @@ CSV = os.path.join(REPO_ROOT, "data", "raw_data", "CHN_Super League.csv")
 
 OPEN_COLS = ["onexbet_open_h", "onexbet_open_d", "onexbet_open_a"]   # bet price
 CLOSE_COLS = ["pinnacle_close_h", "pinnacle_close_d", "pinnacle_close_a"]  # CLV ref
+# Pinnacle opening 1X2 — the sharp reference whose no-vig draw is the alternative
+# λ anchor tested below. NOT a bet price and NOT the CLV reference; it only feeds
+# m_D in the "pinnacle_anchor" variant. Coverage is 100% on this sample (every
+# gradeable 1xBet-open fixture also has a Pinnacle open), so anchors run same-n.
+PIN_OPEN_COLS = ["pinnacle_open_h", "pinnacle_open_d", "pinnacle_open_a"]
 res_map = {"H": 0, "D": 1, "A": 2}
 OUTCOME = ["home", "draw", "away"]
 EV_THRESHOLDS = [0.00, 0.10, 0.20]
 
-# (report label, de-bias mode). mode: 0.0 raw; float=market-anchored lam; "delta".
+# (report label, de-bias mode). mode: 0.0 raw; float=market-anchored lam on the
+# 1xBet open; "delta"=market-free δ; "pinnacle_anchor"=λ=0.75 anchored on the
+# PINNACLE open no-vig draw (bet price is still 1xBet open — this is the config
+# shipped to production, dashboard v2.7).
+PINNACLE_ANCHOR_LAM = 0.75
 VARIANTS = [
     ("NegBinom raw", 0.00),
     ("NegBinom + delta-cal (market-free, prod)", "delta"),
     ("NegBinom + lam=0.75 (anchored on 1xBet open)", 0.75),
+    ("NegBinom + lam=0.75 (anchored on PINNACLE open)", "pinnacle_anchor"),
 ]
 
 
 def load() -> pd.DataFrame:
     df = pd.read_csv(CSV)
     df["Date"] = parse_date_only_series(df["Date"])
-    for c in ["HExpG+", "AExpG+", "HG", "AG", *OPEN_COLS, *CLOSE_COLS]:
+    for c in ["HExpG+", "AExpG+", "HG", "AG", *OPEN_COLS, *CLOSE_COLS, *PIN_OPEN_COLS]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
     df = df.dropna(subset=["Date", "Home", "Away"])
     df["Home"] = df["Home"].astype(str)
@@ -85,7 +98,8 @@ def walk_forward(df: pd.DataFrame) -> pd.DataFrame:
     """NegBinom walk-forward over fixtures that carry 1xBet open + Pinnacle close."""
     graded = df[df["res"].notna()
                 & df[OPEN_COLS].notna().all(axis=1)
-                & df[CLOSE_COLS].notna().all(axis=1)].copy()
+                & df[CLOSE_COLS].notna().all(axis=1)
+                & df[PIN_OPEN_COLS].notna().all(axis=1)].copy()
     recs = []
     for date in sorted(graded["Date"].unique()):
         date = pd.Timestamp(date)
@@ -111,19 +125,25 @@ def walk_forward(df: pd.DataFrame) -> pd.DataFrame:
                 "pH": p[0], "pD": p[1], "pA": p[2], "delta": delta,
                 "oH": float(r.onexbet_open_h), "oD": float(r.onexbet_open_d), "oA": float(r.onexbet_open_a),
                 "cH": float(r.pinnacle_close_h), "cD": float(r.pinnacle_close_d), "cA": float(r.pinnacle_close_a),
+                "poH": float(r.pinnacle_open_h), "poD": float(r.pinnacle_open_d), "poA": float(r.pinnacle_open_a),
             })
     return pd.DataFrame(recs).sort_values("date").reset_index(drop=True)
 
 
-def apply_debias(P, novig_o, mode, b):
+def apply_debias(P, novig_anchor, mode, b):
+    """De-bias the raw grid P. ``novig_anchor`` is the no-vig 1X2 whose draw is the
+    λ target — grade() passes the 1xBet-open no-vig for float modes and the
+    Pinnacle-open no-vig for "pinnacle_anchor". Both float-λ and "pinnacle_anchor"
+    use the identical shrink formula; only the anchor source differs."""
     if isinstance(mode, str) and mode == "delta":
         delta = b["delta"].values
         d = P[:, 1]
         z = 1.0 - d + delta * d
         return np.column_stack([P[:, 0] / z, delta * d / z, P[:, 2] / z])
-    if mode == 0.0:
+    lam = PINNACLE_ANCHOR_LAM if mode == "pinnacle_anchor" else mode
+    if lam == 0.0:
         return P
-    pD = (1.0 - mode) * P[:, 1] + mode * novig_o[:, 1]
+    pD = (1.0 - lam) * P[:, 1] + lam * novig_anchor[:, 1]
     scale = (1.0 - pD) / (1.0 - P[:, 1])
     return np.column_stack([P[:, 0] * scale, pD, P[:, 2] * scale])
 
@@ -137,11 +157,18 @@ def season_drift(b, novig_o, novig_c):
 
 def grade(b, mode, *, allow_draw: bool):
     P_raw = b[["pH", "pD", "pA"]].values
-    O = b[["oH", "oD", "oA"]].values
-    C = b[["cH", "cD", "cA"]].values
+    O = b[["oH", "oD", "oA"]].values        # 1xBet open = bet price
+    C = b[["cH", "cD", "cA"]].values        # Pinnacle close = CLV reference
     novig_o = (1 / O) / (1 / O).sum(1, keepdims=True)
     novig_c = (1 / C) / (1 / C).sum(1, keepdims=True)
-    P = apply_debias(P_raw, novig_o, mode, b)
+    # Anchor source: Pinnacle open for "pinnacle_anchor", else the 1xBet open (the
+    # bet price doubles as anchor for the float-λ variant). Both share the shrink.
+    if mode == "pinnacle_anchor":
+        PO = b[["poH", "poD", "poA"]].values
+        novig_anchor = (1 / PO) / (1 / PO).sum(1, keepdims=True)
+    else:
+        novig_anchor = novig_o
+    P = apply_debias(P_raw, novig_anchor, mode, b)
     ev = P * O - 1.0
     ev_pick = ev.copy()
     if not allow_draw:
@@ -233,6 +260,108 @@ def report_by_season(b, thr=0.20):
                       f"{g['exclv'][m].mean() * 100:>+7.2f} {_t(g['exclv'][m]):>+6.2f} {gap:>+7.2f}")
 
 
+# The two λ=0.75 variants that differ ONLY in the draw anchor. Same bet price
+# (1xBet open), same CLV reference (Pinnacle close), same n — an apples-to-apples
+# isolation of the anchor choice (user's pre-registered experiment).
+ANCHOR_VARIANTS = [
+    ("1xBet-open anchor", 0.75),
+    ("Pinnacle-open anchor", "pinnacle_anchor"),
+]
+
+
+def _bootstrap_all_seasons_gap_positive(b, mode, thr, allow_draw, n_boot=4000, seed=0):
+    """P(gap>0 in EVERY season) under per-season resampling of the picked bets —
+    the §13.4 robustness check applied to this anchor."""
+    rng = np.random.default_rng(seed)
+    seasons = sorted(int(s) for s in b["Season"].unique())
+    per = {}
+    for s in seasons:
+        sub = b[b["Season"] == s].reset_index(drop=True)
+        g = grade(sub, mode, allow_draw=allow_draw)
+        m = g["best_ev"] > thr
+        if m.sum() < 2:
+            return float("nan")
+        per[s] = (g["clv"][m], g["bar"][m])
+    hits = 0
+    for _ in range(n_boot):
+        ok = True
+        for s in seasons:
+            clv, bar = per[s]
+            idx = rng.integers(0, len(clv), len(clv))
+            if (clv[idx].mean() - bar[idx].mean()) <= 0:
+                ok = False
+                break
+        hits += ok
+    return hits / n_boot
+
+
+def compare_anchors(b, thr=0.20, allow_draw=True):
+    """Head-to-head of the two draw anchors on the identical sample: the metrics and
+    pre-registered acceptance criteria (A–E) the user asked for."""
+    seasons = sorted(int(s) for s in b["Season"].unique())
+    tag = "WITH draw" if allow_draw else "NO draw"
+    print(f"\n{'=' * 74}")
+    print(f"ANCHOR HEAD-TO-HEAD  |  λ=0.75, {tag}, thr>{thr:.2f}, bet=1xBet open, CLV vs Pinnacle close")
+    print(f"n={len(b)} fixtures (Pinnacle-open coverage among bettable = 100% -> criterion E PASS)")
+    print(f"{'=' * 74}")
+
+    grades = {}
+    print(f"\n  {'anchor':<22} {'n':>3} {'draws':>5} {'ROI':>7} {'exCLV':>7} {'t':>5} {'gap':>6}  "
+          f"{'per-season gap ' + '/'.join(str(s) for s in seasons):>24}  {'boot':>5}")
+    for label, mode in ANCHOR_VARIANTS:
+        g = grade(b, mode, allow_draw=allow_draw)
+        m = g["best_ev"] > thr
+        grades[label] = (g, m, mode)
+        ndraw = int((g["pick"][m] == 1).sum())
+        exclv = g["exclv"][m].mean() * 100
+        gap = (g["clv"][m].mean() - g["bar"][m].mean()) * 100
+        per = []
+        for s in seasons:
+            sub = b[b["Season"] == s].reset_index(drop=True)
+            gs = grade(sub, mode, allow_draw=allow_draw)
+            ms = gs["best_ev"] > thr
+            per.append((gs["clv"][ms].mean() - gs["bar"][ms].mean()) * 100 if ms.sum() >= 2 else float("nan"))
+        boot = _bootstrap_all_seasons_gap_positive(b, mode, thr, allow_draw)
+        per_str = " ".join(f"{x:>+6.2f}" for x in per)
+        print(f"  {label:<22} {int(m.sum()):>3} {ndraw:>5} {g['pl'][m].mean():>+7.3f} "
+              f"{exclv:>+7.2f} {_t(g['exclv'][m]):>+5.2f} {gap:>+6.2f}  {per_str:>24}  {boot:>5.2f}")
+
+    # --- pick agreement, split H/A vs draw (over ALL graded fixtures, argmax pick) ---
+    g1 = grade(b, ANCHOR_VARIANTS[0][1], allow_draw=allow_draw)["pick"]
+    g2 = grade(b, ANCHOR_VARIANTS[1][1], allow_draw=allow_draw)["pick"]
+    same = g1 == g2
+    either_draw = (g1 == 1) | (g2 == 1)
+    ha = ~either_draw
+    print(f"\n  pick agreement (all n={len(b)}, argmax over H/D/A):")
+    print(f"    overall           {same.mean():>6.1%}  ({int(same.sum())}/{len(b)})")
+    print(f"    on H/A picks      {same[ha].mean():>6.1%}  ({int(same[ha].sum())}/{int(ha.sum())})")
+    print(f"    draw involved     {same[either_draw].mean() if either_draw.any() else float('nan'):>6.1%}  "
+          f"({int(same[either_draw].sum())}/{int(either_draw.sum())})")
+    print(f"    draws picked: 1xBet-anchor {int((g1 == 1).sum())}, Pinnacle-anchor {int((g2 == 1).sum())}")
+
+    # --- disagreement subset: whose pick earned more exCLV on the fixtures they differ ---
+    dis = ~same
+    (ga, _, _), (gb, _, _) = grades["1xBet-open anchor"], grades["Pinnacle-open anchor"]
+    if dis.any():
+        ex1 = ga["exclv"][dis].mean() * 100
+        ex2 = gb["exclv"][dis].mean() * 100
+        print(f"\n  disagreement subset (n={int(dis.sum())}, picks differ; ≈all draws):")
+        print(f"    1xBet-anchor pick  exCLV {ex1:>+6.2f}pp")
+        print(f"    Pinnacle-anchor pick exCLV {ex2:>+6.2f}pp   <- criterion C: must be >= 0")
+    else:
+        print("\n  disagreement subset: none (anchors pick identically on this sample)")
+
+    # Sharper criterion C: the draws the Pinnacle anchor actually BETS (clear thr) —
+    # are those specific extra draw bets noise? (bet-level, not argmax-level.)
+    gp, mp, _ = grades["Pinnacle-open anchor"]
+    draw_bet = mp & (gp["pick"] == 1)
+    if draw_bet.any():
+        print(f"\n  Pinnacle-anchor draw BETS (thr>{thr:.2f}): n={int(draw_bet.sum())}, "
+              f"exCLV {gp['exclv'][draw_bet].mean() * 100:>+6.2f}pp (t={_t(gp['exclv'][draw_bet]):>+.2f}), "
+              f"gap {(gp['clv'][draw_bet].mean() - gp['bar'][draw_bet].mean()) * 100:>+6.2f}pp, "
+              f"ROI {gp['pl'][draw_bet].mean():>+.3f}")
+
+
 def main():
     df = load()
     b = walk_forward(df)
@@ -242,6 +371,7 @@ def main():
     for label, mode in VARIANTS:
         report(label, b, mode)
     report_by_season(b)
+    compare_anchors(b, thr=0.20, allow_draw=True)
     print("\nReading guide: gap = CLV − bar (the §11.7 vig wall at 1xBet's overround)."
           "\ngap > 0 means the bet clears 1xBet's vig; exCLV is the model's edge over the"
           "\nhome-drift baseline. THREE seasons now (2024 + 2025 + 2026): at thr>0.20 the gap"

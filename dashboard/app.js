@@ -274,7 +274,7 @@ function signalActionCell(state) {
   if (state === "bet") {
     return (
       `<span class="signal-badge">● BET</span>` +
-      `<a class="signal-link" href="${ONEXBET_LEAGUE_URL}" target="_blank" rel="noopener noreferrer">Bet on 1xBet ↗</a>`
+      `<a class="signal-link" href="${ONEXBET_LEAGUE_URL}" target="_blank" rel="noopener noreferrer">Link ↗</a>`
     );
   }
   if (state === "odds_cap") {
@@ -294,11 +294,10 @@ function signalOutcomeRow(row, outcome, isFirst) {
   const rowClass = state === "bet" ? "signal-row signal-row--bet" : "signal-row";
   const labelClass =
     outcome.key === "draw" ? "signal-outcome signal-outcome--draw" : "signal-outcome";
-  const pickMark = isPick && state === "bet" ? `<span class="signal-outcome__mark">▸</span>` : "";
   return `
     <tr class="${rowClass}">
       ${timeCell}
-      <td class="${labelClass}">${pickMark}${outcome.label}</td>
+      <td class="${labelClass}">${outcome.label}</td>
       <td class="numeric market-comparison__value signal-prob">${formatPercent(outcome.prob)}</td>
       <td class="numeric market-comparison__value market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.onexbet_open_last_update ?? ""}" data-tip-method="${row.debias_method ?? ""}" data-tip-hodds="${row.onexbet_open_home_odds ?? ""}" data-tip-dodds="${row.onexbet_open_draw_odds ?? ""}" data-tip-aodds="${row.onexbet_open_away_odds ?? ""}">${formatOdds(outcome.odds)}</td>
       <td class="numeric market-comparison__value ${evClass(outcome.ev)}">${formatEv(outcome.ev)}</td>
