@@ -3,260 +3,169 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CSL Macro Terminal</title>
+    <title>CSL Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="terminal-shell">
-      <header class="masthead">
-        <div class="masthead__brand">
-          <div class="masthead__glyph">
-            <img class="masthead__logo" src="./assets/csl-logo.png" alt="Chinese Super League logo" />
-          </div>
-          <div class="masthead__copy">
-            <h1 class="masthead__title">CSL Monitor</h1>
-            <p class="masthead__trail" data-bind="masthead-trail">Chinese Super League · Season 2026 · Model Terminal · v2.7</p>
+    <div class="term">
+      <!-- COMMAND BAR -->
+      <header class="cmd">
+        <div class="cmd__brand">
+          <div class="cmd__glyph"><img src="./assets/csl-logo.png" alt="CSL" /></div>
+          <div>
+            <div class="cmd__title-row">
+              <span class="cmd__title">CSL Terminal</span>
+              <span class="cmd__tag">Macro Terminal</span>
+            </div>
+            <div class="cmd__trail" data-bind="masthead-trail">Chinese Super League · Season 2026</div>
           </div>
         </div>
-
-        <div class="masthead__status">
-          <div class="masthead__status-item">
-            <span class="masthead__status-label">Next</span>
-            <span class="masthead__status-value" data-bind="masthead-next-date">2026-05-09</span>
-          </div>
-          <div class="masthead__status-item">
-            <span class="masthead__status-label">Update</span>
-            <span class="masthead__status-value" data-bind="masthead-updated">20:00 UTC</span>
-          </div>
-          <div class="masthead__status-item">
-            <span class="masthead__status-label">Clock</span>
-            <span class="masthead__status-value" data-bind="masthead-clock">20:00:31</span>
-          </div>
+        <div class="cmd__status">
+          <div class="cmd__stat"><span class="cmd__stat-k">NEXT</span><span class="cmd__stat-v" data-bind="masthead-next-date">--</span></div>
+          <div class="cmd__stat"><span class="cmd__stat-k">UPDATED</span><span class="cmd__stat-v" data-bind="masthead-updated">--</span></div>
+          <div class="cmd__stat cmd__stat--live"><span class="cmd__stat-k">● LIVE</span><span class="cmd__stat-v" data-bind="masthead-clock">--:--:--</span></div>
         </div>
       </header>
 
-      <section class="signal-bar" aria-label="Signal Bar">
-        <div class="signal-bar__summary">
-          <span class="signal-bar__value" data-bind="signal-played-count">138</span>
-          <span class="signal-bar__label">Played</span>
+      <!-- FUNCTION TABS -->
+      <nav class="tabs" aria-label="Views">
+        <button type="button" class="tab tab--active" data-view-target="ev-bet" aria-current="page"><span class="tab__f">F1</span> EV ANALYSIS</button>
+        <button type="button" class="tab" data-view-target="schedule" aria-current="false"><span class="tab__f">F2</span> SCHEDULE</button>
+        <button type="button" class="tab" data-view-target="club" aria-current="false"><span class="tab__f">F3</span> TEAM STRENGTH</button>
+        <button type="button" class="tab" data-view-target="context" aria-current="false"><span class="tab__f">F4</span> MODEL</button>
+        <div class="tabs__meta">
+          <span>PLAYED <b data-bind="played">--</b></span>
+          <span class="tabs__sep">|</span>
+          <span>RND <b data-bind="round-label">--</b></span>
+          <div class="progress"><div class="progress__fill" id="round-fill"></div></div>
         </div>
-        <div class="signal-rounds" id="signal-rounds" aria-label="Season round progress">
-          <span class="signal-round signal-round--done">1</span>
-          <span class="signal-round signal-round--done">2</span>
-          <span class="signal-round signal-round--done">3</span>
-          <span class="signal-round signal-round--current">4</span>
-          <span class="signal-round">5</span>
-        </div>
+      </nav>
+
+      <!-- KPI STRIP -->
+      <section class="kpi" aria-label="Key metrics">
+        <article class="kpi__cell kpi__cell--primary">
+          <span class="kpi__label">★ BEST BET</span>
+          <span class="kpi__value" data-bind="best-bet-team">--</span>
+          <span class="kpi__note" data-bind="best-bet-note"></span>
+        </article>
+        <article class="kpi__cell">
+          <span class="kpi__label">NEXT FIXTURE</span>
+          <span class="kpi__value" data-bind="next-fixture">--</span>
+          <span class="kpi__note" data-bind="next-note"></span>
+        </article>
+        <article class="kpi__cell">
+          <span class="kpi__label">STRONGEST CLUB</span>
+          <span class="kpi__value kpi__value--accent" data-bind="strong-team">--</span>
+          <span class="kpi__note" data-bind="strong-note"></span>
+        </article>
+        <article class="kpi__cell">
+          <span class="kpi__label">SIGNALS FIRING</span>
+          <span class="kpi__value"><span data-bind="signals-count">--</span> <span class="kpi__value-sub">/ <span data-bind="signals-fixtures">--</span> fixtures</span></span>
+          <span class="kpi__note" data-bind="signals-note"></span>
+        </article>
       </section>
 
-      <section class="metrics-ribbon" aria-label="Key Metrics">
-        <article class="metric-cell metric-cell--next">
-          <p class="metric-cell__label">Next Fixture</p>
-          <p class="metric-cell__value" data-bind="metric-next-fixture">Shanghai Shenhua vs Chongqing Tonglianglong</p>
-          <p class="metric-cell__note" data-bind="metric-next-fixture-note">2026-05-09 11:35</p>
-        </article>
-        <article class="metric-cell">
-          <p class="metric-cell__label">Strongest Club</p>
-          <p class="metric-cell__value metric-cell__value--amber" data-bind="metric-strongest-team">Chengdu Rongcheng</p>
-          <p class="metric-cell__note" data-bind="metric-strongest-team-note">OVR 3.918 · ATT 1.823 · DEF -2.095</p>
-        </article>
-        <article class="metric-cell">
-          <p class="metric-cell__label">⚡ Signals</p>
-          <p class="metric-cell__value metric-cell__value--green" data-bind="metric-signals-count">0</p>
-          <p class="metric-cell__note" data-bind="metric-signals-note">— no signal</p>
-        </article>
-        <article class="metric-cell">
-          <p class="metric-cell__label">Best Fair Price</p>
-          <p class="metric-cell__value metric-cell__value--cyan" data-bind="metric-best-fair-odds">1.47</p>
-          <p class="metric-cell__note" data-bind="metric-best-fair-odds-note">Chengdu Rongcheng vs Henan Songshan Longmen</p>
-        </article>
-      </section>
-
-      <main class="terminal-layout">
-        <nav class="sidebar" aria-label="Primary views">
-          <div class="sidebar__group">
-            <p class="sidebar__group-label">Terminal</p>
-            <ul class="sidebar__nav">
-              <li>
-                <button type="button" class="sidebar__link sidebar__link--active" data-view-target="ev-bet" aria-current="page">EV Bet</button>
-              </li>
-              <li>
-                <button type="button" class="sidebar__link" data-view-target="schedule" aria-current="false">Upcoming Schedule</button>
-              </li>
-              <li>
-                <button type="button" class="sidebar__link" data-view-target="club" aria-current="false">Club Snapshot</button>
-              </li>
-              <li>
-                <button type="button" class="sidebar__link" data-view-target="context" aria-current="false">Model Context</button>
-              </li>
-            </ul>
+      <div class="views">
+        <!-- ===== EV BET ===== -->
+        <section class="view view--active" data-view="ev-bet" aria-label="Bet Signals">
+          <div class="panel">
+            <div class="panel__bar">
+              <div class="panel__title-wrap"><span class="panel__title">BET SIGNALS</span><span class="panel__kick">1XBET OPENING LINE · MODEL vs FAIR</span></div>
+              <span class="panel__meta" data-bind="panel-signal-meta">Model -- · 1xBet open --</span>
+            </div>
+            <div class="panel__config">
+              <span>λ 0.75</span><span>EV &gt; 0.20</span><span>ODDS ≤ 7</span><span>DRAWS ELIGIBLE</span>
+            </div>
+            <div class="scroll">
+              <table class="tbl tbl--signals">
+                <thead>
+                  <tr>
+                    <th class="c-time">TIME</th>
+                    <th class="c-outcome">OUTCOME</th>
+                    <th class="num c-prob">PROB</th>
+                    <th class="num c-grp">1XBET OPEN</th>
+                    <th class="num c-ev">EV</th>
+                    <th class="c-grp c-signal">SIGNAL</th>
+                  </tr>
+                </thead>
+                <tbody id="signal-body"></tbody>
+              </table>
+            </div>
+            <div class="legend">
+              <span><b class="pos">+EV</b> value vs model &nbsp; <b class="neg">−EV</b> negative edge</span>
+              <span><span class="badge">BET</span> model pick clears EV &amp; odds filter</span>
+              <span><span class="swatch">amber</span> = model pick on a bet-signal fixture</span>
+            </div>
           </div>
-        </nav>
+        </section>
 
-        <div class="terminal-views">
-          <section class="terminal-view terminal-view--active" data-view="ev-bet" aria-label="Bet Signals">
-            <section class="terminal-panel terminal-panel--wide">
-              <header class="terminal-panel__header">
-                <div class="terminal-panel__title-wrap">
-                  <span class="terminal-panel__kicker">1xBet Opening Line</span>
-                  <h2 class="terminal-panel__title">Bet Signals</h2>
-                </div>
-                <div class="terminal-panel__meta-stack">
-                  <div class="terminal-panel__meta" data-bind="panel-signal-config">λ=0.75 · EV&gt;0.20 · odds≤7 · draws eligible</div>
-                  <div class="terminal-panel__meta" data-bind="panel-signal-meta">Model -- -- · 1xBet open -- --</div>
-                </div>
-              </header>
-              <div class="terminal-panel__body">
-                <table class="terminal-table signal-table">
-                  <thead>
-                    <tr>
-                      <th>Time</th>
-                      <th>Outcome</th>
-                      <th class="numeric">Prob</th>
-                      <th class="numeric market-comparison__group-start">1xBet Open</th>
-                      <th class="numeric">EV</th>
-                      <th class="signal-table__action-col">Signal</th>
-                    </tr>
-                  </thead>
-                  <tbody id="signal-body">
-                    <tr>
-                      <td class="numeric" rowspan="3">--</td>
-                      <td>--</td>
-                      <td class="numeric">--</td>
-                      <td class="numeric market-comparison__group-start">--</td>
-                      <td class="numeric">--</td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          </section>
+        <!-- ===== SCHEDULE ===== -->
+        <section class="view" data-view="schedule" aria-label="Upcoming Schedule">
+          <div class="panel">
+            <div class="panel__bar">
+              <span class="panel__title">UPCOMING MATCHES</span>
+              <span class="panel__meta" data-bind="panel-market-meta">-- matches</span>
+            </div>
+            <div class="scroll">
+              <table class="tbl tbl--market">
+                <thead>
+                  <tr>
+                    <th class="c-rnd">RND</th>
+                    <th class="c-date">DATE</th>
+                    <th class="c-mtime">TIME</th>
+                    <th class="c-match">MATCH</th>
+                    <th class="num c-grp c-p">HOME</th>
+                    <th class="num c-p">DRAW</th>
+                    <th class="num c-p">AWAY</th>
+                  </tr>
+                </thead>
+                <tbody id="market-body"></tbody>
+              </table>
+            </div>
+            <div class="legend"><span>Highlighted = model’s most-likely outcome · small figure = fair odds (F)</span></div>
+          </div>
+        </section>
 
-          <section class="terminal-view" data-view="schedule" aria-label="Upcoming Schedule">
-            <section class="terminal-panel terminal-panel--primary">
-              <header class="terminal-panel__header">
-                <div class="terminal-panel__title-wrap">
-                  <span class="terminal-panel__kicker">Fixture Market</span>
-                  <h2 class="terminal-panel__title">Upcoming Matches</h2>
-                </div>
-                <div class="terminal-panel__meta-stack">
-                  <div class="terminal-panel__stamp" data-bind="panel-market-stamp">Last Updated on 08/05/2026 10:35 UTC</div>
-                  <div class="terminal-panel__meta" data-bind="panel-market-meta">20 matches · Negative Binomial with Dixon-Coles Time Decay</div>
-                </div>
-              </header>
-              <div class="terminal-panel__body">
-                <table class="terminal-table market-table">
-                  <thead>
-                    <tr>
-                      <th>Rnd</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                      <th>Match</th>
-                      <th class="numeric">H</th>
-                      <th class="numeric">D</th>
-                      <th class="numeric">A</th>
-                    </tr>
-                  </thead>
-                  <tbody id="market-body">
-                    <tr>
-                      <td>11</td>
-                      <td>2026-05-09</td>
-                      <td>11:35</td>
-                      <td>Shanghai Shenhua vs Chongqing Tonglianglong</td>
-                      <td class="numeric">40.7%</td>
-                      <td class="numeric">42.8%</td>
-                      <td class="numeric">16.5%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          </section>
+        <!-- ===== TEAM STRENGTH ===== -->
+        <section class="view" data-view="club" aria-label="Club Snapshot">
+          <div class="panel">
+            <div class="panel__bar">
+              <span class="panel__title">TEAM STRENGTH</span>
+              <span class="panel__meta" data-bind="panel-strength-meta">-- clubs</span>
+            </div>
+            <div class="scroll">
+              <table class="tbl tbl--strength">
+                <thead>
+                  <tr>
+                    <th class="num c-rk">RK</th>
+                    <th class="c-team">TEAM</th>
+                    <th class="num c-grp c-ovr">OVR</th>
+                    <th class="num c-r">ATT</th>
+                    <th class="num c-r">DEF</th>
+                    <th class="c-grp c-form">FORM</th>
+                  </tr>
+                </thead>
+                <tbody id="strength-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
 
-          <section class="terminal-view" data-view="club" aria-label="Club Snapshot">
-            <section class="terminal-panel terminal-panel--strength">
-              <header class="terminal-panel__header">
-                <div class="terminal-panel__title-wrap">
-                  <span class="terminal-panel__kicker">Leaderboard</span>
-                  <h2 class="terminal-panel__title">Team Strength</h2>
-                </div>
-                <div class="terminal-panel__meta" data-bind="panel-strength-meta">19 clubs · last 5 form</div>
-              </header>
-              <div class="terminal-panel__body">
-                <table class="terminal-table strength-table">
-                  <thead>
-                    <tr>
-                      <th>Rk</th>
-                      <th>Team</th>
-                      <th class="numeric">Ovr</th>
-                      <th>Form</th>
-                    </tr>
-                  </thead>
-                  <tbody id="strength-body">
-                    <tr>
-                      <td>1</td>
-                      <td>Chengdu Rongcheng</td>
-                      <td class="numeric">3.918</td>
-                      <td>W W W W W</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          </section>
-
-          <section class="terminal-view" data-view="context" aria-label="Model Context">
-            <section class="terminal-panel terminal-panel--context">
-              <header class="terminal-panel__header">
-                <div class="terminal-panel__title-wrap">
-                  <span class="terminal-panel__kicker">System</span>
-                  <h2 class="terminal-panel__title">Model Context</h2>
-                </div>
-                <div class="terminal-panel__meta">Terminal reference</div>
-              </header>
-              <div class="terminal-panel__body terminal-panel__body--stacked">
-                <dl class="meta-grid">
-                  <div class="meta-grid__row">
-                    <dt>Competition</dt>
-                    <dd data-bind="meta-competition">Chinese Super League</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Season</dt>
-                    <dd data-bind="meta-season">2026</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Last Update</dt>
-                    <dd data-bind="meta-updated-at">2026-05-07T20:00:31+08:00</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Timezone</dt>
-                    <dd data-bind="meta-timezone">Asia/Shanghai</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Last Completed</dt>
-                    <dd data-bind="meta-last-completed">2026-05-02</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Next Fixture</dt>
-                    <dd data-bind="meta-next-fixture-date">2026-05-09</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Model Name</dt>
-                    <dd data-bind="meta-model-name">Negative Binomial with Dixon-Coles Time Decay</dd>
-                  </div>
-                  <div class="meta-grid__row">
-                    <dt>Version</dt>
-                    <dd data-bind="meta-model-version">v2.6</dd>
-                  </div>
-                </dl>
-              </div>
-            </section>
-          </section>
-        </div>
-      </main>
+        <!-- ===== MODEL CONTEXT ===== -->
+        <section class="view" data-view="context" aria-label="Model Context">
+          <div class="panel panel--narrow">
+            <div class="panel__bar">
+              <span class="panel__title">MODEL CONTEXT</span>
+              <span class="panel__meta">SYSTEM REFERENCE</span>
+            </div>
+            <dl class="meta" id="context-body"></dl>
+          </div>
+        </section>
+      </div>
     </div>
-
     <script src="./app.js" defer></script>
   </body>
 </html>
