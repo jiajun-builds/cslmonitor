@@ -146,7 +146,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 16484884,18,2026-07-14,Zhejiang Professional,Qingdao Hainiu,3,2,,,Ended
 15552576,19,2026-07-17,Beijing Guoan,Liaoning Tieren,,,,,Not started
 15552581,19,2026-07-17,Henan Songshan Longmen,Qingdao Hainiu,,,,,Not started
-15552577,19,2026-07-17,Qingdao West Coast,Chengdu Rongcheng,,,,,Not started
+15552577,19,2026-07-17,Qingdao West Coast,Chengdu Rongcheng,0,0,,,1st half
 15552580,19,2026-07-17,Yunnan Yukun,Shanghai Port,,,,,Not started
 15552578,19,2026-07-18,Chongqing Tonglianglong,Zhejiang Professional,,,,,Not started
 15552584,19,2026-07-18,Dalian Yingbo,Shandong Taishan,,,,,Not started
