@@ -1,21 +1,37 @@
 """
-Export upcoming CSL fixtures with de-biased model 1X2 probabilities and
-Pinnacle h2h (1X2) odds (opening capture vs current "Now" line), plus model EV
-for every outcome at both prices.
+Export upcoming CSL fixtures as a **1xBet-open bet-signal board** (dashboard
+v2.7). Each fixture carries de-biased model 1X2 probabilities, the 1xBet OPENING
+1X2 price (the line we actually bet), model EV against that price, and a betting
+signal flag per the backtest.md §13.4 recommended config.
+
+Two books, two distinct roles (they are NOT the same book):
+
+  * **Pinnacle open — the de-bias anchor** (never displayed). Pinnacle is the
+    sharp reference; its opening no-vig draw is the target the draw shrinks
+    toward. This keeps the model probability identical to the all-pairs
+    prediction surface (one coherent prob per fixture).
+  * **1xBet open — the bet price.** Cheaper book (~4.9% open overround vs
+    Pinnacle's ~7.5%, backtest.md §13), so the same edge can clear the vig wall.
+    EV, the displayed Open odds, and the signal are all on this line.
 
 Draw de-bias is hybrid (AGENTS.md roadmap #10, validated in backtest.md §12):
 
-  * Fixture WITH a captured opening 1X2 -> market-anchored shrink at
+  * Fixture WITH a captured PINNACLE opening 1X2 -> market-anchored shrink at
     ``DEBIAS_LAMBDA``: starting from the RAW (un-δ'd) model grid,
-    ``p'_D = (1-λ)·p_D + λ·m_D`` where ``m_D`` is the no-vig opening draw
+    ``p'_D = (1-λ)·p_D + λ·m_D`` where ``m_D`` is Pinnacle's no-vig opening draw
     probability; the freed mass is returned to H/A pro-rata. Anchoring on the
     raw grid (``predict_raw``) avoids stacking λ on top of the δ calibration.
-  * Fixture WITHOUT a captured open -> δ-calibrated model (``predict``), the
-    same market-free calibration used by the all-pairs prediction surface.
+  * Fixture WITHOUT a captured Pinnacle open -> δ-calibrated model (``predict``),
+    the same market-free calibration used by the all-pairs prediction surface.
 
 The ``debias_method`` column records which path produced each row's
-probabilities ("market_anchor" or "delta"); EV columns are consistent with the
-row's probabilities: ``EV_k = p'_k * odds_k - 1``.
+probabilities ("market_anchor" or "delta"). EV is computed against the 1xBet
+opening price: ``onexbet_open_EV_k = p'_k * onexbet_open_odds_k - 1``.
+
+Signal (backtest.md §13.4): pick = argmax EV over {home, draw, away} priced on
+the 1xBet open; ``signal_state`` is "bet" when that pick's EV > ``SIGNAL_EV_MIN``
+and its 1xBet odds <= ``SIGNAL_ODDS_CAP``, "odds_cap" when the EV clears but the
+long-shot cap does not, "" otherwise.
 
 Usage (仓库根目录，PYTHONPATH=src):
     python -m csl.odds.export_upcoming_market_comparison
@@ -42,6 +58,11 @@ from csl.odds.fetch_pinnacle_spreads import BOOKMAKER as ANCHOR_BOOKMAKER
 from csl.odds.snapshot_store import HISTORY_CSV, load_history
 from csl.paths import data_dashboard_csv_dir, data_output_dir, data_raw_dir
 
+# The cheap book we bet into; its opening 1X2 is the displayed line, the EV
+# basis, and the signal price (backtest.md §13). Distinct from ANCHOR_BOOKMAKER
+# (Pinnacle), whose open only feeds the λ draw anchor and is never shown.
+BET_BOOKMAKER = "onexbet"
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(message)s",
@@ -56,17 +77,36 @@ MODEL_XI = 0.001
 # CLV at thr>0.10; the result holds over the surrounding λ region, not a point.
 DEBIAS_LAMBDA = 0.75
 
-# Opening-price columns joined from the capture history (snapshot_type=open).
-# Blank for fixtures whose open has not been captured yet.
-OPEN_COLUMNS = [
+# Betting signal thresholds (backtest.md §13.4 recommended config). A pick fires
+# ("bet") only when its 1xBet-open EV clears SIGNAL_EV_MIN AND its price is within
+# the long-shot cap; picks over the cap are flagged "odds_cap" (visible, not bet)
+# because the odds>7 tail is the least-edge slice in the book (§13.4b).
+SIGNAL_EV_MIN = 0.20
+SIGNAL_ODDS_CAP = 7.0
+
+# 1xBet opening-price columns joined from the capture history (snapshot_type=open,
+# bookmaker=onexbet). These are the displayed line, the EV basis, and the signal
+# price. Blank for fixtures whose 1xBet open has not been captured yet.
+ONEXBET_OPEN_COLUMNS = [
+    "onexbet_open_home_odds",
+    "onexbet_open_draw_odds",
+    "onexbet_open_away_odds",
+    "onexbet_open_home_ev",
+    "onexbet_open_draw_ev",
+    "onexbet_open_away_ev",
+    "onexbet_open_last_update",
+]
+
+# Pinnacle opening odds — the λ draw anchor only, never surfaced. Retained in the
+# full archive CSV for reproducibility of debias_method.
+PINNACLE_OPEN_COLUMNS = [
     "open_home_odds",
     "open_draw_odds",
     "open_away_odds",
-    "open_home_ev",
-    "open_draw_ev",
-    "open_away_ev",
     "open_last_update",
 ]
+
+SIGNAL_COLUMNS = ["signal_pick", "signal_state"]
 
 FULL_COLUMNS = [
     "fixture_id",
@@ -80,6 +120,8 @@ FULL_COLUMNS = [
     "draw_prob",
     "away_win_prob",
     "debias_method",
+    # Pinnacle "Now" line — still captured (roadmap #3 close/CLV data) but not a
+    # betting basis here; kept in the archive for reference.
     "home_odds",
     "draw_odds",
     "away_odds",
@@ -88,12 +130,13 @@ FULL_COLUMNS = [
     "regions",
     "last_update",
     "fetched_at",
-    "home_ev",
-    "draw_ev",
-    "away_ev",
-    *OPEN_COLUMNS,
+    *ONEXBET_OPEN_COLUMNS,
+    *PINNACLE_OPEN_COLUMNS,
+    *SIGNAL_COLUMNS,
 ]
 
+# Dashboard contract: probabilities + 1xBet open line/EV + signal. No Pinnacle
+# Now line, no Move — the board is the 1xBet-open signal surface only.
 DASHBOARD_COLUMNS = [
     "fixture_id",
     "match_date",
@@ -104,15 +147,9 @@ DASHBOARD_COLUMNS = [
     "draw_prob",
     "away_win_prob",
     "debias_method",
-    "home_odds",
-    "draw_odds",
-    "away_odds",
-    "last_update",
+    *ONEXBET_OPEN_COLUMNS,
+    *SIGNAL_COLUMNS,
     "fetched_at",
-    "home_ev",
-    "draw_ev",
-    "away_ev",
-    *OPEN_COLUMNS,
 ]
 
 
@@ -183,35 +220,40 @@ def load_pinnacle(path: str) -> pd.DataFrame:
     return df
 
 
-OPEN_SNAPSHOT_COLUMNS = [
-    "home_team",
-    "away_team",
-    "open_home_odds",
-    "open_draw_odds",
-    "open_away_odds",
-    "open_last_update",
-]
+def _open_snapshot_columns(prefix: str) -> list[str]:
+    return [
+        "home_team",
+        "away_team",
+        f"{prefix}_home_odds",
+        f"{prefix}_draw_odds",
+        f"{prefix}_away_odds",
+        f"{prefix}_last_update",
+    ]
 
 
-def load_open_snapshots(path: str, bookmaker: str = ANCHOR_BOOKMAKER) -> pd.DataFrame:
+def load_open_snapshots(
+    path: str, bookmaker: str = ANCHOR_BOOKMAKER, *, prefix: str = "open"
+) -> pd.DataFrame:
     """One opening-price row per fixture from the capture history (may be empty).
 
     Reads the append-only capture history, keeps ``snapshot_type == "open"`` rows
-    **for ``bookmaker`` only** — since roadmap #8 the history also carries other
-    books' prices at the same window (recon data), and the λ anchor must be the
-    single reference book's line, not whichever book happened to be fetched first.
-    Since a line can in principle be captured more than once, takes the earliest
-    ``fetched_at`` per fixture as the true opening prices. Returns a frame keyed by
-    (home_team, away_team) with ``open_*`` 1X2 odds columns, or an empty
-    (correctly-columned) frame when no opens have been captured yet.
+    **for ``bookmaker`` only** — since roadmap #8 the history carries several books'
+    prices at the same window, and the two roles here need different books: the λ
+    anchor is Pinnacle's open (``bookmaker=ANCHOR_BOOKMAKER``, ``prefix="open"``),
+    the bet price is 1xBet's open (``bookmaker=BET_BOOKMAKER``,
+    ``prefix="onexbet_open"``). Since a line can in principle be captured more than
+    once, takes the earliest ``fetched_at`` per fixture as the true opening prices.
+    Returns a frame keyed by (home_team, away_team) with ``{prefix}_*`` 1X2 odds
+    columns, or an empty (correctly-columned) frame when no opens exist yet.
     """
+    columns = _open_snapshot_columns(prefix)
     hist = load_history(path)
     if not hist.empty:
         opens = hist[(hist["snapshot_type"] == "open") & (hist["bookmaker"] == bookmaker)]
     else:
         opens = hist
     if opens.empty:
-        return pd.DataFrame(columns=OPEN_SNAPSHOT_COLUMNS)
+        return pd.DataFrame(columns=columns)
 
     opens = opens.copy()
     opens["home_team"] = opens["home_team"].astype(str).str.strip()
@@ -224,19 +266,20 @@ def load_open_snapshots(path: str, bookmaker: str = ANCHOR_BOOKMAKER) -> pd.Data
     )
     opens = opens.rename(
         columns={
-            "home_odds": "open_home_odds",
-            "draw_odds": "open_draw_odds",
-            "away_odds": "open_away_odds",
-            "last_update": "open_last_update",
+            "home_odds": f"{prefix}_home_odds",
+            "draw_odds": f"{prefix}_draw_odds",
+            "away_odds": f"{prefix}_away_odds",
+            "last_update": f"{prefix}_last_update",
         }
     )
-    return opens[OPEN_SNAPSHOT_COLUMNS]
+    return opens[columns]
 
 
 def build_base_frame(
     upcoming: pd.DataFrame,
     pinnacle: pd.DataFrame,
-    opens: pd.DataFrame,
+    pinnacle_opens: pd.DataFrame,
+    onexbet_opens: pd.DataFrame,
     *,
     now: pd.Timestamp | None = None,
 ) -> pd.DataFrame:
@@ -246,21 +289,25 @@ def build_base_frame(
         how="left",
         validate="one_to_one",
     )
-    merged = merged.merge(opens, on=["home_team", "away_team"], how="left", validate="one_to_one")
-    # Keep a fixture if it has a current Now line (Pinnacle event_id) OR a captured
-    # opening line. Open-only fixtures — captured before they appeared in a Now-line
-    # fetch — are shown with blank Now columns rather than dropped, so a freshly
-    # captured open line surfaces immediately instead of waiting for the next Now fetch.
-    # Now-line fixtures come from the live feed and are inherently upcoming; an open-only
-    # fixture is gated to a future kickoff so already-kicked-off matches don't linger on
-    # the board until the daily upcoming CSV trims them (the feed drops them at kickoff,
-    # which used to self-clean the comparison before open-only rows were surfaced).
+    merged = merged.merge(
+        pinnacle_opens, on=["home_team", "away_team"], how="left", validate="one_to_one"
+    )
+    merged = merged.merge(
+        onexbet_opens, on=["home_team", "away_team"], how="left", validate="one_to_one"
+    )
+    # Keep a fixture if it has a Pinnacle Now line (event_id) OR a captured opening
+    # line from either book. Open-only fixtures — captured before they appeared in a
+    # Now-line fetch — are shown rather than dropped, so a freshly captured 1xBet open
+    # surfaces immediately. Now-line fixtures come from the live feed and are inherently
+    # upcoming; open-only fixtures are gated to a future kickoff so already-kicked-off
+    # matches don't linger on the board until the daily upcoming CSV trims them.
     now = now or pd.Timestamp.now(tz="UTC")
     kickoff = pd.to_datetime(merged["kickoff_at"], utc=True, errors="coerce")
     is_upcoming = kickoff.isna() | (kickoff >= now)
     has_now = merged["event_id"].notna()
-    has_open = merged["open_home_odds"].notna()
-    keep = has_now | (has_open & is_upcoming)
+    has_pin_open = merged["open_home_odds"].notna()
+    has_bet_open = merged["onexbet_open_home_odds"].notna()
+    keep = has_now | ((has_pin_open | has_bet_open) & is_upcoming)
     return merged[keep].copy()
 
 
@@ -306,6 +353,8 @@ def attach_model_probabilities(
     methods: list[str] = []
 
     for row in out.itertuples(index=False):
+        # Anchor is PINNACLE's open (prefix "open"), never 1xBet's — the sharp
+        # reference draw is the de-bias target even though we bet the 1xBet line.
         open_odds = (row.open_home_odds, row.open_draw_odds, row.open_away_odds)
         try:
             if all(pd.notna(o) and float(o) > 1.0 for o in open_odds):
@@ -329,13 +378,51 @@ def attach_model_probabilities(
     out["away_win_prob"] = probs_a
     out["debias_method"] = methods
 
-    # EV per outcome, consistent with the row's (de-biased) probabilities.
+    # EV per outcome against the 1xBet OPENING price (the line we bet). The
+    # de-biased probabilities are the same ones anchored on Pinnacle's open above,
+    # so EV isolates the model's disagreement with 1xBet's cheaper line.
     for side, prob_col in (("home", "home_win_prob"), ("draw", "draw_prob"), ("away", "away_win_prob")):
-        now_odds = pd.to_numeric(out[f"{side}_odds"], errors="coerce")
-        open_odds_col = pd.to_numeric(out[f"open_{side}_odds"], errors="coerce")
-        out[f"{side}_ev"] = np.where(now_odds.notna(), out[prob_col] * now_odds - 1.0, nan)
-        out[f"open_{side}_ev"] = np.where(open_odds_col.notna(), out[prob_col] * open_odds_col - 1.0, nan)
+        bet_odds = pd.to_numeric(out[f"onexbet_open_{side}_odds"], errors="coerce")
+        out[f"onexbet_open_{side}_ev"] = np.where(bet_odds.notna(), out[prob_col] * bet_odds - 1.0, nan)
 
+    return out
+
+
+def attach_signals(frame: pd.DataFrame) -> pd.DataFrame:
+    """Flag the max-EV 1xBet-open pick per fixture (backtest.md §13.4).
+
+    ``signal_pick`` is the outcome ("home"/"draw"/"away") with the highest EV among
+    the outcomes that have a 1xBet opening price; ``signal_state`` is:
+
+      * "bet"      — pick EV > SIGNAL_EV_MIN and pick odds <= SIGNAL_ODDS_CAP.
+      * "odds_cap" — pick EV > SIGNAL_EV_MIN but odds over the long-shot cap
+                     (surfaced, greyed, not a bet — §13.4b).
+      * ""         — no pick clears the EV floor (or no 1xBet open captured).
+    """
+    out = frame.copy()
+    picks: list[str] = []
+    states: list[str] = []
+    for row in out.itertuples(index=False):
+        best_key = ""
+        best_ev = float("-inf")
+        for side in ("home", "draw", "away"):
+            odds = getattr(row, f"onexbet_open_{side}_odds")
+            ev = getattr(row, f"onexbet_open_{side}_ev")
+            if pd.isna(odds) or pd.isna(ev):
+                continue
+            if float(ev) > best_ev:
+                best_ev = float(ev)
+                best_key = side
+        if best_key and best_ev > SIGNAL_EV_MIN:
+            pick_odds = float(getattr(row, f"onexbet_open_{best_key}_odds"))
+            state = "bet" if pick_odds <= SIGNAL_ODDS_CAP else "odds_cap"
+            picks.append(best_key)
+            states.append(state)
+        else:
+            picks.append("")
+            states.append("")
+    out["signal_pick"] = picks
+    out["signal_state"] = states
     return out
 
 
@@ -355,18 +442,26 @@ def validate_model_probabilities(frame: pd.DataFrame) -> None:
         ].to_dict("records")
         raise ValueError(f"Model 1X2 probabilities out of (0, 1): {bad}")
 
-    # Now-side EVs must exist exactly where a current Now line does; open-side
-    # EVs exactly where an opening capture does.
-    now_rows = frame[frame["event_id"].notna()]
-    for col in ("home_ev", "draw_ev", "away_ev"):
-        if now_rows[col].isna().any():
-            bad = now_rows.loc[now_rows[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
-            raise ValueError(f"Missing EV values in {col}: {bad}")
-    open_rows = frame[frame["open_home_odds"].notna()]
-    for col in ("open_home_ev", "open_draw_ev", "open_away_ev"):
-        if open_rows[col].isna().any():
-            bad = open_rows.loc[open_rows[col].isna(), ["fixture_id", "home_team", "away_team"]].to_dict("records")
-            raise ValueError(f"Missing EV values in {col}: {bad}")
+    # 1xBet-open EVs must exist exactly where a 1xBet opening price does.
+    for side in ("home", "draw", "away"):
+        odds_col = f"onexbet_open_{side}_odds"
+        ev_col = f"onexbet_open_{side}_ev"
+        has_odds = frame[odds_col].notna()
+        missing = has_odds & frame[ev_col].isna()
+        if missing.any():
+            bad = frame.loc[missing, ["fixture_id", "home_team", "away_team"]].to_dict("records")
+            raise ValueError(f"Missing EV in {ev_col} where {odds_col} present: {bad}")
+
+    # A fired signal ("bet"/"odds_cap") must name an outcome that actually has a
+    # 1xBet open price; an empty state must have an empty pick.
+    for row in frame.itertuples(index=False):
+        state = getattr(row, "signal_state")
+        pick = getattr(row, "signal_pick")
+        if state in ("bet", "odds_cap"):
+            if pick not in ("home", "draw", "away") or pd.isna(getattr(row, f"onexbet_open_{pick}_odds")):
+                raise ValueError(f"Signal {state} without a priced pick: {row.home_team} vs {row.away_team}")
+        elif pick:
+            raise ValueError(f"Empty signal_state with non-empty pick '{pick}': {row.home_team} vs {row.away_team}")
 
 
 def write_csv(df: pd.DataFrame, path: str) -> None:
@@ -389,14 +484,15 @@ def run(
     upcoming = load_upcoming(upcoming_csv)
     pinnacle = load_pinnacle(pinnacle_csv)
 
-    opens = load_open_snapshots(history_csv)
-    base = build_base_frame(upcoming, pinnacle, opens)
+    pinnacle_opens = load_open_snapshots(history_csv, ANCHOR_BOOKMAKER, prefix="open")
+    onexbet_opens = load_open_snapshots(history_csv, BET_BOOKMAKER, prefix="onexbet_open")
+    base = build_base_frame(upcoming, pinnacle, pinnacle_opens, onexbet_opens)
     n_now = int(base["event_id"].notna().sum())
-    n_open = int(base["open_home_odds"].notna().sum())
-    n_open_only = int((base["event_id"].isna() & base["open_home_odds"].notna()).sum())
+    n_pin_open = int(base["open_home_odds"].notna().sum())
+    n_bet_open = int(base["onexbet_open_home_odds"].notna().sum())
     log.info(
-        "Comparison fixtures: %d of %d upcoming (%d with Now line, %d with open line, %d open-only)",
-        len(base), len(upcoming), n_now, n_open, n_open_only,
+        "Comparison fixtures: %d of %d upcoming (%d Now line, %d Pinnacle open anchor, %d 1xBet open bet-price)",
+        len(base), len(upcoming), n_now, n_pin_open, n_bet_open,
     )
 
     if base.empty:
@@ -408,12 +504,19 @@ def run(
         return full_df, dashboard_df
 
     enriched = attach_model_probabilities(base, matches_csv, xi, lam)
+    enriched = attach_signals(enriched)
     validate_model_probabilities(enriched)
     log.info(
         "De-bias split: %d market_anchor (λ=%.2f), %d delta fallback",
         int((enriched["debias_method"] == "market_anchor").sum()),
         lam,
         int((enriched["debias_method"] == "delta").sum()),
+    )
+    log.info(
+        "Signals: %d bet, %d odds_cap (EV>%.2f, cap odds<=%.0f)",
+        int((enriched["signal_state"] == "bet").sum()),
+        int((enriched["signal_state"] == "odds_cap").sum()),
+        SIGNAL_EV_MIN, SIGNAL_ODDS_CAP,
     )
 
     full_df = enriched[FULL_COLUMNS].copy()
