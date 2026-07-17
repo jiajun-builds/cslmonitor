@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-17T01:57:35+01:00"
+    "updated_at": "2026-07-17T03:49:47+01:00"
   },
   "rows": [
     {
@@ -80,7 +80,7 @@
       "team": "Dalian Yingbo",
       "attack_rating": 0.8461400441987844,
       "defense_rating": -1.3443274346499507,
-      "overall_rating": 2.1904674788487353,
+      "overall_rating": 2.1904674788487357,
       "attack_rank": 13,
       "defense_rank": 8,
       "form": "W,L,L,W,D"
@@ -140,7 +140,7 @@
       "team": "Liaoning Tieren",
       "attack_rating": 1.037886413191348,
       "defense_rating": -0.8917087166223598,
-      "overall_rating": 1.9295951298137075,
+      "overall_rating": 1.929595129813708,
       "attack_rank": 8,
       "defense_rank": 17,
       "form": "W,L,D,W,W"
