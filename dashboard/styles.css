@@ -761,38 +761,121 @@ th,
   margin-top: 6px;
 }
 
-/* Fixed layout so the 9 columns share the full width evenly instead of one
+/* Fixed layout so the 6 columns share the full width evenly instead of one
    greedy auto column shoving the numbers to the right edge. */
-.market-comparison-table {
+.signal-table {
   table-layout: fixed;
   width: 100%;
 }
 
-.market-comparison-table th:nth-child(1),
-.market-comparison-table td:nth-child(1) { width: 5%; }   /* Time */
-.market-comparison-table th:nth-child(2),
-.market-comparison-table td:nth-child(2) { width: 24%; }  /* Match */
-.market-comparison-table th:nth-child(3),
-.market-comparison-table td:nth-child(3) { width: 10%; }  /* Open Line */
-.market-comparison-table th:nth-child(4),
-.market-comparison-table td:nth-child(4) { width: 10%; }  /* Open Odds */
-.market-comparison-table th:nth-child(5),
-.market-comparison-table td:nth-child(5) { width: 9%; }   /* Open EV */
-.market-comparison-table th:nth-child(6),
-.market-comparison-table td:nth-child(6) { width: 11%; }  /* Current Line */
-.market-comparison-table th:nth-child(7),
-.market-comparison-table td:nth-child(7) { width: 11%; }  /* Current Odds */
-.market-comparison-table th:nth-child(8),
-.market-comparison-table td:nth-child(8) { width: 10%; }  /* Current EV */
-.market-comparison-table th:nth-child(9),
-.market-comparison-table td:nth-child(9) { width: 10%; }  /* Move */
+.signal-table th:nth-child(1),
+.signal-table td:nth-child(1) { width: 7%; }    /* Time */
+.signal-table th:nth-child(2),
+.signal-table td:nth-child(2) { width: 33%; }   /* Outcome */
+.signal-table th:nth-child(3),
+.signal-table td:nth-child(3) { width: 12%; }   /* Prob */
+.signal-table th:nth-child(4),
+.signal-table td:nth-child(4) { width: 13%; }   /* 1xBet Open */
+.signal-table th:nth-child(5),
+.signal-table td:nth-child(5) { width: 12%; }   /* EV */
+.signal-table th:nth-child(6),
+.signal-table td:nth-child(6) { width: 23%; }   /* Signal */
 
-/* Keep every header on a single line so column labels align uniformly; the
-   tight letter-spacing lets "Open Odds" / "Now Odds" fit without wrapping. */
-.market-comparison-table th {
+/* Keep every header on a single line so column labels align uniformly. */
+.signal-table th {
   white-space: nowrap;
   vertical-align: bottom;
   letter-spacing: 0.04em;
+}
+
+.signal-table__action-col {
+  text-align: left;
+}
+
+/* Prob column reads as supporting context, dimmer than the EV it explains. */
+.signal-prob {
+  color: hsl(var(--term-dim));
+}
+
+/* One 3-row block per fixture; middle (draw) label dimmed so the eye groups it. */
+.signal-outcome {
+  color: hsl(var(--term-text));
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.signal-outcome--draw {
+  color: hsl(var(--term-dim));
+}
+
+.signal-outcome__mark {
+  color: hsl(var(--term-green-strong));
+  margin-right: 6px;
+  font-weight: 700;
+}
+
+/* The winning-signal row: a green wash + left rail so it reads at a glance.
+   Non-signal outcomes carry no colour (per design — only bets are flagged). */
+.signal-row--bet td {
+  background: hsl(var(--term-green) / 0.10);
+}
+
+.signal-row--bet td:first-child {
+  box-shadow: inset 3px 0 0 hsl(var(--term-green-strong));
+}
+
+.signal-row--bet .signal-outcome {
+  color: hsl(var(--term-green-strong));
+  font-weight: 600;
+}
+
+.signal-table__action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.signal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: hsl(var(--term-green-strong));
+  color: hsl(var(--term-bg));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.signal-badge--capped {
+  background: transparent;
+  border: 1px solid hsl(var(--term-dim) / 0.6);
+  color: hsl(var(--term-dim));
+  font-weight: 600;
+}
+
+.signal-link {
+  color: hsl(var(--term-cyan));
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.signal-link:hover {
+  text-decoration: underline;
+}
+
+.odds-tooltip__method {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid hsl(var(--term-border) / 0.7);
+  color: hsl(var(--term-dim));
+  font-size: 12px;
 }
 
 /* Faint divider marking the Open | Now group boundary (odds column of each). */
@@ -800,11 +883,7 @@ th,
   border-left: 1px solid hsl(var(--term-border) / 0.5);
 }
 
-.market-comparison__move {
-  color: hsl(var(--term-dim));
-}
-
-/* Odds cells are hoverable for the snapshot tooltip (full H/D/A triplet). */
+/* Odds cells are hoverable for the 1xBet-open snapshot tooltip (H/D/A triplet). */
 .market-comparison__line-cell {
   cursor: help;
 }
@@ -855,37 +934,19 @@ th,
   font-weight: 600;
 }
 
-.market-comparison__time,
-.market-comparison__match,
-.market-comparison-table td[rowspan] {
-  vertical-align: middle;
-}
-
-.market-comparison__time,
-.market-comparison-table td[rowspan] {
+/* The kickoff-time cell spans the fixture's 3 outcome rows; top-align it. */
+.signal-table__time,
+.signal-table td[rowspan] {
   vertical-align: top;
 }
 
-.market-comparison__match {
-  color: hsl(var(--term-text));
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* The Draw row sits between the two team rows; dim its label so the eye
-   still reads each 3-row block as one match. */
-.market-comparison__match--draw {
-  color: hsl(var(--term-dim));
-}
-
-.market-comparison__row--home td,
-.market-comparison__row--draw td {
+/* Intra-fixture row dividers faint; the away row closes the block with a
+   stronger rule so each 3-row fixture reads as one group. */
+.signal-row:not(:nth-child(3n)) td {
   border-bottom-color: hsl(var(--term-border) / 0.35);
 }
 
-.market-comparison__row--away td {
+.signal-row:nth-child(3n) td {
   border-bottom-color: hsl(var(--term-border) / 0.85);
 }
 

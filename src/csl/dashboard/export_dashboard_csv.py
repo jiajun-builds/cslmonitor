@@ -26,7 +26,7 @@ TZ = ZoneInfo("Europe/London")
 COMPETITION_CODE = "CSL"
 COMPETITION_NAME = "Chinese Super League"
 MODEL_NAME = "Negative Binomial with Dixon-Coles Time Decay"
-MODEL_VERSION = "v2.6"
+MODEL_VERSION = "v2.7"
 
 META_COLUMNS = [
     "competition_code",

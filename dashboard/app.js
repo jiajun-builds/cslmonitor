@@ -5,10 +5,20 @@ const DATA_BASES = ["./data", "../data/dashboard/json"];
 // Asia/Shanghai (+08:00) but converted here for a consistent reading.
 const DISPLAY_TZ = "Europe/London";
 
+// 1xBet exposes no stable per-fixture deep link we can build without its event id,
+// so a bet button lands on 1xBet's football line page and the user filters to the
+// CSL fixture from there. Replace with a verified CSL league URL if one is found.
+const ONEXBET_LEAGUE_URL = "https://1xbet.com/en/line/football";
+
+// Betting signal thresholds — display copy only; the authoritative signal is
+// computed server-side (export_upcoming_market_comparison.py, backtest.md §13.4).
+const SIGNAL_EV_MIN = 0.2;
+const SIGNAL_ODDS_CAP = 7;
+
 const selectors = {
   signalRounds: document.getElementById("signal-rounds"),
   marketBody: document.getElementById("market-body"),
-  marketComparisonBody: document.getElementById("market-comparison-body"),
+  signalBody: document.getElementById("signal-body"),
   strengthBody: document.getElementById("strength-body"),
 };
 
@@ -122,61 +132,20 @@ function evClass(value) {
   return "market-comparison__value--neutral";
 }
 
-// Arrow for how an outcome's price moved from open to now: ↓ shortened (market
-// moved toward this outcome), ↑ drifted out, = unchanged.
-function oddsMove(openOdds, nowOdds) {
-  if (openOdds == null || nowOdds == null) {
-    return "";
-  }
-  const o = Number(openOdds);
-  const n = Number(nowOdds);
-  if (Number.isNaN(o) || Number.isNaN(n)) {
-    return "";
-  }
-  if (n < o) {
-    return "↓";
-  }
-  if (n > o) {
-    return "↑";
-  }
-  return "=";
+// Per-outcome accessors for a market-comparison row, keyed by signal_pick value
+// ("home"/"draw"/"away"). Returns the 1xBet opening odds / EV / label for that side.
+function outcomeOdds(row, pick) {
+  return row[`onexbet_open_${pick}_odds`];
 }
 
-function getBestBet(rows) {
-  return rows.reduce((best, row) => {
-    const variants = [
-      {
-        team: row.home_team,
-        side: "H",
-        odds: row.home_odds,
-        // null (open-only fixture, no Now line) -> NaN so it's skipped below;
-        // Number(null) is 0, which would otherwise look like a real 0-EV bet.
-        ev: row.home_ev == null ? NaN : Number(row.home_ev),
-      },
-      {
-        team: `${row.home_team} vs ${row.away_team}`,
-        side: "D",
-        odds: row.draw_odds,
-        ev: row.draw_ev == null ? NaN : Number(row.draw_ev),
-      },
-      {
-        team: row.away_team,
-        side: "A",
-        odds: row.away_odds,
-        ev: row.away_ev == null ? NaN : Number(row.away_ev),
-      },
-    ];
+function outcomeEv(row, pick) {
+  return row[`onexbet_open_${pick}_ev`];
+}
 
-    variants.forEach((variant) => {
-      if (Number.isNaN(variant.ev)) {
-        return;
-      }
-      if (!best || variant.ev > best.ev) {
-        best = variant;
-      }
-    });
-    return best;
-  }, null);
+function outcomeLabel(row, pick) {
+  if (pick === "home") return row.home_team;
+  if (pick === "away") return row.away_team;
+  return "Draw";
 }
 
 function getSignal(row) {
@@ -298,74 +267,73 @@ function renderStrength(rows) {
     .join("");
 }
 
-// One <tr> per 1X2 outcome; the kickoff-time cell on the first (home) row spans
-// all three. Open-odds cells carry the captured opening snapshot for the tooltip.
-function comparisonOutcomeRow(row, outcome, isFirst) {
+// The action cell only carries content on the fixture's signal_pick row: a BET
+// badge + 1xBet link when the pick fires ("bet"), or a greyed odds-cap marker when
+// the EV clears but the pick's price is over the long-shot cap ("odds_cap").
+function signalActionCell(state) {
+  if (state === "bet") {
+    return (
+      `<span class="signal-badge">● BET</span>` +
+      `<a class="signal-link" href="${ONEXBET_LEAGUE_URL}" target="_blank" rel="noopener noreferrer">Bet on 1xBet ↗</a>`
+    );
+  }
+  if (state === "odds_cap") {
+    return `<span class="signal-badge signal-badge--capped">odds &gt; ${SIGNAL_ODDS_CAP}</span>`;
+  }
+  return "";
+}
+
+// One <tr> per 1X2 outcome; the kickoff-time cell on the first (home) row spans all
+// three. The 1xBet-open odds cell carries the opening snapshot for the tooltip.
+function signalOutcomeRow(row, outcome, isFirst) {
   const timeCell = isFirst
-    ? `<td class="numeric market-comparison__time" rowspan="3">${formatKickoffTime(row.kickoff_at, row.match_time)}</td>`
+    ? `<td class="numeric signal-table__time" rowspan="3">${formatKickoffTime(row.kickoff_at, row.match_time)}</td>`
     : "";
-  const matchClass =
-    outcome.key === "draw"
-      ? "market-comparison__match market-comparison__match--draw"
-      : "market-comparison__match";
+  const isPick = row.signal_pick === outcome.key;
+  const state = isPick ? row.signal_state : "";
+  const rowClass = state === "bet" ? "signal-row signal-row--bet" : "signal-row";
+  const labelClass =
+    outcome.key === "draw" ? "signal-outcome signal-outcome--draw" : "signal-outcome";
+  const pickMark = isPick && state === "bet" ? `<span class="signal-outcome__mark">▸</span>` : "";
   return `
-    <tr class="market-comparison__row market-comparison__row--${outcome.key}">
+    <tr class="${rowClass}">
       ${timeCell}
-      <td class="${matchClass}">${outcome.label}</td>
-      <td class="numeric market-comparison__value market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.open_last_update ?? ""}" data-tip-hodds="${row.open_home_odds ?? ""}" data-tip-dodds="${row.open_draw_odds ?? ""}" data-tip-aodds="${row.open_away_odds ?? ""}">${formatOdds(outcome.openOdds)}</td>
-      <td class="numeric market-comparison__value ${evClass(outcome.openEv)}">${formatEv(outcome.openEv)}</td>
-      <td class="numeric market-comparison__value market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.last_update ?? ""}" data-tip-hodds="${row.home_odds ?? ""}" data-tip-dodds="${row.draw_odds ?? ""}" data-tip-aodds="${row.away_odds ?? ""}">${formatOdds(outcome.nowOdds)}</td>
-      <td class="numeric market-comparison__value ${evClass(outcome.nowEv)}">${formatEv(outcome.nowEv)}</td>
-      <td class="numeric market-comparison__value market-comparison__move">${oddsMove(outcome.openOdds, outcome.nowOdds)}</td>
+      <td class="${labelClass}">${pickMark}${outcome.label}</td>
+      <td class="numeric market-comparison__value signal-prob">${formatPercent(outcome.prob)}</td>
+      <td class="numeric market-comparison__value market-comparison__group-start market-comparison__line-cell" data-tip-time="${row.onexbet_open_last_update ?? ""}" data-tip-method="${row.debias_method ?? ""}" data-tip-hodds="${row.onexbet_open_home_odds ?? ""}" data-tip-dodds="${row.onexbet_open_draw_odds ?? ""}" data-tip-aodds="${row.onexbet_open_away_odds ?? ""}">${formatOdds(outcome.odds)}</td>
+      <td class="numeric market-comparison__value ${evClass(outcome.ev)}">${formatEv(outcome.ev)}</td>
+      <td class="signal-table__action">${signalActionCell(state)}</td>
     </tr>
   `;
 }
 
-function renderMarketComparison(rows, meta) {
-  selectors.marketComparisonBody.innerHTML = rows
+function renderSignals(rows, meta) {
+  selectors.signalBody.innerHTML = rows
     .map((row) => {
       const outcomes = [
-        {
-          key: "home",
-          label: row.home_team,
-          openOdds: row.open_home_odds,
-          openEv: row.open_home_ev,
-          nowOdds: row.home_odds,
-          nowEv: row.home_ev,
-        },
-        {
-          key: "draw",
-          label: "Draw",
-          openOdds: row.open_draw_odds,
-          openEv: row.open_draw_ev,
-          nowOdds: row.draw_odds,
-          nowEv: row.draw_ev,
-        },
-        {
-          key: "away",
-          label: row.away_team,
-          openOdds: row.open_away_odds,
-          openEv: row.open_away_ev,
-          nowOdds: row.away_odds,
-          nowEv: row.away_ev,
-        },
+        { key: "home", label: row.home_team, prob: row.home_win_prob, odds: row.onexbet_open_home_odds, ev: row.onexbet_open_home_ev },
+        { key: "draw", label: "Draw", prob: row.draw_prob, odds: row.onexbet_open_draw_odds, ev: row.onexbet_open_draw_ev },
+        { key: "away", label: row.away_team, prob: row.away_win_prob, odds: row.onexbet_open_away_odds, ev: row.onexbet_open_away_ev },
       ];
       return outcomes
-        .map((outcome, index) => comparisonOutcomeRow(row, outcome, index === 0))
+        .map((outcome, index) => signalOutcomeRow(row, outcome, index === 0))
         .join("");
     })
     .join("");
 
-  // The model is rebuilt daily; the Now line refreshes every few hours. Label the two
-  // times distinctly so a stale/fresh feed is never mistaken for a stale/fresh model.
-  const latestFetch = rows.reduce(
-    (best, row) => (!best || (row.fetched_at && row.fetched_at > best) ? row.fetched_at : best),
+  // The model is rebuilt daily; the 1xBet opening line is captured once per fixture.
+  // Label both so a stale model is never mistaken for a stale opening capture.
+  const latestOpen = rows.reduce(
+    (best, row) =>
+      row.onexbet_open_last_update && (!best || row.onexbet_open_last_update > best)
+        ? row.onexbet_open_last_update
+        : best,
     "",
   );
   const modelUpdated = meta?.model_updated_at ?? meta?.updated_at ?? "";
   setText(
-    "panel-market-comparison-meta",
-    `Model ${formatFeedStamp(modelUpdated)} · Odds fetched ${formatFeedStamp(latestFetch)}`,
+    "panel-signal-meta",
+    `Model ${formatFeedStamp(modelUpdated)} · 1xBet open ${formatFeedStamp(latestOpen)}`,
   );
 }
 
@@ -375,7 +343,7 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
   const topFavorite = [...predictions]
     .map((row) => ({ row, signal: getSignal(row) }))
     .sort((a, b) => b.signal.value - a.signal.value)[0];
-  const bestBet = getBestBet(marketComparison);
+  const betSignals = marketComparison.filter((row) => row.signal_state === "bet");
 
   setText("masthead-trail", `${meta.competition_name} · Season ${meta.season} · ${meta.model_name} · ${meta.model_version}`);
   setText("masthead-next-date", meta.next_fixture_date);
@@ -397,9 +365,18 @@ function renderHeader(meta, fixtures, predictions, strength, marketComparison) {
     );
   }
 
-  if (bestBet) {
-    setText("metric-best-bet", bestBet.team);
-    setText("metric-best-bet-note", `${bestBet.side} @ ${formatOdds(bestBet.odds)} · EV ${formatEv(bestBet.ev)}`);
+  setText("metric-signals-count", String(betSignals.length));
+  if (betSignals.length) {
+    const top = betSignals[0];
+    const pick = top.signal_pick;
+    const side = pick.charAt(0).toUpperCase(); // home->H, draw->D, away->A
+    const more = betSignals.length > 1 ? ` · +${betSignals.length - 1} more` : "";
+    setText(
+      "metric-signals-note",
+      `${outcomeLabel(top, pick)} (${side}) @ ${formatOdds(outcomeOdds(top, pick))} · EV ${formatEv(outcomeEv(top, pick))}${more}`,
+    );
+  } else {
+    setText("metric-signals-note", "— no signal");
   }
 
   if (topFavorite) {
@@ -516,7 +493,7 @@ async function bootstrap() {
     renderSignalBar(meta);
     renderMeta(meta);
     renderMarketRows(mergedMarketRows);
-    renderMarketComparison(marketComparison, meta);
+    renderSignals(marketComparison, meta);
     renderStrength(strength);
     startClock();
   } catch (error) {
@@ -561,18 +538,23 @@ function ensureOddsTooltip() {
 }
 
 function showOddsTooltip(cell) {
-  const { tipTime, tipHodds, tipDodds, tipAodds } = cell.dataset;
+  const { tipTime, tipHodds, tipDodds, tipAodds, tipMethod } = cell.dataset;
   if (!tipTime && !tipHodds && !tipDodds && !tipAodds) {
-    return; // no captured snapshot for this column
+    return; // no captured 1xBet opening snapshot for this fixture
   }
   const tip = ensureOddsTooltip();
+  const methodLabel = tipMethod === "market_anchor" ? "Pinnacle-anchored" : tipMethod === "delta" ? "δ-calibrated" : "";
+  const methodLine = methodLabel
+    ? `<div class="odds-tooltip__method">de-bias: ${methodLabel}</div>`
+    : "";
   tip.innerHTML = `
-    <div class="odds-tooltip__time">${formatOpenStamp(tipTime)}</div>
+    <div class="odds-tooltip__time">1XBET OPEN · ${formatOpenStamp(tipTime)}</div>
     <div class="odds-tooltip__grid">
       <span class="odds-tooltip__key">home</span><span class="odds-tooltip__val">${formatOdds(tipHodds || null)}</span>
       <span class="odds-tooltip__key">draw</span><span class="odds-tooltip__val">${formatOdds(tipDodds || null)}</span>
       <span class="odds-tooltip__key">away</span><span class="odds-tooltip__val">${formatOdds(tipAodds || null)}</span>
-    </div>`;
+    </div>
+    ${methodLine}`;
   tip.hidden = false;
 }
 

@@ -65,6 +65,31 @@ class ExportPaths:
         return os.path.join(self.json_dir, "upcoming_market_comparison.json")
 
 
+# Dashboard v2.7 market-comparison contract: model probabilities + 1xBet opening
+# line/EV + betting signal. No Pinnacle "Now" line — the board is the 1xBet-open
+# signal surface (backtest.md §13.4). Order is significant: the JSON validator
+# requires each row's keys to equal this list exactly.
+MARKET_COMPARISON_FIELDS = [
+    "home_team",
+    "away_team",
+    "match_time",
+    "home_win_prob",
+    "draw_prob",
+    "away_win_prob",
+    "debias_method",
+    "onexbet_open_home_odds",
+    "onexbet_open_draw_odds",
+    "onexbet_open_away_odds",
+    "onexbet_open_home_ev",
+    "onexbet_open_draw_ev",
+    "onexbet_open_away_ev",
+    "signal_pick",
+    "signal_state",
+    "onexbet_open_last_update",
+    "fetched_at",
+]
+
+
 def _require_columns(df: pd.DataFrame, required: list[str], label: str) -> None:
     missing = [col for col in required if col not in df.columns]
     if missing:
@@ -158,26 +183,7 @@ def validate_payloads(
     market_rows = market_comparison_payload["rows"]
     for row in market_rows:
         row_keys = list(row.keys())
-        expected_keys = [
-            "home_team",
-            "away_team",
-            "match_time",
-            "home_odds",
-            "draw_odds",
-            "away_odds",
-            "home_ev",
-            "draw_ev",
-            "away_ev",
-            "open_home_odds",
-            "open_draw_odds",
-            "open_away_odds",
-            "open_home_ev",
-            "open_draw_ev",
-            "open_away_ev",
-            "open_last_update",
-            "last_update",
-            "fetched_at",
-        ]
+        expected_keys = MARKET_COMPARISON_FIELDS
         if row_keys != expected_keys:
             raise ValueError(
                 "upcoming_market_comparison.json rows must contain exactly the approved fields; "
@@ -260,26 +266,7 @@ def run() -> None:
 
     market_comparison_rows = _load_rows_csv(
         paths.market_comparison_csv,
-        [
-            "home_team",
-            "away_team",
-            "match_time",
-            "home_odds",
-            "draw_odds",
-            "away_odds",
-            "home_ev",
-            "draw_ev",
-            "away_ev",
-            "open_home_odds",
-            "open_draw_odds",
-            "open_away_odds",
-            "open_home_ev",
-            "open_draw_ev",
-            "open_away_ev",
-            "open_last_update",
-            "last_update",
-            "fetched_at",
-        ],
+        MARKET_COMPARISON_FIELDS,
         "upcoming_market_comparison.csv",
     )
 
