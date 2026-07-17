@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-17T06:45:16+01:00"
+    "updated_at": "2026-07-17T09:13:58+01:00"
   },
   "rows": [
     {
@@ -22,7 +22,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-11T12:12:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Beijing Guoan",
@@ -41,7 +41,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-11T08:07:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Henan Songshan Longmen",
@@ -60,7 +60,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-14T09:58:06Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Yunnan Yukun",
@@ -79,7 +79,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-12T11:07:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Chongqing Tonglianglong",
@@ -98,7 +98,7 @@
       "signal_pick": "away",
       "signal_state": "bet",
       "onexbet_open_last_update": "2026-07-13T09:59:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -117,7 +117,7 @@
       "signal_pick": "away",
       "signal_state": "bet",
       "onexbet_open_last_update": "2026-07-12T11:07:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -136,7 +136,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-11T11:58:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -155,7 +155,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-11T12:12:00Z",
-      "fetched_at": "2026-07-17T05:45:13Z"
+      "fetched_at": "2026-07-17T08:13:54Z"
     }
   ]
 }
