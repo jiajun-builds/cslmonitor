@@ -32,10 +32,11 @@
 
       <!-- FUNCTION TABS -->
       <nav class="tabs" aria-label="Views">
-        <button type="button" class="tab tab--active" data-view-target="ev-bet" aria-current="page"><span class="tab__f">F1</span> EV ANALYSIS</button>
-        <button type="button" class="tab" data-view-target="schedule" aria-current="false"><span class="tab__f">F2</span> SCHEDULE</button>
-        <button type="button" class="tab" data-view-target="club" aria-current="false"><span class="tab__f">F3</span> TEAM STRENGTH</button>
-        <button type="button" class="tab" data-view-target="context" aria-current="false"><span class="tab__f">F4</span> MODEL</button>
+        <button type="button" class="tab tab--active" data-view-target="overview" aria-current="page"><span class="tab__f">F1</span> OVERVIEW</button>
+        <button type="button" class="tab" data-view-target="ev-bet" aria-current="false"><span class="tab__f">F2</span> EV BET</button>
+        <button type="button" class="tab" data-view-target="schedule" aria-current="false"><span class="tab__f">F3</span> SCHEDULE</button>
+        <button type="button" class="tab" data-view-target="club" aria-current="false"><span class="tab__f">F4</span> TEAM STRENGTH</button>
+        <button type="button" class="tab" data-view-target="context" aria-current="false"><span class="tab__f">F5</span> MODEL</button>
         <div class="tabs__meta">
           <span>PLAYED <b data-bind="played">--</b></span>
           <span class="tabs__sep">|</span>
@@ -44,33 +45,61 @@
         </div>
       </nav>
 
-      <!-- KPI STRIP -->
-      <section class="kpi" aria-label="Key metrics">
-        <article class="kpi__cell kpi__cell--primary">
-          <span class="kpi__label">★ BEST BET</span>
-          <span class="kpi__value" data-bind="best-bet-team">--</span>
-          <span class="kpi__note" data-bind="best-bet-note"></span>
-        </article>
-        <article class="kpi__cell">
-          <span class="kpi__label">NEXT FIXTURE</span>
-          <span class="kpi__value" data-bind="next-fixture">--</span>
-          <span class="kpi__note" data-bind="next-note"></span>
-        </article>
-        <article class="kpi__cell">
-          <span class="kpi__label">STRONGEST CLUB</span>
-          <span class="kpi__value kpi__value--accent" data-bind="strong-team">--</span>
-          <span class="kpi__note" data-bind="strong-note"></span>
-        </article>
-        <article class="kpi__cell">
-          <span class="kpi__label">SIGNALS FIRING</span>
-          <span class="kpi__value"><span data-bind="signals-count">--</span> <span class="kpi__value-sub">/ <span data-bind="signals-fixtures">--</span> fixtures</span></span>
-          <span class="kpi__note" data-bind="signals-note"></span>
-        </article>
-      </section>
-
       <div class="views">
+        <!-- ===== OVERVIEW ===== -->
+        <section class="view view--active" data-view="overview" aria-label="Overview">
+          <!-- BEST BET HERO -->
+          <div class="hero" id="overview-hero"></div>
+
+          <!-- CONTENT ROW -->
+          <div class="ov-grid">
+            <!-- SIGNALS FIRING -->
+            <div class="panel ov-grid__main">
+              <div class="panel__bar">
+                <div class="panel__title-wrap"><span class="panel__title">SIGNALS FIRING</span><span class="panel__kick">FIXTURES CLEARING EV &amp; ODDS FILTER</span></div>
+                <span class="panel__meta"><b data-bind="ov-signal-count">--</b> firing · <span data-bind="ov-signal-total">--</span> fixtures</span>
+              </div>
+              <div class="scroll">
+                <table class="tbl tbl--overview">
+                  <thead>
+                    <tr>
+                      <th class="c-time">TIME</th>
+                      <th class="c-match">MATCH</th>
+                      <th class="c-pick">MODEL PICK</th>
+                      <th class="num c-odds">1XBET OPEN</th>
+                      <th class="num c-ev">EV</th>
+                      <th class="c-signal">SIGNAL</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overview-body"></tbody>
+                </table>
+              </div>
+              <div class="legend"><span>Ranked by EV · pick is the model’s bet on the 1xBet opening line · <span class="badge">BET</span> clears EV &gt; 0.20 &amp; odds ≤ 7</span></div>
+            </div>
+
+            <!-- SIDE TILES -->
+            <aside class="ov-grid__side">
+              <article class="tile">
+                <span class="tile__label">NEXT FIXTURE</span>
+                <span class="tile__value" data-bind="next-fixture">--</span>
+                <span class="tile__note" data-bind="next-note"></span>
+              </article>
+              <article class="tile">
+                <span class="tile__label">STRONGEST CLUB</span>
+                <span class="tile__value tile__value--accent" data-bind="strong-team">--</span>
+                <span class="tile__note" data-bind="strong-note"></span>
+              </article>
+              <article class="tile">
+                <span class="tile__label">LEAGUE STATE</span>
+                <span class="tile__value"><span data-bind="played">--</span> <span class="tile__value-sub">played</span></span>
+                <span class="tile__note">Round <b data-bind="round-label">--</b> · updated <span data-bind="masthead-updated">--</span></span>
+              </article>
+            </aside>
+          </div>
+        </section>
+
         <!-- ===== EV BET ===== -->
-        <section class="view view--active" data-view="ev-bet" aria-label="Bet Signals">
+        <section class="view" data-view="ev-bet" aria-label="Bet Signals">
           <div class="panel">
             <div class="panel__bar">
               <div class="panel__title-wrap"><span class="panel__title">BET SIGNALS</span><span class="panel__kick">1XBET OPENING LINE · MODEL vs FAIR</span></div>

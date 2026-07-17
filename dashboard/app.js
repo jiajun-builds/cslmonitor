@@ -14,6 +14,8 @@ const ONEXBET_LEAGUE_URL = "https://1xbet.com/en/line/football";
 const SIGNAL_ODDS_CAP = 7;
 
 const el = {
+  overviewHero: document.getElementById("overview-hero"),
+  overviewBody: document.getElementById("overview-body"),
   signalBody: document.getElementById("signal-body"),
   marketBody: document.getElementById("market-body"),
   strengthBody: document.getElementById("strength-body"),
@@ -31,6 +33,7 @@ function odds(v) { return v == null ? "--" : Number(v).toFixed(2); }
 function ev(v) { if (v == null) return "--"; const n = Number(v); return (n >= 0 ? "+" : "") + n.toFixed(3); }
 function evClass(v) { if (v == null) return "zero"; return v > 0.0005 ? "pos" : v < -0.0005 ? "neg" : "zero"; }
 function sideLetter(k) { return k === "home" ? "H" : k === "away" ? "A" : "D"; }
+function sideWord(k) { return k === "home" ? "HOME WIN" : k === "away" ? "AWAY WIN" : "DRAW"; }
 
 function fmtStamp(v) {
   if (!v) return "--";
@@ -57,6 +60,91 @@ function clock() {
   return new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: DISPLAY_TZ }).format(new Date());
 }
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+/* ---------- OVERVIEW (best-bet hero + firing signals) ---------- */
+function renderOverview(market) {
+  const bets = market
+    .filter((r) => r.signal_state === "bet")
+    .map((r) => ({
+      time: r.match_time,
+      kickoff_at: r.kickoff_at,
+      match: `${r.home_team} vs ${r.away_team}`,
+      team: r.signal_pick === "home" ? r.home_team : r.signal_pick === "away" ? r.away_team : "Draw",
+      key: r.signal_pick,
+      odds: r[`onexbet_open_${r.signal_pick}_odds`],
+      ev: r[`onexbet_open_${r.signal_pick}_ev`],
+    }))
+    .sort((a, b) => b.ev - a.ev);
+
+  setText("ov-signal-count", String(bets.length));
+  setText("ov-signal-total", String(market.length));
+
+  renderHero(bets, market);
+
+  if (!el.overviewBody) return;
+  if (!bets.length) {
+    el.overviewBody.innerHTML = `<tr class="ov-empty"><td colspan="6">— No signals firing. No model pick clears EV &gt; 0.20 &amp; odds ≤ ${SIGNAL_ODDS_CAP} on the current slate.</td></tr>`;
+    return;
+  }
+  el.overviewBody.innerHTML = bets.map((b) => `<tr>
+    <td class="ov-time">${fmtTime(b.kickoff_at, b.time)}</td>
+    <td class="ov-match">${esc(b.match)}</td>
+    <td class="ov-pick">${esc(b.team)} <span class="ov-side">(${sideLetter(b.key)})</span></td>
+    <td class="num ov-odds">${odds(b.odds)}</td>
+    <td class="num ov-ev${b.ev >= 0.2 ? " strong" : ""}">${ev(b.ev)}</td>
+    <td class="ov-sig"><span class="badge">● BET</span> <a class="sig-link" href="${ONEXBET_LEAGUE_URL}" target="_blank" rel="noopener noreferrer">Link ↗</a></td>
+  </tr>`).join("");
+}
+
+function renderHero(bets, market) {
+  if (!el.overviewHero) return;
+
+  // Prefer a firing signal; otherwise surface the single best available edge.
+  let pick = bets[0] || null;
+  let firing = Boolean(pick);
+  if (!pick) {
+    market.forEach((r) => {
+      ["home", "draw", "away"].forEach((k) => {
+        const e = r[`onexbet_open_${k}_ev`];
+        if (e == null) return;
+        if (!pick || e > pick.ev) {
+          pick = {
+            ev: e, odds: r[`onexbet_open_${k}_odds`], key: k,
+            team: k === "home" ? r.home_team : k === "away" ? r.away_team : "Draw",
+            match: `${r.home_team} vs ${r.away_team}`, time: r.match_time, kickoff_at: r.kickoff_at,
+          };
+        }
+      });
+    });
+  }
+
+  if (!pick) {
+    el.overviewHero.className = "hero hero--empty";
+    el.overviewHero.innerHTML = `<div class="hero__main"><span class="hero__label">★ BEST BET</span><span class="hero__team">No market data</span></div>`;
+    return;
+  }
+
+  const when = fmtTime(pick.kickoff_at, pick.time);
+  const cta = firing
+    ? `<span class="badge">● BET</span><a class="sig-link" href="${ONEXBET_LEAGUE_URL}" target="_blank" rel="noopener noreferrer">1xBet ↗</a>`
+    : `<span class="badge badge--cap">BELOW THRESHOLD</span>`;
+
+  el.overviewHero.className = "hero" + (firing ? " hero--bet" : " hero--flat");
+  el.overviewHero.innerHTML = `
+    <div class="hero__main">
+      <span class="hero__label">${firing ? "★ BEST BET" : "★ TOP EDGE"}</span>
+      <div class="hero__headline">
+        <span class="hero__team">${esc(pick.team)}</span>
+        <span class="hero__side">${sideWord(pick.key)}</span>
+      </div>
+      <span class="hero__ctx">${esc(pick.match)}${when ? ` · ${when}` : ""}</span>
+    </div>
+    <div class="hero__metrics">
+      <div class="hero__metric"><span class="hero__metric-k">1XBET OPEN</span><span class="hero__metric-v">${odds(pick.odds)}</span></div>
+      <div class="hero__metric"><span class="hero__metric-k">EDGE (EV)</span><span class="hero__metric-v ${evClass(pick.ev)}">${ev(pick.ev)}</span></div>
+      <div class="hero__cta">${cta}</div>
+    </div>`;
+}
 
 /* ---------- EV BET (bet signals) ---------- */
 function renderSignals(rows) {
@@ -174,36 +262,7 @@ function renderHeader(meta, fixtures, predictions, strength, market, openMax) {
     setText("strong-team", sc.team);
     setText("strong-note", `OVR ${rating(sc.overall_rating)} · ATT ${rating(sc.attack_rating)} · DEF ${rating(sc.defense_rating)}`);
   }
-
-  // Best bet / signals
-  const bets = market
-    .filter((r) => r.signal_state === "bet")
-    .map((r) => ({ r, ev: r[`onexbet_open_${r.signal_pick}_ev`], odds: r[`onexbet_open_${r.signal_pick}_odds`], team: r.signal_pick === "home" ? r.home_team : r.signal_pick === "away" ? r.away_team : "Draw", key: r.signal_pick }))
-    .sort((a, b) => b.ev - a.ev);
-  setText("signals-count", String(bets.length));
-  setText("signals-fixtures", String(market.length));
-
-  if (bets.length) {
-    const b = bets[0];
-    setText("best-bet-team", b.team);
-    setText("best-bet-note", `${sideLetter(b.key)} @ ${odds(b.odds)} · EV ${ev(b.ev)} · FIRES`);
-    const more = bets.length > 1 ? ` · +${bets.length - 1} more` : "";
-    setText("signals-note", `${b.team} (${sideLetter(b.key)}) @ ${odds(b.odds)}${more}`);
-  } else {
-    // surface top available edge
-    let top = null;
-    market.forEach((r) => {
-      ["home", "draw", "away"].forEach((k) => {
-        const e = r[`onexbet_open_${k}_ev`];
-        if (e != null && (!top || e > top.ev)) top = { ev: e, odds: r[`onexbet_open_${k}_odds`], key: k, team: k === "home" ? r.home_team : k === "away" ? r.away_team : "Draw" };
-      });
-    });
-    if (top) {
-      setText("best-bet-team", top.team);
-      setText("best-bet-note", `${sideLetter(top.key)} @ ${odds(top.odds)} · EV ${ev(top.ev)} · below thr`);
-    }
-    setText("signals-note", "— no signal");
-  }
+  // Best bet + firing signals now render on the Overview view (renderOverview / renderHero).
 }
 
 /* ---------- nav + clock + boot ---------- */
@@ -255,6 +314,7 @@ async function bootstrap() {
     }));
 
     const openMax = renderSignals(market);
+    renderOverview(market);
     renderMarket(predictions);
     renderStrength(strength);
     renderContext(meta);
