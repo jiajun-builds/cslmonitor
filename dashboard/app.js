@@ -10,7 +10,7 @@
 
 const DATA_BASES = ["./data", "../data/dashboard/json"];
 const DISPLAY_TZ = "Europe/London";
-const ONEXBET_LEAGUE_URL = "https://1xbet.com/en/line/football";
+const ONEXBET_LEAGUE_URL = "https://1xbetjap.com/en/line/football/58043-china-super-league";
 const SIGNAL_ODDS_CAP = 7;
 
 const el = {
