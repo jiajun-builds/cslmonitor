@@ -1,5 +1,5 @@
 event_id,commence_time,api_home_team,api_away_team,home_team,away_team,home_odds,draw_odds,away_odds,bookmaker,market,regions,last_update,fetched_at
-08d268ec4c18c02590640fe2cdafc1e5,2026-07-18T11:00:00Z,Chongqing Tonglianglong FC,Zhejiang,Chongqing Tonglianglong,Zhejiang Professional,2.84,3.5,2.46,pinnacle,h2h,us,2026-07-17T16:16:46Z,2026-07-17T16:17:33Z
-a2f48c8669537b56409b960e6f4b5da8,2026-07-18T11:35:00Z,Dalian Yingbo,Shandong Luneng Taishan FC,Dalian Yingbo,Shandong Taishan,2.33,3.87,2.8,pinnacle,h2h,us,2026-07-17T16:16:46Z,2026-07-17T16:17:33Z
-3abd5d6ab676880db7d46e5c1a267269,2026-07-18T11:35:00Z,Shanghai Shenhua FC,Tianjin Jinmen Tiger FC,Shanghai Shenhua,Tianjin Jinmen Tiger,1.48,4.7,6.21,pinnacle,h2h,us,2026-07-17T16:16:46Z,2026-07-17T16:17:33Z
-6d213f33c60b8339c5c6ff5c5d9cf15d,2026-07-18T12:00:00Z,Wuhan Three Towns,Shenzhen Peng City FC,Wuhan Three Towns,Shenzhen Xinpengcheng,2.25,3.61,3.09,pinnacle,h2h,us,2026-07-17T16:16:46Z,2026-07-17T16:17:33Z
+08d268ec4c18c02590640fe2cdafc1e5,2026-07-18T11:00:00Z,Chongqing Tonglianglong FC,Zhejiang,Chongqing Tonglianglong,Zhejiang Professional,2.84,3.5,2.46,pinnacle,h2h,us,2026-07-17T19:14:45Z,2026-07-17T19:14:46Z
+a2f48c8669537b56409b960e6f4b5da8,2026-07-18T11:35:00Z,Dalian Yingbo,Shandong Luneng Taishan FC,Dalian Yingbo,Shandong Taishan,2.33,3.87,2.8,pinnacle,h2h,us,2026-07-17T19:14:45Z,2026-07-17T19:14:46Z
+3abd5d6ab676880db7d46e5c1a267269,2026-07-18T11:35:00Z,Shanghai Shenhua FC,Tianjin Jinmen Tiger FC,Shanghai Shenhua,Tianjin Jinmen Tiger,1.48,4.7,6.21,pinnacle,h2h,us,2026-07-17T19:14:45Z,2026-07-17T19:14:46Z
+6d213f33c60b8339c5c6ff5c5d9cf15d,2026-07-18T12:00:00Z,Wuhan Three Towns,Shenzhen Peng City FC,Wuhan Three Towns,Shenzhen Xinpengcheng,2.25,3.61,3.09,pinnacle,h2h,us,2026-07-17T19:14:45Z,2026-07-17T19:14:46Z
