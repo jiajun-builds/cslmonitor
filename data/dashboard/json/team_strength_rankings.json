@@ -2,35 +2,35 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-18T08:56:05+01:00"
+    "updated_at": "2026-07-18T10:48:17+01:00"
   },
   "rows": [
     {
       "rank_overall": 1,
       "team": "Chengdu Rongcheng",
-      "attack_rating": 1.5440923302798444,
-      "defense_rating": -1.8306804914336363,
-      "overall_rating": 3.3747728217134805,
+      "attack_rating": 1.5375775565443,
+      "defense_rating": -1.8542951156017704,
+      "overall_rating": 3.3918726721460706,
       "attack_rank": 1,
       "defense_rank": 1,
-      "form": "D,D,W,W,L"
+      "form": "D,D,D,W,W"
     },
     {
       "rank_overall": 2,
       "team": "Beijing Guoan",
-      "attack_rating": 1.468219963699967,
-      "defense_rating": -1.5978396013244298,
-      "overall_rating": 3.066059565024397,
-      "attack_rank": 3,
+      "attack_rating": 1.455788202546333,
+      "defense_rating": -1.5821088029632877,
+      "overall_rating": 3.0378970055096204,
+      "attack_rank": 4,
       "defense_rank": 2,
-      "form": "W,W,W,L,D"
+      "form": "D,W,W,W,L"
     },
     {
       "rank_overall": 3,
       "team": "Shanghai Shenhua",
-      "attack_rating": 1.5196711170613315,
-      "defense_rating": -1.4289377275179285,
-      "overall_rating": 2.94860884457926,
+      "attack_rating": 1.5183330659813847,
+      "defense_rating": -1.4268505492129298,
+      "overall_rating": 2.9451836151943143,
       "attack_rank": 2,
       "defense_rank": 6,
       "form": "W,W,W,L,D"
@@ -38,39 +38,39 @@
     {
       "rank_overall": 4,
       "team": "Shandong Taishan",
-      "attack_rating": 1.4614967016422662,
-      "defense_rating": -1.3081218024963264,
-      "overall_rating": 2.769618504138593,
-      "attack_rank": 4,
+      "attack_rating": 1.4608383832292062,
+      "defense_rating": -1.3064840608708723,
+      "overall_rating": 2.7673224441000785,
+      "attack_rank": 3,
       "defense_rank": 11,
       "form": "W,L,W,L,D"
     },
     {
       "rank_overall": 5,
       "team": "Shanghai Port",
-      "attack_rating": 1.382495700364864,
-      "defense_rating": -1.3280124684118062,
-      "overall_rating": 2.71050816877667,
+      "attack_rating": 1.3750805503447,
+      "defense_rating": -1.3303839523023238,
+      "overall_rating": 2.705464502647024,
       "attack_rank": 5,
       "defense_rank": 9,
-      "form": "L,W,D,D,W"
+      "form": "D,L,W,D,D"
     },
     {
       "rank_overall": 6,
       "team": "Henan Songshan Longmen",
-      "attack_rating": 1.2041824003605794,
-      "defense_rating": -1.4809427265809352,
-      "overall_rating": 2.6851251269415144,
+      "attack_rating": 1.2318193536667543,
+      "defense_rating": -1.4652480752641477,
+      "overall_rating": 2.697067428930902,
       "attack_rank": 6,
       "defense_rank": 3,
-      "form": "L,L,L,W,W"
+      "form": "W,L,L,L,W"
     },
     {
       "rank_overall": 7,
       "team": "Zhejiang Professional",
-      "attack_rating": 1.0638177939760645,
-      "defense_rating": -1.3118993407977688,
-      "overall_rating": 2.3757171347738333,
+      "attack_rating": 1.062519548949871,
+      "defense_rating": -1.3096996418035614,
+      "overall_rating": 2.3722191907534325,
       "attack_rank": 7,
       "defense_rank": 10,
       "form": "W,L,D,W,L"
@@ -78,9 +78,9 @@
     {
       "rank_overall": 8,
       "team": "Dalian Yingbo",
-      "attack_rating": 0.8461400441987844,
-      "defense_rating": -1.3443274346499507,
-      "overall_rating": 2.1904674788487357,
+      "attack_rating": 0.8446779284374041,
+      "defense_rating": -1.3424482788361711,
+      "overall_rating": 2.1871262072735758,
       "attack_rank": 13,
       "defense_rank": 8,
       "form": "W,L,L,W,D"
@@ -88,29 +88,29 @@
     {
       "rank_overall": 9,
       "team": "Yunnan Yukun",
-      "attack_rating": 1.0283965113047628,
-      "defense_rating": -1.130434211052204,
-      "overall_rating": 2.158830722356967,
-      "attack_rank": 9,
+      "attack_rating": 1.0212878241740964,
+      "defense_rating": -1.136185606418787,
+      "overall_rating": 2.1574734305928835,
+      "attack_rank": 10,
       "defense_rank": 12,
-      "form": "L,W,L,D,L"
+      "form": "D,L,W,L,D"
     },
     {
       "rank_overall": 10,
       "team": "Qingdao West Coast",
-      "attack_rating": 0.8036465554597225,
-      "defense_rating": -1.3516674056606697,
-      "overall_rating": 2.155313961120392,
+      "attack_rating": 0.7841916509810308,
+      "defense_rating": -1.3553538594059011,
+      "overall_rating": 2.139545510386932,
       "attack_rank": 14,
       "defense_rank": 7,
-      "form": "L,W,D,L,W"
+      "form": "D,L,W,D,L"
     },
     {
       "rank_overall": 11,
       "team": "Tianjin Jinmen Tiger",
-      "attack_rating": 0.7088379962129009,
-      "defense_rating": -1.4305249327614111,
-      "overall_rating": 2.139362928974312,
+      "attack_rating": 0.7069032934749813,
+      "defense_rating": -1.4284213346464754,
+      "overall_rating": 2.135324628121457,
       "attack_rank": 15,
       "defense_rank": 5,
       "form": "W,L,W,D,L"
@@ -118,19 +118,19 @@
     {
       "rank_overall": 12,
       "team": "Qingdao Hainiu",
-      "attack_rating": 1.0158249970582505,
-      "defense_rating": -1.114124373868284,
-      "overall_rating": 2.1299493709265347,
-      "attack_rank": 10,
+      "attack_rating": 1.027309094638261,
+      "defense_rating": -1.0846068560530302,
+      "overall_rating": 2.1119159506912912,
+      "attack_rank": 9,
       "defense_rank": 14,
-      "form": "L,D,W,L,L"
+      "form": "L,L,D,W,L"
     },
     {
       "rank_overall": 13,
       "team": "Wuhan Three Towns",
-      "attack_rating": 0.9971144220445416,
-      "defense_rating": -1.0090725676445165,
-      "overall_rating": 2.0061869896890583,
+      "attack_rating": 0.9953055507074414,
+      "defense_rating": -1.0067264087842294,
+      "overall_rating": 2.0020319594916707,
       "attack_rank": 11,
       "defense_rank": 16,
       "form": "L,L,D,D,D"
@@ -138,19 +138,19 @@
     {
       "rank_overall": 14,
       "team": "Liaoning Tieren",
-      "attack_rating": 1.037886413191348,
-      "defense_rating": -0.8917087166223598,
-      "overall_rating": 1.929595129813708,
+      "attack_rating": 1.0622629954601333,
+      "defense_rating": -0.9161971781326544,
+      "overall_rating": 1.978460173592788,
       "attack_rank": 8,
       "defense_rank": 17,
-      "form": "W,L,D,W,W"
+      "form": "D,W,L,D,W"
     },
     {
       "rank_overall": 15,
       "team": "Shenzhen Xinpengcheng",
-      "attack_rating": 0.6924272755156532,
-      "defense_rating": -1.114861208969634,
-      "overall_rating": 1.8072884844852872,
+      "attack_rating": 0.6915110480053958,
+      "defense_rating": -1.112384707607225,
+      "overall_rating": 1.8038957556126207,
       "attack_rank": 16,
       "defense_rank": 13,
       "form": "W,L,L,W,W"
@@ -158,9 +158,9 @@
     {
       "rank_overall": 16,
       "team": "Meizhou Hakka",
-      "attack_rating": 0.8498109809821346,
-      "defense_rating": -0.7833289456267226,
-      "overall_rating": 1.633139926608857,
+      "attack_rating": 0.8485741719613272,
+      "defense_rating": -0.7801219479366746,
+      "overall_rating": 1.628696119898002,
       "attack_rank": 12,
       "defense_rank": 18,
       "form": "L,D,L,L,L"
@@ -168,9 +168,9 @@
     {
       "rank_overall": 17,
       "team": "Chongqing Tonglianglong",
-      "attack_rating": 0.0820102033029945,
-      "defense_rating": -1.4469629964124764,
-      "overall_rating": 1.528973199715471,
+      "attack_rating": 0.0849531468072548,
+      "defense_rating": -1.4465676975006665,
+      "overall_rating": 1.5315208443079211,
       "attack_rank": 18,
       "defense_rank": 4,
       "form": "D,L,W,L,W"
@@ -178,9 +178,9 @@
     {
       "rank_overall": 18,
       "team": "Changchun Yatai",
-      "attack_rating": 0.293928593343988,
-      "defense_rating": -1.082001858224924,
-      "overall_rating": 1.375930451568912,
+      "attack_rating": 0.2910666340901247,
+      "defense_rating": -1.0793884904762214,
+      "overall_rating": 1.370455124566346,
       "attack_rank": 17,
       "defense_rank": 15,
       "form": "L,L,D,L,D"
