@@ -2,85 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-18T13:48:44+01:00"
+    "updated_at": "2026-07-18T14:21:19+01:00"
   },
   "rows": [
-    {
-      "home_team": "Chongqing Tonglianglong",
-      "away_team": "Zhejiang Professional",
-      "match_time": "11:00",
-      "home_win_prob": 0.2515070252172842,
-      "draw_prob": 0.3180702205462035,
-      "away_win_prob": 0.4304227542365122,
-      "debias_method": "market_anchor",
-      "onexbet_open_home_odds": 2.29,
-      "onexbet_open_draw_odds": 3.77,
-      "onexbet_open_away_odds": 2.9,
-      "onexbet_open_home_ev": -0.4240489122524192,
-      "onexbet_open_draw_ev": 0.199124731459187,
-      "onexbet_open_away_ev": 0.2482259872858854,
-      "signal_pick": "away",
-      "signal_state": "bet",
-      "onexbet_open_last_update": "2026-07-13T09:59:00Z",
-      "fetched_at": "2026-07-18T10:20:52Z"
-    },
-    {
-      "home_team": "Dalian Yingbo",
-      "away_team": "Shandong Taishan",
-      "match_time": "11:35",
-      "home_win_prob": 0.3224295082903881,
-      "draw_prob": 0.2681453639413225,
-      "away_win_prob": 0.4094251277682895,
-      "debias_method": "market_anchor",
-      "onexbet_open_home_odds": 2.15,
-      "onexbet_open_draw_odds": 3.79,
-      "onexbet_open_away_odds": 3.13,
-      "onexbet_open_home_ev": -0.3067765571756656,
-      "onexbet_open_draw_ev": 0.0162709293376124,
-      "onexbet_open_away_ev": 0.2815006499147461,
-      "signal_pick": "away",
-      "signal_state": "bet",
-      "onexbet_open_last_update": "2026-07-12T11:07:00Z",
-      "fetched_at": "2026-07-18T10:20:52Z"
-    },
-    {
-      "home_team": "Shanghai Shenhua",
-      "away_team": "Tianjin Jinmen Tiger",
-      "match_time": "11:35",
-      "home_win_prob": 0.6805449098207317,
-      "draw_prob": 0.2139648256026505,
-      "away_win_prob": 0.1054902645766178,
-      "debias_method": "market_anchor",
-      "onexbet_open_home_odds": 1.46,
-      "onexbet_open_draw_odds": 4.79,
-      "onexbet_open_away_odds": 6.44,
-      "onexbet_open_home_ev": -0.0064044316617317,
-      "onexbet_open_draw_ev": 0.0248915146366959,
-      "onexbet_open_away_ev": -0.3206426961265807,
-      "signal_pick": null,
-      "signal_state": null,
-      "onexbet_open_last_update": "2026-07-11T11:58:00Z",
-      "fetched_at": "2026-07-18T10:20:52Z"
-    },
-    {
-      "home_team": "Wuhan Three Towns",
-      "away_team": "Shenzhen Xinpengcheng",
-      "match_time": "12:00",
-      "home_win_prob": 0.525325601235542,
-      "draw_prob": 0.2713510822293481,
-      "away_win_prob": 0.2033233165351098,
-      "debias_method": "market_anchor",
-      "onexbet_open_home_odds": 2.12,
-      "onexbet_open_draw_odds": 3.58,
-      "onexbet_open_away_odds": 3.38,
-      "onexbet_open_home_ev": 0.1136902746193488,
-      "onexbet_open_draw_ev": -0.0285631256189337,
-      "onexbet_open_away_ev": -0.3127671901113287,
-      "signal_pick": null,
-      "signal_state": null,
-      "onexbet_open_last_update": "2026-07-11T12:12:00Z",
-      "fetched_at": "2026-07-18T10:20:52Z"
-    },
     {
       "home_team": "Qingdao Hainiu",
       "away_team": "Tianjin Jinmen Tiger",
@@ -98,7 +22,26 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-18T12:18:48Z",
-      "fetched_at": null
+      "fetched_at": "2026-07-18T13:21:15Z"
+    },
+    {
+      "home_team": "Liaoning Tieren",
+      "away_team": "Qingdao West Coast",
+      "match_time": "11:35",
+      "home_win_prob": 0.4393243771345217,
+      "draw_prob": 0.2660148441848983,
+      "away_win_prob": 0.2946607786805797,
+      "debias_method": "market_anchor",
+      "onexbet_open_home_odds": 2.01,
+      "onexbet_open_draw_odds": 3.79,
+      "onexbet_open_away_odds": 3.5,
+      "onexbet_open_home_ev": -0.1169580019596114,
+      "onexbet_open_draw_ev": 0.0081962594607647,
+      "onexbet_open_away_ev": 0.0313127253820288,
+      "signal_pick": null,
+      "signal_state": null,
+      "onexbet_open_last_update": "2026-07-18T13:20:34Z",
+      "fetched_at": "2026-07-18T13:21:15Z"
     },
     {
       "home_team": "Shanghai Port",
@@ -117,7 +60,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-18T12:18:48Z",
-      "fetched_at": null
+      "fetched_at": "2026-07-18T13:21:15Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -136,7 +79,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-18T12:47:15Z",
-      "fetched_at": null
+      "fetched_at": "2026-07-18T13:21:15Z"
     }
   ]
 }
