@@ -13,6 +13,13 @@ name: Capture Odds
 # suffices.
 
 on:
+  # Primary trigger (P0-3): an external timer POSTs a repository_dispatch every ~10min.
+  # GitHub's `schedule` cron is heavily throttled (measured median ~78min, worst ~197min
+  # between landed runs — wider than the 180min executable window), whereas an API-fired
+  # dispatch starts within seconds. The `schedule` below is kept only as a fallback
+  # heartbeat should the external timer stop. See SETUP_ALERTS.md for the timer setup.
+  repository_dispatch:
+    types: [capture-tick]
   workflow_dispatch:
     inputs:
       dry_run:
@@ -20,7 +27,7 @@ on:
         type: boolean
         default: false
   schedule:
-    - cron: "*/10 * * * *"  # every 10 minutes (UTC)
+    - cron: "*/10 * * * *"  # fallback heartbeat only (throttled); dispatch is primary
 
 permissions:
   contents: write
@@ -163,6 +170,10 @@ jobs:
       - name: Rebuild dashboard from captured lines (no odds fetch)
         env:
           PYTHONPATH: src
+          # Signal alerts: republish runs the notifier, which pushes newly-fired bet
+          # signals to Telegram. Unset -> the notifier no-ops (never fails the build).
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: ./scripts/csl.sh republish
 
       - name: Commit rebuilt dashboard

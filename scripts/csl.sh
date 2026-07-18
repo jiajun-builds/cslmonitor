@@ -96,8 +96,16 @@ run_site_build() {
   ./scripts/build_dashboard_site.sh
 }
 
+# Push Telegram alerts for newly-fired bet signals. Fail-open: the module already
+# exits 0 on any error, and the `|| true` is belt-and-suspenders under `set -e` so a
+# notifier hiccup can never fail a publish. No-op locally when the tokens are unset.
+run_notify() {
+  "$PYTHON" -m csl.notify.signal_alert || true
+}
+
 run_publish() {
   run_dashboard
+  run_notify
   run_site_build
 }
 
@@ -136,6 +144,7 @@ EOF
   run_timed_phase "STEP 3b/6" "Fallback Open Backfill" "python -m csl.odds.backfill_open" run_backfill_open
   run_timed_phase "STEP 4/6" "Market Comparison Export" "python -m csl.odds.export_upcoming_market_comparison" run_market_comparison
   run_timed_phase "STEP 5/6" "Dashboard Export" "python -m csl.dashboard.export_dashboard_csv && python -m csl.dashboard.export_dashboard_json" run_dashboard
+  run_timed_phase "STEP 5b/6" "Signal Alerts" "python -m csl.notify.signal_alert" run_notify
   run_timed_phase "STEP 6/6" "Publish Site" "./scripts/build_dashboard_site.sh" run_site_build
 
   finished_at="$(date +%s)"
