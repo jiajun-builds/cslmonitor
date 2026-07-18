@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-18T13:30:30+01:00"
+    "updated_at": "2026-07-18T13:48:44+01:00"
   },
   "rows": [
     {
@@ -127,15 +127,15 @@
       "draw_prob": 0.29850552895253,
       "away_win_prob": 0.1625934035612387,
       "debias_method": "market_anchor",
-      "onexbet_open_home_odds": null,
-      "onexbet_open_draw_odds": null,
-      "onexbet_open_away_odds": null,
-      "onexbet_open_home_ev": null,
-      "onexbet_open_draw_ev": null,
-      "onexbet_open_away_ev": null,
+      "onexbet_open_home_odds": 2.17,
+      "onexbet_open_draw_odds": 3.48,
+      "onexbet_open_away_odds": 3.33,
+      "onexbet_open_home_ev": 0.1694153164451219,
+      "onexbet_open_draw_ev": 0.0387992407548045,
+      "onexbet_open_away_ev": -0.4585639661410751,
       "signal_pick": null,
       "signal_state": null,
-      "onexbet_open_last_update": null,
+      "onexbet_open_last_update": "2026-07-18T12:47:15Z",
       "fetched_at": null
     }
   ]
