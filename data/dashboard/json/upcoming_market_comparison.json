@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-18T03:41:38+01:00"
+    "updated_at": "2026-07-18T06:29:59+01:00"
   },
   "rows": [
     {
@@ -22,7 +22,7 @@
       "signal_pick": "away",
       "signal_state": "bet",
       "onexbet_open_last_update": "2026-07-13T09:59:00Z",
-      "fetched_at": "2026-07-18T02:41:35Z"
+      "fetched_at": "2026-07-18T05:29:56Z"
     },
     {
       "home_team": "Dalian Yingbo",
@@ -41,7 +41,7 @@
       "signal_pick": "away",
       "signal_state": "bet",
       "onexbet_open_last_update": "2026-07-12T11:07:00Z",
-      "fetched_at": "2026-07-18T02:41:35Z"
+      "fetched_at": "2026-07-18T05:29:56Z"
     },
     {
       "home_team": "Shanghai Shenhua",
@@ -60,7 +60,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-11T11:58:00Z",
-      "fetched_at": "2026-07-18T02:41:35Z"
+      "fetched_at": "2026-07-18T05:29:56Z"
     },
     {
       "home_team": "Wuhan Three Towns",
@@ -79,7 +79,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-11T12:12:00Z",
-      "fetched_at": "2026-07-18T02:41:35Z"
+      "fetched_at": "2026-07-18T05:29:56Z"
     }
   ]
 }
