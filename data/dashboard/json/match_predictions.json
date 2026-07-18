@@ -2,67 +2,11 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-17T22:56:22+01:00",
+    "updated_at": "2026-07-18T03:41:38+01:00",
     "model_name": "Negative Binomial with Dixon-Coles Time Decay",
     "model_version": "v2.7"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-19-2026-07-17-qingdao-west-coast-chengdu-rongcheng",
-      "round": 19,
-      "match_date": "2026-07-17",
-      "kickoff_at": "2026-07-17T12:00:00+01:00",
-      "home_team": "Qingdao West Coast",
-      "away_team": "Chengdu Rongcheng",
-      "home_win_prob": 0.172424,
-      "draw_prob": 0.287651,
-      "away_win_prob": 0.539925,
-      "home_win_fair_odds": 5.7997,
-      "draw_fair_odds": 3.4764,
-      "away_win_fair_odds": 1.8521
-    },
-    {
-      "fixture_id": "CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren",
-      "round": 19,
-      "match_date": "2026-07-17",
-      "kickoff_at": "2026-07-17T12:35:00+01:00",
-      "home_team": "Beijing Guoan",
-      "away_team": "Liaoning Tieren",
-      "home_win_prob": 0.832949,
-      "draw_prob": 0.112083,
-      "away_win_prob": 0.054968,
-      "home_win_fair_odds": 1.2006,
-      "draw_fair_odds": 8.922,
-      "away_win_fair_odds": 18.1924
-    },
-    {
-      "fixture_id": "CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu",
-      "round": 19,
-      "match_date": "2026-07-17",
-      "kickoff_at": "2026-07-17T12:35:00+01:00",
-      "home_team": "Henan Songshan Longmen",
-      "away_team": "Qingdao Hainiu",
-      "home_win_prob": 0.640981,
-      "draw_prob": 0.220117,
-      "away_win_prob": 0.138901,
-      "home_win_fair_odds": 1.5601,
-      "draw_fair_odds": 4.543,
-      "away_win_fair_odds": 7.1994
-    },
-    {
-      "fixture_id": "CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port",
-      "round": 19,
-      "match_date": "2026-07-17",
-      "kickoff_at": "2026-07-17T13:00:00+01:00",
-      "home_team": "Yunnan Yukun",
-      "away_team": "Shanghai Port",
-      "home_win_prob": 0.334286,
-      "draw_prob": 0.256313,
-      "away_win_prob": 0.409401,
-      "home_win_fair_odds": 2.9915,
-      "draw_fair_odds": 3.9015,
-      "away_win_fair_odds": 2.4426
-    },
     {
       "fixture_id": "CSL-2026-19-2026-07-18-chongqing-tonglianglong-zhejiang-professional",
       "round": 19,

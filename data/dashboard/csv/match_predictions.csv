@@ -1,8 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-19-2026-07-17-qingdao-west-coast-chengdu-rongcheng,19,2026-07-17,2026-07-17T12:00:00+01:00,Qingdao West Coast,Chengdu Rongcheng,0.172424,0.287651,0.539925,5.7997,3.4764,1.8521
-CSL-2026-19-2026-07-17-beijing-guoan-liaoning-tieren,19,2026-07-17,2026-07-17T12:35:00+01:00,Beijing Guoan,Liaoning Tieren,0.832949,0.112083,0.054968,1.2006,8.922,18.1924
-CSL-2026-19-2026-07-17-henan-songshan-longmen-qingdao-hainiu,19,2026-07-17,2026-07-17T12:35:00+01:00,Henan Songshan Longmen,Qingdao Hainiu,0.640981,0.220117,0.138901,1.5601,4.543,7.1994
-CSL-2026-19-2026-07-17-yunnan-yukun-shanghai-port,19,2026-07-17,2026-07-17T13:00:00+01:00,Yunnan Yukun,Shanghai Port,0.334286,0.256313,0.409401,2.9915,3.9015,2.4426
 CSL-2026-19-2026-07-18-chongqing-tonglianglong-zhejiang-professional,19,2026-07-18,2026-07-18T12:00:00+01:00,Chongqing Tonglianglong,Zhejiang Professional,0.217742,0.407453,0.374805,4.5926,2.4543,2.6681
 CSL-2026-19-2026-07-18-dalian-yingbo-shandong-taishan,19,2026-07-18,2026-07-18T12:35:00+01:00,Dalian Yingbo,Shandong Taishan,0.317726,0.280361,0.401913,3.1474,3.5668,2.4881
 CSL-2026-19-2026-07-18-shanghai-shenhua-tianjin-jinmen-tiger,19,2026-07-18,2026-07-18T12:35:00+01:00,Shanghai Shenhua,Tianjin Jinmen Tiger,0.680305,0.214399,0.105296,1.4699,4.6642,9.497
