@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-18T13:00:28+01:00"
+    "updated_at": "2026-07-18T13:20:26+01:00"
   },
   "rows": [
     {
@@ -89,15 +89,15 @@
       "draw_prob": 0.3031862890962855,
       "away_win_prob": 0.2505970455467776,
       "debias_method": "market_anchor",
-      "onexbet_open_home_odds": null,
-      "onexbet_open_draw_odds": null,
-      "onexbet_open_away_odds": null,
-      "onexbet_open_home_ev": null,
-      "onexbet_open_draw_ev": null,
-      "onexbet_open_away_ev": null,
+      "onexbet_open_home_odds": 2.55,
+      "onexbet_open_draw_odds": 3.25,
+      "onexbet_open_away_odds": 2.89,
+      "onexbet_open_home_ev": 0.1378524966601886,
+      "onexbet_open_draw_ev": -0.0146445604370719,
+      "onexbet_open_away_ev": -0.2757745383698127,
       "signal_pick": null,
       "signal_state": null,
-      "onexbet_open_last_update": null,
+      "onexbet_open_last_update": "2026-07-18T12:18:48Z",
       "fetched_at": null
     },
     {
@@ -108,15 +108,15 @@
       "draw_prob": 0.2494993150055317,
       "away_win_prob": 0.3179344136721115,
       "debias_method": "market_anchor",
-      "onexbet_open_home_odds": null,
-      "onexbet_open_draw_odds": null,
-      "onexbet_open_away_odds": null,
-      "onexbet_open_home_ev": null,
-      "onexbet_open_draw_ev": null,
-      "onexbet_open_away_ev": null,
+      "onexbet_open_home_odds": 2.16,
+      "onexbet_open_draw_odds": 3.85,
+      "onexbet_open_away_odds": 3.07,
+      "onexbet_open_home_ev": -0.0656568539437094,
+      "onexbet_open_draw_ev": -0.0394276372287027,
+      "onexbet_open_away_ev": -0.0239413500266176,
       "signal_pick": null,
       "signal_state": null,
-      "onexbet_open_last_update": null,
+      "onexbet_open_last_update": "2026-07-18T12:18:48Z",
       "fetched_at": null
     }
   ]
