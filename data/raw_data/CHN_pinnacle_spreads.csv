@@ -1,5 +1,5 @@
 event_id,commence_time,api_home_team,api_away_team,home_team,away_team,home_odds,draw_odds,away_odds,bookmaker,market,regions,last_update,fetched_at
-b38d8ecec25f9c8a6da23fe7ca64f37f,2026-07-25T09:30:00Z,Qingdao Hainiu FC,Tianjin Jinmen Tiger FC,Qingdao Hainiu,Tianjin Jinmen Tiger,2.52,3.23,2.87,pinnacle,h2h,us,2026-07-18T13:21:12Z,2026-07-18T13:21:15Z
-82b0fdbfbaa18193200ade14973bd208,2026-07-25T11:35:00Z,Liaoning Tieren FC,Qingdao West Coast FC,Liaoning Tieren,Qingdao West Coast,2.0,3.73,3.46,pinnacle,h2h,us,2026-07-18T13:21:12Z,2026-07-18T13:21:15Z
-2cfc5f9dfe94ee29edfb2732a7b2e915,2026-07-25T11:35:00Z,Shanghai SIPG FC,Shanghai Shenhua FC,Shanghai Port,Shanghai Shenhua,2.16,3.8,3.04,pinnacle,h2h,us,2026-07-18T13:21:12Z,2026-07-18T13:21:15Z
-d5e0333a9423ddedc76bbbf26a080ada,2026-07-25T12:00:00Z,Wuhan Three Towns,Chongqing Tonglianglong FC,Wuhan Three Towns,Chongqing Tonglianglong,2.17,3.42,3.31,pinnacle,h2h,us,2026-07-18T13:21:12Z,2026-07-18T13:21:15Z
+b38d8ecec25f9c8a6da23fe7ca64f37f,2026-07-25T09:30:00Z,Qingdao Hainiu FC,Tianjin Jinmen Tiger FC,Qingdao Hainiu,Tianjin Jinmen Tiger,2.52,3.23,2.87,pinnacle,h2h,us,2026-07-18T16:00:34Z,2026-07-18T16:00:34Z
+82b0fdbfbaa18193200ade14973bd208,2026-07-25T11:35:00Z,Liaoning Tieren FC,Qingdao West Coast FC,Liaoning Tieren,Qingdao West Coast,2.0,3.73,3.46,pinnacle,h2h,us,2026-07-18T16:00:34Z,2026-07-18T16:00:34Z
+2cfc5f9dfe94ee29edfb2732a7b2e915,2026-07-25T11:35:00Z,Shanghai SIPG FC,Shanghai Shenhua FC,Shanghai Port,Shanghai Shenhua,2.16,3.8,3.04,pinnacle,h2h,us,2026-07-18T16:00:34Z,2026-07-18T16:00:34Z
+d5e0333a9423ddedc76bbbf26a080ada,2026-07-25T12:00:00Z,Wuhan Three Towns,Chongqing Tonglianglong FC,Wuhan Three Towns,Chongqing Tonglianglong,2.17,3.42,3.31,pinnacle,h2h,us,2026-07-18T16:00:34Z,2026-07-18T16:00:34Z
