@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-18T13:20:26+01:00"
+    "updated_at": "2026-07-18T13:30:30+01:00"
   },
   "rows": [
     {
@@ -117,6 +117,25 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-18T12:18:48Z",
+      "fetched_at": null
+    },
+    {
+      "home_team": "Wuhan Three Towns",
+      "away_team": "Chongqing Tonglianglong",
+      "match_time": "12:00",
+      "home_win_prob": 0.5389010674862313,
+      "draw_prob": 0.29850552895253,
+      "away_win_prob": 0.1625934035612387,
+      "debias_method": "market_anchor",
+      "onexbet_open_home_odds": null,
+      "onexbet_open_draw_odds": null,
+      "onexbet_open_away_odds": null,
+      "onexbet_open_home_ev": null,
+      "onexbet_open_draw_ev": null,
+      "onexbet_open_away_ev": null,
+      "signal_pick": null,
+      "signal_state": null,
+      "onexbet_open_last_update": null,
       "fetched_at": null
     }
   ]
