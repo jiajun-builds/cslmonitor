@@ -94,6 +94,10 @@ jobs:
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           PYTHONPATH: src
           MODE: ${{ steps.mode.outputs.mode }}
+          # Signal alerts: publish (odds mode) and `all` (full mode) both run the
+          # notifier. Unset secrets -> the notifier no-ops (never fails the build).
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           # SofaScore Cloudflare-blocks datacenter IPs; skip the xG fetch on CI
           # and merge the committed xg_data.csv (refreshed by the home Mac).
           CSL_SKIP_XG_FETCH: "1"

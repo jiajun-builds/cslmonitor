@@ -70,13 +70,25 @@ from csl.odds.snapshot_store import DEDUP_KEY, HISTORY_CSV, append_snapshots, lo
 DEFAULT_CAPTURE_WINDOW_HOURS = 12.0
 
 # The book whose opening line defines "captured" (roadmap #8). Since that roadmap
-# item the tick STORES every book in CAPTURE_BOOKMAKERS (same 1-credit cost), but the
-# fire/pending decision stays keyed on Pinnacle alone. Keying it on "any book" would
-# let an early-opening book satisfy the window and stop the ticks before Pinnacle
-# posts, losing the opening line the λ de-bias anchors on (see
-# export_upcoming_market_comparison). Other books' rows are recon payload: a book
-# that ALREADY has a price when Pinnacle opens is one that opened earlier.
+# item the tick STORES every book in CAPTURE_BOOKMAKERS (same 1-credit cost). It is
+# kept as the *anchor* book (Pinnacle's open feeds the λ de-bias) and is one of the
+# two REQUIRED_OPEN_BOOKS below.
 REFERENCE_BOOKMAKER = BOOKMAKER
+
+# The books a fixture must have an ``open`` row for before it stops being pending.
+# Both are load-bearing for the dashboard: Pinnacle's open is the λ de-bias anchor,
+# 1xBet's open is the displayed bet price / EV basis / signal price
+# (export_upcoming_market_comparison). A fixture keeps firing (1 credit/tick) until
+# BOTH are captured or its window closes — this is the point of P0-1: the earlier
+# Pinnacle-only rule stopped ticking the moment Pinnacle opened, so a 1xBet line that
+# posted later than that single tick was lost, leaving the fixture with no bet price.
+# Requiring BOTH is strictly *stricter* than the old rule (never looser), so it can
+# never let an early-opening rival stop the ticks before Pinnacle's anchor is stored.
+# Bounded by the 12h capture window + kickoff cap + the min-remaining quota guard, and
+# any genuine miss is caught quota-free by the 3h Now-refresh fallback (backfill_open).
+# Recon-only books (betfair/matchbook) are deliberately NOT required: they have patchy
+# coverage (matchbook 4/8 fixtures) and would burn a fixture to window-close every time.
+REQUIRED_OPEN_BOOKS = (BOOKMAKER, "onexbet")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -91,33 +103,50 @@ def _norm(name: str) -> str:
     return " ".join((name or "").split()).casefold()
 
 
-def already_captured_open(history_path: str) -> set[tuple[str, str]]:
-    """Set of (home, away) normalized keys with a REFERENCE_BOOKMAKER ``open`` row.
+def captured_open_books(history_path: str) -> dict[tuple[str, str], set[str]]:
+    """Map (norm_home, norm_away) -> set of bookmaker keys that have an ``open`` row.
 
-    Deliberately ignores other books' open rows: a fixture stays pending until
-    Pinnacle's own opening line is stored (see REFERENCE_BOOKMAKER).
+    The per-book view the dual-book pending rule and the append-once filter are
+    keyed on: a fixture is done when this set covers every REQUIRED_OPEN_BOOKS.
     """
     hist = load_history(history_path)
     if hist.empty:
-        return set()
-    opens = hist[(hist["snapshot_type"] == "open") & (hist["bookmaker"] == REFERENCE_BOOKMAKER)]
-    return {(_norm(h), _norm(a)) for h, a in zip(opens["home_team"], opens["away_team"])}
+        return {}
+    opens = hist[hist["snapshot_type"] == "open"]
+    out: dict[tuple[str, str], set[str]] = {}
+    for home, away, book in zip(opens["home_team"], opens["away_team"], opens["bookmaker"]):
+        out.setdefault((_norm(home), _norm(away)), set()).add(book)
+    return out
+
+
+def already_captured_open(
+    history_path: str, bookmaker: str = REFERENCE_BOOKMAKER
+) -> set[tuple[str, str]]:
+    """Set of (home, away) normalized keys with an ``open`` row for ``bookmaker``."""
+    return {key for key, books in captured_open_books(history_path).items() if bookmaker in books}
+
+
+def missing_required_books(captured: dict[tuple[str, str], set[str]], key: tuple[str, str]) -> set[str]:
+    """REQUIRED_OPEN_BOOKS still without an ``open`` row for fixture ``key``."""
+    return set(REQUIRED_OPEN_BOOKS) - captured.get(key, set())
 
 
 def pending_open_fixtures(now: datetime, *, schedule_path, target_path, window_hours, history_path):
-    """Fixtures whose open window contains ``now`` and have no ``open`` row yet.
+    """Fixtures whose open window contains ``now`` and still miss a REQUIRED_OPEN_BOOKS open.
 
     Returns a list of (home, away, round) as they appear in the calendar
-    (standard names).
+    (standard names). A fixture stays pending until *every* required book's opening
+    line is stored, so a book (e.g. 1xBet) that posts later than Pinnacle is still
+    chased on subsequent ticks instead of being lost.
     """
-    captured = already_captured_open(history_path)
+    captured = captured_open_books(history_path)
     pending = []
     for w in build_open_windows(schedule_path, target_path, window_hours):
         if w.open_from is None or w.open_to is None:
             continue
         if not (w.open_from <= now <= w.open_to):
             continue
-        if (_norm(w.home), _norm(w.away)) in captured:
+        if not missing_required_books(captured, (_norm(w.home), _norm(w.away))):
             continue
         pending.append((w.home, w.away, w.round))
     return pending
@@ -189,18 +218,35 @@ def tick(
         log.info("None of the in-window fixtures were present in the odds response; nothing appended.")
         return 0
 
+    # Append each (fixture, book) open EXACTLY once: drop rows for a book that already
+    # has an open for this fixture. Without this, a fixture kept pending for a missing
+    # book (e.g. 1xBet) would, on each subsequent tick, re-append Pinnacle's *current*
+    # line as another snapshot_type=open — a later line mislabelled as the open. (The
+    # read side takes the earliest fetched_at, so the anchor stays correct, but the
+    # history would accrue mislabelled rows.)
+    captured = captured_open_books(history_path)
+    if not frame.empty:
+        needed = frame.apply(
+            lambda r: r["bookmaker"] not in captured.get((_norm(r["home_team"]), _norm(r["away_team"])), set()),
+            axis=1,
+        )
+        frame = frame[needed]
+    if frame.empty:
+        log.info("All in-window books already have an open on file; nothing new to append.")
+        return 0
+
     books = sorted(frame["bookmaker"].unique())
     has_ref = REFERENCE_BOOKMAKER in books
     log.info(
-        "In-window rows: %d across %d book(s): %s | %s present: %s",
+        "New in-window open rows: %d across %d book(s): %s | %s present: %s",
         len(frame), len(books), ", ".join(books), REFERENCE_BOOKMAKER, has_ref,
     )
     if not has_ref:
         # Other books' rows are still worth storing (they prove those books opened
         # first), and the fixture stays pending so a later tick grabs Pinnacle's open.
         log.info(
-            "%s has not posted these fixtures yet; storing the other books' rows and "
-            "leaving the fixture(s) pending.", REFERENCE_BOOKMAKER,
+            "%s not among the new rows this tick; storing the other books' opens and "
+            "leaving any book still missing pending.", REFERENCE_BOOKMAKER,
         )
 
     _, appended = append_snapshots(

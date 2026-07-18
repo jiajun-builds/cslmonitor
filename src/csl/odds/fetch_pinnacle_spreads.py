@@ -58,6 +58,11 @@ CAPTURE_BOOKMAKERS = (BOOKMAKER, "onexbet", "betfair_ex_eu", "betfair_ex_uk", "m
 API_KEY_ENV = "THE_ODDS_API_KEY"
 
 DEFAULT_OUTPUT_CSV = os.path.join(data_raw_dir(), "CHN_pinnacle_spreads.csv")
+# All-book "Now" snapshot written alongside the Pinnacle-only CSV: same 1-credit
+# fetch (bookmakers filter is free), every CAPTURE_BOOKMAKERS row retained. This is
+# the source the zero-quota fallback (backfill_open) reads to record a missed 1xBet
+# (or Pinnacle) open, so the bet-price book is no longer Pinnacle-only downstream.
+DEFAULT_ALL_BOOKS_CSV = os.path.join(data_raw_dir(), "CHN_now_all_books.csv")
 TEAM_MAPPING_CSV = os.path.join(data_output_dir(), "CHN_team_name_mapping.csv")
 
 OUTPUT_COLUMNS = [
@@ -357,16 +362,30 @@ def rows_to_frame(rows: list[dict[str, Any]]) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=OUTPUT_COLUMNS)
 
 
-def run(*, out_path: str, regions: str) -> pd.DataFrame:
+def run(
+    *, out_path: str, regions: str, all_books_out_path: str = DEFAULT_ALL_BOOKS_CSV
+) -> pd.DataFrame:
     api_key = get_api_key()
     mapping = load_team_mapping()
     fetched_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
-    events = fetch_odds_payload(api_key, regions)
+    # Fetch every capture book in one request (bookmakers filter is free, so this is
+    # the same 1 credit as the old Pinnacle-only call) and keep them all for the
+    # all-book Now snapshot; the Pinnacle-only slice keeps the downstream contract.
+    events = fetch_odds_payload(api_key, regions, bookmakers=",".join(CAPTURE_BOOKMAKERS))
     log.info("Fetched %d events from The Odds API", len(events))
-    rows = extract_rows(events, mapping, regions=regions, fetched_at=fetched_at)
-    frame = rows_to_frame(rows)
+    all_rows = extract_rows(events, mapping, regions=regions, fetched_at=fetched_at, bookmaker_keys=None)
+    all_frame = rows_to_frame(all_rows)
 
+    all_out_dir = os.path.dirname(os.path.abspath(all_books_out_path))
+    os.makedirs(all_out_dir, exist_ok=True)
+    all_frame.to_csv(all_books_out_path, index=False, encoding="utf-8")
+    log.info(
+        "Wrote %s (%d rows across %d book(s))",
+        all_books_out_path, len(all_frame), all_frame["bookmaker"].nunique() if not all_frame.empty else 0,
+    )
+
+    frame = all_frame[all_frame["bookmaker"] == BOOKMAKER].copy() if not all_frame.empty else all_frame
     out_dir = os.path.dirname(os.path.abspath(out_path))
     os.makedirs(out_dir, exist_ok=True)
     frame.to_csv(out_path, index=False, encoding="utf-8")
