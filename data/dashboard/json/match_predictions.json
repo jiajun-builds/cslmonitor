@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-24T09:31:21+01:00",
+    "updated_at": "2026-07-24T11:30:40+01:00",
     "model_name": "Negative Binomial with Dixon-Coles Time Decay",
     "model_version": "v2.7"
   },
@@ -230,6 +230,20 @@
       "home_win_fair_odds": 4.1426,
       "draw_fair_odds": 4.3686,
       "away_win_fair_odds": 1.8879
+    },
+    {
+      "fixture_id": "CSL-2026-22-2026-08-07-beijing-guoan-shenzhen-xinpengcheng",
+      "round": 22,
+      "match_date": "2026-08-07",
+      "kickoff_at": "2026-08-07T12:35:00+01:00",
+      "home_team": "Beijing Guoan",
+      "away_team": "Shenzhen Xinpengcheng",
+      "home_win_prob": 0.796683,
+      "draw_prob": 0.149292,
+      "away_win_prob": 0.054026,
+      "home_win_fair_odds": 1.2552,
+      "draw_fair_odds": 6.6983,
+      "away_win_fair_odds": 18.5096
     }
   ]
 }
