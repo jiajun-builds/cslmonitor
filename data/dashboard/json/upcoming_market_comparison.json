@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-07-26T13:34:30+01:00"
+    "updated_at": "2026-07-26T13:48:29+01:00"
   },
   "rows": [
     {
@@ -22,7 +22,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-19T16:00:26Z",
-      "fetched_at": "2026-07-25T10:36:32Z"
+      "fetched_at": "2026-07-26T10:46:41Z"
     },
     {
       "home_team": "Chengdu Rongcheng",
@@ -41,7 +41,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-19T16:00:26Z",
-      "fetched_at": "2026-07-25T10:36:32Z"
+      "fetched_at": "2026-07-26T10:46:41Z"
     },
     {
       "home_team": "Shandong Taishan",
@@ -60,7 +60,7 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-19T16:00:26Z",
-      "fetched_at": "2026-07-25T10:36:32Z"
+      "fetched_at": "2026-07-26T10:46:41Z"
     },
     {
       "home_team": "Zhejiang Professional",
@@ -79,7 +79,45 @@
       "signal_pick": null,
       "signal_state": null,
       "onexbet_open_last_update": "2026-07-19T16:00:26Z",
-      "fetched_at": "2026-07-25T10:36:32Z"
+      "fetched_at": "2026-07-26T10:46:41Z"
+    },
+    {
+      "home_team": "Tianjin Jinmen Tiger",
+      "away_team": "Yunnan Yukun",
+      "match_time": "11:00",
+      "home_win_prob": 0.4341470053781752,
+      "draw_prob": 0.2696969450961609,
+      "away_win_prob": 0.296156049525664,
+      "debias_method": "market_anchor",
+      "onexbet_open_home_odds": 2.42,
+      "onexbet_open_draw_odds": 3.54,
+      "onexbet_open_away_odds": 2.84,
+      "onexbet_open_home_ev": 0.0506357530151839,
+      "onexbet_open_draw_ev": -0.0452728143595905,
+      "onexbet_open_away_ev": -0.1589168193471143,
+      "signal_pick": null,
+      "signal_state": null,
+      "onexbet_open_last_update": "2026-07-26T11:49:58Z",
+      "fetched_at": null
+    },
+    {
+      "home_team": "Qingdao West Coast",
+      "away_team": "Qingdao Hainiu",
+      "match_time": "10:00",
+      "home_win_prob": 0.5134419616149427,
+      "draw_prob": 0.2376972774902767,
+      "away_win_prob": 0.2488607608947804,
+      "debias_method": "market_anchor",
+      "onexbet_open_home_odds": 1.72,
+      "onexbet_open_draw_odds": 4.08,
+      "onexbet_open_away_odds": 4.53,
+      "onexbet_open_home_ev": -0.1168798260222985,
+      "onexbet_open_draw_ev": -0.0301951078396708,
+      "onexbet_open_away_ev": 0.1273392468533556,
+      "signal_pick": null,
+      "signal_state": null,
+      "onexbet_open_last_update": "2026-07-26T10:46:02Z",
+      "fetched_at": "2026-07-26T10:46:41Z"
     }
   ]
 }
