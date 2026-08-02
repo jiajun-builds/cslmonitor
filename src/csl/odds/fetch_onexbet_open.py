@@ -21,8 +21,11 @@ Quota discipline
   * An idle tick — every fixture already has its 1xBet open — spends **zero** requests,
     exactly like ``capture_scheduler``'s idle path. Most ticks are idle.
   * A busy tick spends ``1`` (``/events``) + ``ceil(pending / 10)`` (``/odds/multi``),
-    hard-capped by ``--max-requests``. At the default cap of 4 and a 15-minute cadence
-    the worst case is 96 x 4 = 384 requests/day, provably inside the ~500/day ceiling.
+    hard-capped by ``--max-requests``. The capture workflow passes ``2`` — one events
+    call plus one batch of up to 10 fixtures — so even at a fully-recovered 144
+    runs/day the ceiling is 288/day. Overflow past 10 pending fixtures waits for the
+    next tick rather than costing more. The default of 4 here is for manual runs, where
+    draining the whole pending set in one go is usually what you want.
   * A fixture that never gets a 1xBet price drops out of pending at kickoff, so it can
     never burn requests indefinitely.
 
