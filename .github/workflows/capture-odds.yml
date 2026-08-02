@@ -6,6 +6,12 @@ name: Capture Odds
 # the opening line to data/raw_data/CHN_pinnacle_spreads_history.csv and commits it
 # back to main.
 #
+# Two providers write that same history file here:
+#   * capture_scheduler  -> Pinnacle (+ recon books) from The Odds API, window-gated,
+#                           ~500 requests/MONTH.
+#   * fetch_onexbet_open -> 1xBet from odds-api.io, NO window, ~500 requests/DAY,
+#                           throttled to ~2 runs/hour by the minute band in its step.
+#
 # NOTE: scheduled workflows only run from the default branch (main), so this has no
 # effect until merged there. GitHub's cron can be delayed/skipped under load; that is
 # tolerated here because open windows are ~1h wide and a fixture is captured at most
@@ -72,6 +78,43 @@ jobs:
             ARGS="--dry-run"
           fi
           python -m csl.odds.capture_scheduler $ARGS
+
+      # 1xBet's opening line comes from a different provider (odds-api.io) on a
+      # different budget: ~500 requests/DAY vs The Odds API's ~500/MONTH. That is what
+      # lets it poll with no predicted window at all, which is the fix for opens lost
+      # when a fixture reaches the feed after its window closed.
+      #
+      # It rides in this workflow rather than a separate one so that new 1xBet opens
+      # flow through the existing `appended` gate below and refresh the dashboard
+      # immediately — the bet price, EV and signal all key off this book, so a fresh
+      # open that waited ~3h for the next csl-refresh would blunt the whole signal.
+      #
+      # Throttled to ~2 runs/hour by a stateless minute band, because this workflow
+      # ticks every ~10min and 144 daily runs would not fit the daily budget. Worst
+      # case: 48 runs x 4 requests = 192/day. Idle runs cost zero either way, and the
+      # bands are wide enough that a drifting dispatch schedule still lands one tick in
+      # each. A missed band is harmless — the fixture simply stays pending.
+      - name: Capture 1xBet opening lines (odds-api.io)
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_IO_KEY }}
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          if [ -z "${ODDS_API_IO_KEY:-}" ]; then
+            echo "ODDS_API_IO_KEY not configured; skipping."
+            exit 0
+          fi
+          minute=$(date -u +%M)
+          # 10-minute bands on the hour and half hour => ~2 runs/hour.
+          if [ "$minute" -ge 10 ] && [ "$minute" -lt 30 ] \
+             || [ "$minute" -ge 40 ]; then
+            echo "Minute $minute is outside the capture bands; skipping (0 requests)."
+            exit 0
+          fi
+          # Fail-open: a supplementary source must never fail the Pinnacle tick.
+          python -m csl.odds.fetch_onexbet_open || \
+            echo "WARNING: odds-api.io capture failed; continuing."
 
       - name: Commit captured snapshot
         id: commit
