@@ -42,7 +42,7 @@ The alert no-ops if either Telegram secret is missing — it never fails a tick.
 
 ### PAT expiry — record it here
 
-> **`GITHUB_PAT` expires: _(fill in when minted)_**
+> **`GITHUB_PAT` expires: 2027-08-22.** Minted 2026-08-22, one-year expiry.
 
 An unrecorded expiry date is what caused the 41 h outage. GitHub emails a warning before a
 fine-grained token expires; the Telegram alert below is the backstop if that mail is missed.
