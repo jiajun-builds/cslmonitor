@@ -169,6 +169,10 @@ Three workflows in `.github/workflows/` (scheduled workflows only run from `main
   Uses a cached conda env (`use-mamba` + `actions/cache` on the pkgs dir); kept
   `conda-incubator/setup-miniconda` because `scripts/common.sh` needs the `conda` command.
 - **`capture-odds.yml`** — every-10-min capture tick; independent concurrency group.
+  Driven by a `repository_dispatch` (`capture-tick`) from the **`cslmonitor-capture-timer`
+  Cloudflare Worker** (`tools/capture-timer/`), *not* by its own `schedule:` cron, which is
+  only a throttled fallback heartbeat. The timer used to be a launchd job on the 2015 MBA;
+  it moved to the cloud because that host sleeps — see roadmap #12.
   **Three capture jobs plus a gated `publish`** (restructured 2026-08-02), each capture
   running lightweight pandas+requests and exposing an `appended` output:
 
@@ -938,8 +942,8 @@ less beats predicting better.** See roadmap #8.
       Explicitly NOT chosen (proposed and deferred): the #3 close-capture piggyback
       (persisting the last pre-kickoff 3h Now snapshot as `snapshot_type=close` for a live
       excess-CLV tracker, zero quota) — do not build it without a fresh user go-ahead.
-12. **Move the `capture-tick` timer off the 2015 MBA → Cloudflare Worker — OPEN (agreed
-    2026-08-18, deferred to next session).** The every-~10min `repository_dispatch` that
+12. **Move the `capture-tick` timer off the 2015 MBA → Cloudflare Worker — CODE LANDED
+    2026-08-22, deploy + decommission PENDING.** The every-~10min `repository_dispatch` that
     drives `capture-odds.yml` is a launchd job on `Jordans-MacBook-Air-2015` — the same
     host as the xG fetcher. It is the single most fragile link in the capture loop and
     nothing in this repo can see it fail.
@@ -998,6 +1002,34 @@ less beats predicting better.** See roadmap #8.
     count against any free-tier ceiling — `*/10` is ~4,320 invocations/month against the
     100k/day Workers free limit, so this is almost certainly fine, but it was not confirmed
     against current docs during planning.
+
+    ---
+
+    **Status 2026-08-22 — built, not yet live.** The Worker source is on
+    `ops/capture-timer-worker`: `tools/capture-timer/{wrangler.toml,src/worker.js,README.md}`,
+    `name = "cslmonitor-capture-timer"`, one cron `*/10`, `workers_dev = false`,
+    `preview_urls = false`, `[observability] enabled = true`. `wrangler deploy --dry-run`
+    passes (3.75 KiB, no bindings). The account is already authenticated
+    (`wrangler whoami` → `jiajunye97@gmail.com`), and `ligamx-capture-timer` is deployed
+    and healthy on it as the precedent.
+
+    **One deliberate extension of the "dumb timer" design:** on a non-204 dispatch the Worker
+    retries once, then pushes a **Telegram alert** (same bot as the repo's signal alerts,
+    secrets optional and no-op if absent) and throws. The alert is gated to the top-of-hour
+    tick — an expired PAT fails *every* tick, so an ungated alert is 144 messages/day and gets
+    muted within one. This exists specifically because failure mode 1 above was silent for 41h.
+
+    **The measurement that triggered execution:** the overnight hole is not a one-off. On
+    2026-08-21/22 dispatches ran cleanly every 10min until `23:53Z`, then **nothing until
+    `11:09Z` — 11h15m**, same shape as the 7h39m hole the week before.
+
+    **Remaining, all requiring the user:** mint a fresh fine-grained PAT (do NOT reuse the
+    MBA's — it gets revoked) and record its expiry in `tools/capture-timer/README.md`;
+    `wrangler secret put GITHUB_PAT` / `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`;
+    `wrangler deploy`; confirm cron invocations against the free-tier ceiling noted above;
+    then run the acceptance check overnight. **Only then** hand
+    `scripts/DECOMMISSION_CAPTURE_TIMER.md` to the MBA — it is a self-contained runbook whose
+    Step 0 is that same acceptance check, and it refuses to proceed if it fails.
 
 
 ## Agent Tips
