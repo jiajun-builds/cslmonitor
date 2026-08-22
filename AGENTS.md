@@ -942,8 +942,8 @@ less beats predicting better.** See roadmap #8.
       Explicitly NOT chosen (proposed and deferred): the #3 close-capture piggyback
       (persisting the last pre-kickoff 3h Now snapshot as `snapshot_type=close` for a live
       excess-CLV tracker, zero quota) — do not build it without a fresh user go-ahead.
-12. **Move the `capture-tick` timer off the 2015 MBA → Cloudflare Worker — CODE LANDED
-    2026-08-22, deploy + decommission PENDING.** The every-~10min `repository_dispatch` that
+12. **Move the `capture-tick` timer off the 2015 MBA → Cloudflare Worker — DEPLOYED
+    2026-08-22; overnight acceptance + MBA decommission PENDING.** The every-~10min `repository_dispatch` that
     drives `capture-odds.yml` is a launchd job on `Jordans-MacBook-Air-2015` — the same
     host as the xG fetcher. It is the single most fragile link in the capture loop and
     nothing in this repo can see it fail.
@@ -1005,8 +1005,13 @@ less beats predicting better.** See roadmap #8.
 
     ---
 
-    **Status 2026-08-22 — built, not yet live.** The Worker source is on
-    `ops/capture-timer-worker`: `tools/capture-timer/{wrangler.toml,src/worker.js,README.md}`,
+    **Status 2026-08-22 — DEPLOYED and firing.** `cslmonitor-capture-timer` version
+    `3ff4ad06`, trigger `*/10 * * * *`, all three secrets set, `GITHUB_PAT` expires
+    **2027-08-22** (recorded in the Worker README). First live tick end-to-end:
+    Worker logged `fired capture-tick` at `13:20:16Z`, the `repository_dispatch` run was
+    created at `13:20:18Z` and completed green — **2s latency**. `workers.dev` is off
+    (deploy printed a schedule and no URL). Source is on `ops/capture-timer-worker`:
+    `tools/capture-timer/{wrangler.toml,src/worker.js,README.md}`,
     `name = "cslmonitor-capture-timer"`, one cron `*/10`, `workers_dev = false`,
     `preview_urls = false`, `[observability] enabled = true`. `wrangler deploy --dry-run`
     passes (3.75 KiB, no bindings). The account is already authenticated
@@ -1023,13 +1028,16 @@ less beats predicting better.** See roadmap #8.
     2026-08-21/22 dispatches ran cleanly every 10min until `23:53Z`, then **nothing until
     `11:09Z` — 11h15m**, same shape as the 7h39m hole the week before.
 
-    **Remaining, all requiring the user:** mint a fresh fine-grained PAT (do NOT reuse the
-    MBA's — it gets revoked) and record its expiry in `tools/capture-timer/README.md`;
-    `wrangler secret put GITHUB_PAT` / `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`;
-    `wrangler deploy`; confirm cron invocations against the free-tier ceiling noted above;
-    then run the acceptance check overnight. **Only then** hand
-    `scripts/DECOMMISSION_CAPTURE_TIMER.md` to the MBA — it is a self-contained runbook whose
-    Step 0 is that same acceptance check, and it refuses to proceed if it fails.
+    **Both timers are live right now, and their timestamps separate cleanly:** the MBA lands
+    on `:x2:5x` (`13:12:58Z`, `13:02:57Z`), the Worker on `:x0:1x` (`13:20:18Z`). That is how
+    to read the acceptance output — do not just count runs.
+
+    **Remaining:** (a) the overnight acceptance check — `gh run list --workflow=capture-odds.yml
+    --event repository_dispatch` showing clean ~10min spacing across a span when the MBA is
+    closed; (b) **only then** hand `scripts/DECOMMISSION_CAPTURE_TIMER.md` to the MBA (it is a
+    self-contained runbook whose Step 0 is that same check, and it refuses to proceed if it
+    fails). **Untested:** the Telegram-on-failure path is deployed but has never fired — testing
+    it means temporarily breaking `GITHUB_PAT`, which was not worth doing on a live timer.
 
 
 ## Agent Tips
