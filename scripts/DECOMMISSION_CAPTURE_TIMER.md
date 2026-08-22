@@ -8,6 +8,54 @@ of type `capture-tick` to `jiajun-builds/cslmonitor` every 10 minutes. That time
 replaced by a Cloudflare Worker (`tools/capture-timer/` in this repo), which does the same POST
 from the cloud.
 
+---
+
+## 🤝 Handover — read this first
+
+**Handed over 2026-08-22** from the main dev Mac (`jordan@Developer/python/cslmonitor`,
+branch `ops/capture-timer-worker`, PR #52) **to you, on the 2015 MacBook Air.**
+
+**You are the only machine that can finish this job.** The Worker half is done and live; the
+launchd job it replaces is on *your* disk and nowhere else. Nobody can stop it remotely, and
+nobody has a copy of its plist.
+
+### What is already done (do not redo any of it)
+
+| | State | Evidence |
+| --- | --- | --- |
+| Worker deployed | ✅ live | `cslmonitor-capture-timer`, version `3ff4ad06`, trigger `*/10 * * * *` |
+| Secrets set | ✅ | `GITHUB_PAT` (expires **2027-08-22**), `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` |
+| Reachable over HTTP | ✅ no | `workers_dev = false`, `preview_urls = false` |
+| End-to-end proven | ✅ once | Worker logged `fired capture-tick` at `2026-08-22T13:20:16Z`; the `repository_dispatch` run was created `13:20:18Z` and finished green — 2 s latency |
+| Overnight coverage | ❓ **not yet proven** | that is Step 0 below, and it is your gate |
+
+### What you must do
+
+1. Run **Step 0**. It is a gate, not a formality — if it fails, stop and report.
+2. Remove the launchd timer (Steps 1–3), deal with the token (Steps 4–5).
+3. Run the post-checks (Step 6) and report back.
+
+### The one thing that makes this readable
+
+**Both timers are running in parallel right now, and their timestamps separate cleanly:**
+
+| Source | Lands on | Observed |
+| --- | --- | --- |
+| This Mac (launchd, `StartInterval 600`) | `:x2:5x` | `13:12:58Z`, `13:02:57Z` |
+| The Worker (Cloudflare cron) | `:x0:1x` | `13:20:18Z` |
+
+So in Step 0 do **not** just count runs — a healthy-looking list may be entirely *your* ticks.
+Look at where the seconds and minutes land, and specifically at what happens **after this Mac
+goes to sleep**.
+
+### Known-untested
+
+The Worker's Telegram-on-failure alert is deployed but has **never fired**. Testing it required
+deliberately breaking `GITHUB_PAT` on a live timer, which was judged not worth it. Do not assume
+you will be paged if the Worker dies — the Step 6 post-checks are the real verification.
+
+---
+
 > ## ⚠️ Do NOT touch the xG fetcher
 >
 > `~/Library/LaunchAgents/com.cslmonitor.fetch-xg.plist` and `scripts/fetch_xg_local.sh` **must
@@ -51,10 +99,17 @@ Read the timestamps. You need **clean ~10 minute spacing across a multi-hour spa
 this Mac was asleep or closed** — typically overnight. That span is the entire point of the
 move: it is the one thing the Worker can do that this machine cannot.
 
-- ✅ No overnight hole → continue to Step 1.
-- ❌ Still a multi-hour hole overnight → **stop and report.** The Worker is not working yet.
-  Leaving the old job installed but tokenless is the worst possible outcome: it looks configured
-  and does nothing.
+The shape you are ruling out, from the night before the Worker existed:
+
+    2026-08-21T23:53:56Z     <- last tick before the lid closed
+    2026-08-22T11:09:44Z     <- first tick the next morning.  11h15m of nothing.
+
+- ✅ Ticks land on `:x0:1x` right through the night, no multi-hour gap → continue to Step 1.
+- ❌ Still a multi-hour hole overnight → **stop and report.** The Worker is not doing its job,
+  and this Mac is still the only thing keeping capture at 10 min. Leaving the old job installed
+  but tokenless is the worst possible outcome: it looks configured and does nothing.
+- ⚠️ If the only ticks you see land on `:x2:5x`, those are **this Mac's**, not the Worker's.
+  That is a fail, however healthy the list looks.
 
 ## Step 1 — Find the job
 
