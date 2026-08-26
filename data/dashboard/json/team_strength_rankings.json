@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-08-26T01:25:13+01:00"
+    "updated_at": "2026-08-26T01:37:11+01:00"
   },
   "rows": [
     {
@@ -10,7 +10,7 @@
       "team": "Chengdu Rongcheng",
       "attack_rating": 2.0745465075791287,
       "defense_rating": 1.0671319511835515,
-      "overall_rating": 0.6654301042502431,
+      "overall_rating": 0.665430104250243,
       "attack_rank": 2,
       "defense_rank": 1,
       "form": "L,W,L,D,D",
@@ -25,7 +25,7 @@
       "team": "Beijing Guoan",
       "attack_rating": 2.0750989020906387,
       "defense_rating": 1.2632165981340429,
-      "overall_rating": 0.5221172505535255,
+      "overall_rating": 0.5221172505535254,
       "attack_rank": 1,
       "defense_rank": 3,
       "form": "D,W,W,W,W",
@@ -55,7 +55,7 @@
       "team": "Shandong Taishan",
       "attack_rating": 1.9833885020528523,
       "defense_rating": 1.5110599089949022,
-      "overall_rating": 0.2998962354278925,
+      "overall_rating": 0.2998962354278927,
       "attack_rank": 4,
       "defense_rank": 10,
       "form": "L,W,W,W,L",
@@ -115,7 +115,7 @@
       "team": "Yunnan Yukun",
       "attack_rating": 1.6451432810174926,
       "defense_rating": 1.6435916106193311,
-      "overall_rating": 0.0049312781344071,
+      "overall_rating": 0.0049312781344075,
       "attack_rank": 6,
       "defense_rank": 12,
       "form": "D,W,W,L,W",
@@ -136,7 +136,7 @@
       "form": "D,L,L,W,D",
       "attack_coef": -0.1419106632549498,
       "defense_coef": -0.1172768723998141,
-      "weighted_matches": 40.887620642326596,
+      "weighted_matches": 40.8876206423266,
       "low_sample": false,
       "in_current_season": true
     },
@@ -145,7 +145,7 @@
       "team": "Dalian Yingbo",
       "attack_rating": 1.3756982565649185,
       "defense_rating": 1.438910051163895,
-      "overall_rating": -0.0459758939455083,
+      "overall_rating": -0.0459758939455084,
       "attack_rank": 11,
       "defense_rank": 9,
       "form": "W,D,L,W,D",
@@ -160,7 +160,7 @@
       "team": "Qingdao West Coast",
       "attack_rating": 1.2886693214510232,
       "defense_rating": 1.3856011200788143,
-      "overall_rating": -0.0732387132969078,
+      "overall_rating": -0.073238713296908,
       "attack_rank": 14,
       "defense_rank": 7,
       "form": "W,D,D,D,W",
