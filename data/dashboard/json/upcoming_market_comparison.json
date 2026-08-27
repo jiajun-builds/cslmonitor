@@ -2,7 +2,7 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-08-26T13:27:23+01:00"
+    "updated_at": "2026-08-27T06:33:20+01:00"
   },
   "rows": [
     {
@@ -43,7 +43,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-23T12:43:30.931Z",
       "duel_open_last_update": "2026-08-23T12:22:04.288Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-28-shanghai-shenhua-shandong-taishan",
@@ -83,7 +83,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-22T12:35:41.933Z",
       "duel_open_last_update": "2026-08-22T12:44:57.302Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-28-shenzhen-xinpengcheng-shanghai-port",
@@ -123,7 +123,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-23T12:05:39.648Z",
       "duel_open_last_update": "2026-08-23T12:08:58.671Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-29-qingdao-hainiu-wuhan-three-towns",
@@ -163,7 +163,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-23T12:05:39.648Z",
       "duel_open_last_update": "2026-08-23T11:46:48.988Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-29-tianjin-jinmen-tiger-qingdao-west-coast",
@@ -203,7 +203,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-22T12:35:41.933Z",
       "duel_open_last_update": "2026-08-22T12:23:48.006Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-29-zhejiang-professional-yunnan-yukun",
@@ -243,7 +243,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-22T12:35:41.933Z",
       "duel_open_last_update": "2026-08-22T12:31:51.27Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-29-chengdu-rongcheng-liaoning-tieren",
@@ -283,7 +283,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-23T12:05:39.648Z",
       "duel_open_last_update": "2026-08-23T11:16:38.284Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     },
     {
       "fixture_id": "CSL-2026-25-2026-08-29-henan-songshan-longmen-chongqing-tonglianglong",
@@ -323,7 +323,7 @@
       "signal_books": null,
       "onexbet_open_last_update": "2026-08-23T12:43:30.931Z",
       "duel_open_last_update": "2026-08-23T12:26:05.994Z",
-      "fetched_at": "2026-08-26T12:27:18Z"
+      "fetched_at": "2026-08-27T05:33:15Z"
     }
   ]
 }
