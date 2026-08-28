@@ -2,36 +2,9 @@
   "meta": {
     "competition_code": "CSL",
     "season": "2026",
-    "updated_at": "2026-08-28T08:29:07+01:00"
+    "updated_at": "2026-08-28T21:15:05+01:00"
   },
   "rows": [
-    {
-      "fixture_id": "CSL-2026-25-2026-08-28-dalian-yingbo-beijing-guoan",
-      "round": 25,
-      "match_date": "2026-08-28",
-      "match_time": "11:35",
-      "kickoff_at": "2026-08-28T12:35:00+01:00",
-      "home_team": "Dalian Yingbo",
-      "away_team": "Beijing Guoan"
-    },
-    {
-      "fixture_id": "CSL-2026-25-2026-08-28-shanghai-shenhua-shandong-taishan",
-      "round": 25,
-      "match_date": "2026-08-28",
-      "match_time": "11:35",
-      "kickoff_at": "2026-08-28T12:35:00+01:00",
-      "home_team": "Shanghai Shenhua",
-      "away_team": "Shandong Taishan"
-    },
-    {
-      "fixture_id": "CSL-2026-25-2026-08-28-shenzhen-xinpengcheng-shanghai-port",
-      "round": 25,
-      "match_date": "2026-08-28",
-      "match_time": "12:00",
-      "kickoff_at": "2026-08-28T13:00:00+01:00",
-      "home_team": "Shenzhen Xinpengcheng",
-      "away_team": "Shanghai Port"
-    },
     {
       "fixture_id": "CSL-2026-25-2026-08-29-qingdao-hainiu-wuhan-three-towns",
       "round": 25,
