@@ -145,7 +145,7 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552574,18,2026-07-12,Tianjin Jinmen Tiger,Liaoning Tieren,,,,,Postponed
 16484884,18,2026-07-14,Zhejiang Professional,Qingdao Hainiu,3,2,0.0,0.0,Ended
 16851672,18,2026-08-18,Shanghai Shenhua,Beijing Guoan,0,3,0.0,0.0,Ended
-16851577,18,2026-08-19,Shanghai Port,Dalian Yingbo,1,1,2.62,1.38,Ended
+16851577,18,2026-08-19,Shanghai Port,Dalian Yingbo,1,1,3.11,1.38,Ended
 15552576,19,2026-07-17,Beijing Guoan,Liaoning Tieren,1,1,2.07,1.73,Ended
 15552581,19,2026-07-17,Henan Songshan Longmen,Qingdao Hainiu,5,1,3.62,1.03,Ended
 15552577,19,2026-07-17,Qingdao West Coast,Chengdu Rongcheng,1,1,0.52,1.17,Ended
@@ -194,9 +194,9 @@ match_id,round,date,home_team,away_team,home_score,away_score,home_xg,away_xg,st
 15552622,24,2026-08-23,Chongqing Tonglianglong,Dalian Yingbo,0,1,0.49,0.57,Ended
 15552623,24,2026-08-23,Liaoning Tieren,Henan Songshan Longmen,4,4,1.75,1.92,Ended
 15552620,24,2026-08-23,Shanghai Port,Qingdao Hainiu,2,1,2.16,0.49,Ended
-15552624,25,2026-08-28,Dalian Yingbo,Beijing Guoan,,,,,Not started
-15552629,25,2026-08-28,Shanghai Shenhua,Shandong Taishan,,,,,Not started
-15552625,25,2026-08-28,Shenzhen Xinpengcheng,Shanghai Port,,,,,Not started
+15552624,25,2026-08-28,Dalian Yingbo,Beijing Guoan,1,1,0.0,0.0,Ended
+15552629,25,2026-08-28,Shanghai Shenhua,Shandong Taishan,2,3,0.0,0.0,Ended
+15552625,25,2026-08-28,Shenzhen Xinpengcheng,Shanghai Port,0,1,0.0,0.0,Ended
 15552628,25,2026-08-29,Chengdu Rongcheng,Liaoning Tieren,,,,,Not started
 15552630,25,2026-08-29,Henan Songshan Longmen,Chongqing Tonglianglong,,,,,Not started
 15552631,25,2026-08-29,Qingdao Hainiu,Wuhan Three Towns,,,,,Not started
