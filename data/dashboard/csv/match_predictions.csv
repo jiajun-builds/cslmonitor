@@ -1,9 +1,4 @@
 fixture_id,round,match_date,kickoff_at,home_team,away_team,home_win_prob,draw_prob,away_win_prob,home_win_fair_odds,draw_fair_odds,away_win_fair_odds
-CSL-2026-25-2026-08-29-qingdao-hainiu-wuhan-three-towns,25,2026-08-29,2026-08-29T10:00:00+01:00,Qingdao Hainiu,Wuhan Three Towns,0.466521,0.229224,0.304255,2.1435,4.3625,3.2867
-CSL-2026-25-2026-08-29-tianjin-jinmen-tiger-qingdao-west-coast,25,2026-08-29,2026-08-29T12:00:00+01:00,Tianjin Jinmen Tiger,Qingdao West Coast,0.446536,0.274174,0.27929,2.2395,3.6473,3.5805
-CSL-2026-25-2026-08-29-zhejiang-professional-yunnan-yukun,25,2026-08-29,2026-08-29T12:00:00+01:00,Zhejiang Professional,Yunnan Yukun,0.502828,0.214263,0.282909,1.9888,4.6672,3.5347
-CSL-2026-25-2026-08-29-chengdu-rongcheng-liaoning-tieren,25,2026-08-29,2026-08-29T12:35:00+01:00,Chengdu Rongcheng,Liaoning Tieren,0.754485,0.14302,0.102495,1.3254,6.992,9.7566
-CSL-2026-25-2026-08-29-henan-songshan-longmen-chongqing-tonglianglong,25,2026-08-29,2026-08-29T13:00:00+01:00,Henan Songshan Longmen,Chongqing Tonglianglong,0.567721,0.25285,0.179429,1.7614,3.9549,5.5732
 CSL-2026-26-2026-09-05-wuhan-three-towns-qingdao-west-coast,26,2026-09-05,2026-09-05T12:00:00+01:00,Wuhan Three Towns,Qingdao West Coast,0.432413,0.248951,0.318636,2.3126,4.0169,3.1384
 CSL-2026-26-2026-09-05-dalian-yingbo-qingdao-hainiu,26,2026-09-05,2026-09-05T12:35:00+01:00,Dalian Yingbo,Qingdao Hainiu,0.530578,0.236445,0.232978,1.8847,4.2293,4.2923
 CSL-2026-26-2026-09-05-shanghai-port-beijing-guoan,26,2026-09-05,2026-09-05T12:35:00+01:00,Shanghai Port,Beijing Guoan,0.415843,0.226992,0.357165,2.4048,4.4054,2.7998
@@ -12,3 +7,4 @@ CSL-2026-26-2026-09-06-chongqing-tonglianglong-shanghai-shenhua,26,2026-09-06,20
 CSL-2026-26-2026-09-06-henan-songshan-longmen-chengdu-rongcheng,26,2026-09-06,2026-09-06T12:35:00+01:00,Henan Songshan Longmen,Chengdu Rongcheng,0.328188,0.239396,0.432416,3.047,4.1772,2.3126
 CSL-2026-26-2026-09-06-yunnan-yukun-liaoning-tieren,26,2026-09-06,2026-09-06T12:35:00+01:00,Yunnan Yukun,Liaoning Tieren,0.552591,0.201701,0.245708,1.8097,4.9578,4.0699
 CSL-2026-26-2026-09-06-tianjin-jinmen-tiger-zhejiang-professional,26,2026-09-06,2026-09-06T13:00:00+01:00,Tianjin Jinmen Tiger,Zhejiang Professional,0.431277,0.251226,0.317496,2.3187,3.9805,3.1496
+CSL-2026-18-2026-09-12-tianjin-jinmen-tiger-liaoning-tieren,18,2026-09-12,2026-09-12T12:00:00+01:00,Tianjin Jinmen Tiger,Liaoning Tieren,0.489288,0.238967,0.271745,2.0438,4.1847,3.6799
